@@ -135,3 +135,25 @@ low-poly ridge reads slightly "3D template". Least likely of the three to drift 
 | Render cost | lowest | low-medium | low-medium |
 
 **Decision pending user.**
+
+---
+
+# Round 3 — motion prototype for G (2026-09-11)
+
+User picked G but would not lock on a still. A throwaway Three.js + GSAP prototype was built
+to show the direction moving: `docs/design/prototype-g-lair.html`, published as an artifact at
+https://claude.ai/code/artifact/98072a00-d091-4bb0-8379-f9e0dce55cd2
+
+**What it shows:** fog-depth cave tunnel with jittered flat-shaded walls and instanced boulders;
+two amber spotlights with additive shaft cones; a 170-bat flock as two InstancedMeshes (left and
+right wings, real flapping) — the whole flock is two draw calls; three echo rings pulsing from
+the headline; scroll-scrubbed camera dolly down the tunnel; flock sweeps across the frame at
+each section change; the voice-agent pipeline etched as SVG that draws itself in on approach;
+a stone plinth under the case study instead of a card; persistent pause control; reduced-motion
+path (no flapping, no sweeps, no scrub smoothing, etched lines pre-drawn).
+
+**Built against current docs** (Context7: `/websites/threejs`, `/websites/gsap_v3`), three
+0.186.0 ES-module build and GSAP 3.15.0 from cdnjs. No addons required.
+
+**Status:** spike. Throwaway code — the Phase 3 build starts from the design spec, not from
+this file. Awaiting user verdict on the motion.

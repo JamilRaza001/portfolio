@@ -116,3 +116,23 @@ CONTENT.md §9.2).
    concrete eval exists.
 **Why:** Each would fail under one interviewer question, and a portfolio that collapses under
 questioning is worse than a modest one that holds. Flagged to the user for the CV as well.
+
+## D10 — Direction G "The Lair" selected, provisionally, pending a motion prototype
+
+**Date:** 2026-09-11
+**Decision:** Of six proposed directions (A–F) plus two "wow" directions (G Lair, H Observatory),
+the user selected **G — The Lair**, with the explicit condition that a moving, 3D prototype be
+shown before the design is locked. Until that prototype is approved this decision is provisional.
+**Why:** User judgment after seeing D, B, G, and H as Stitch stills (hero + case study for G and
+H). G had the most immediate wow; the user prioritised that over D's content-truth and H's
+stronger case-study treatment.
+**Binding constraints carried into G:**
+- Content spine is **echolocation** (sound out, echo back) — not fandom. Every motion and
+  metaphor must trace to it.
+- **No IP:** no emblem, no signal, no cowl, no vehicle, no character or place names. Natural
+  bats, rock, lamplight only.
+- **No fabricated metrics** (D9). The "10,000 queries" Stitch invented is struck.
+- The case-study surface is a **stone plinth**, not a rounded card. Stitch defaulted to a card;
+  the build must not.
+**Rejected:** D (too quiet for the user), H (better system, less wow), B (structural mismatch
+with voice/dashboard work), A/C/E/F (not shortlisted).

@@ -165,3 +165,6 @@ Awaiting user go-ahead at the gate.
   case study each. Caught a fabricated metric in G's hero and a defaulted SaaS card in G's case
   section; both logged in DIRECTIONS.md. H's star-chart case study is the strongest screen so far.
   **Decision pending: D / G / H.**
+- User chose **G — The Lair** provisionally (D10) on condition of seeing it move. Built a
+  Three.js/GSAP motion prototype (spike, throwaway) against Context7-verified current APIs and
+  published it as an artifact. Awaiting verdict to lock D10 and proceed to 2.2.
