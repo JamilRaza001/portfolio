@@ -4,6 +4,10 @@
 !.env.example
 .claude/settings.local.json
 
+# personal source documents (raw CV / LinkedIn export)
+*.pdf
+!public/**/*.pdf
+
 # dependencies
 node_modules/
 .pnp

@@ -93,3 +93,36 @@ stitch           (.mcp.json) - Pending approval
   distinct tool prefixes so there is no collision, and each only spawns when called. **Phase 3
   should consistently use the project-scoped one** so the build does not depend on ECC staying
   installed.
+
+---
+
+## 2026-09-11 — Session 1 (cont.) — Phase 1 Content (Opus)
+
+### Done
+- MCP approvals confirmed: `chrome-devtools` and `context7` Connected. Stitch's `claude mcp list`
+  timeout was a transient health-check window — direct retry returned 15 tools in 3.5s. Not a fault.
+- Raw PDFs gitignored (`*.pdf`, with `!public/**/*.pdf` so a published resume can still be committed).
+- Read `MJR_CV_9 6 2026.pdf` (3pp) and `Profile.pdf` (LinkedIn export, 4pp) in full.
+- **GitHub private-repo access CONFIRMED** — connector returned 2 private repos. **No PAT needed.**
+  PLAN.md step 1.2 resolved.
+- Repo inventory: 55 total (53 public, 2 private). ~35 are 2024 bootcamp exercises.
+- Dispatched 3 `Explore` sub-agents in parallel, READMEs only, across 12 candidate repos.
+- Wrote `docs/CONTENT.md` — the structured content model.
+
+### Headline finding
+**The GitHub evidence is materially weaker than the CV implies.** Of 12 candidates: 4 have no
+README at all, 1 README is 0 bytes (`SecureVision-AI`, public and CV-linked), 3 describe projects
+explicitly at an early phase, and 1 (`CB_voice-agent`) carries a clone URL pointing at a third
+party's repository. **The two strongest CV projects — Call Center QA and the Qurbani Dashboard —
+have no repo on his account at all.**
+
+Only ~5 hard numbers exist across the entire corpus. This directly threatens the result-first card
+inversion that `PLAN.md` §1.5 carries over from the reference site.
+
+### Open — blocking Phase 2
+1. Outcome numbers: get them, or Phase 2 switches to an architecture-first hierarchy.
+2. Locate Call Center QA + Qurbani repos, or treat as link-less case studies.
+3. Employer permission for publishing internal Saylani system details.
+
+### Next action
+User answers the Phase 1 gate questions. Then Phase 2 (Design) — **model switches to Fable**.
