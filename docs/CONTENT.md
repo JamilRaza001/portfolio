@@ -287,3 +287,93 @@ almost nobody else's portfolio shows architecture at that resolution.
 
 **The real story is production systems at a working organisation**, not GitHub stars. The site
 should be weighted accordingly: employment work first, public repos second.
+
+---
+
+# ADDENDUM — Metrics supplied by the user (2026-09-11)
+
+Answers to the Phase 1 gate questions. **These replace the `METRIC MISSING` tags above.**
+
+## 8. Confirmed numbers
+
+| # | Claim | Number | Confidence |
+|---|---|---|---|
+| 1 | n8n / LangChain automation workflows | **~20 hours saved per week** | ✅ Strong. Clean, defensible, his own work. **Best headline number he has.** |
+| 2 | Voice Agent | **10% of inbound calls handled autonomously** | ✅ Strong and honest. 10% is modest but real and verifiable. |
+| 3 | Voice ordering system TTFC | **1.24 s for English** (working on parity for other languages without losing accuracy/quality) | ✅ Strong. **Note: this is NOT sub-second.** The CV says "targeting sub-second" — that framing is honest; do not upgrade it. |
+| 4 | SMIT students | **50+ per batch at intake**, declining through the course | ✅ Resolved. Both CV and LinkedIn were true at different points. Use "50+ per batch". |
+| 5 | Donations YoY (org-level) | **+32% vs last year**, via social media + call-centre outbound, noticed by his HOD and a trustee | ⚠️ **Attribution risk — see §9.1** |
+| 6 | Qurbani / Ramazan YoY | **Flat** — no lift. Value delivered was *operational visibility*, not revenue | ✅ Honest. Ironically more credible than #5. |
+| 7 | Shoe-shop automation seasonal revenue | **+20% in season** (Ramazan, Bakra Eid) | ⚠️ **Attribution risk — see §9.2** |
+| 8 | RAG chatbot relevance improvement | **None — no concrete eval exists** | 🔴 **See §9.3. The CV overstates this.** |
+| 9 | Pothole detector mAP | Not remembered | Drop the metric; the project stays or goes on other merits. |
+
+## 9. Three claims that need care before they go on a page
+
+### 9.1 The 32% donation figure — do not claim causation
+Donations grew 32% YoY through social media and outbound call-centre activity. He built the
+dashboard that gave leadership visibility into those operations. **He did not cause the 32%.**
+
+- ❌ Never write: *"Drove a 32% increase in donations."*
+- ✅ Defensible: *"Built the live operations dashboard leadership used to track donation and
+  call-centre performance through a year in which donations grew 32%."*
+
+An interviewer will ask "what was your contribution to that number?" The honest answer —
+visibility and decision support — is still good. The inflated version collapses under one question.
+
+### 9.2 The shoe-shop 20% — weak attribution, better metric available
+Shoe retail revenue rises during Ramazan and Bakra Eid regardless of any automation. Attributing
+a seasonal +20% to the receipt pipeline is not defensible.
+
+**The real achievement is different and better:** the shop had *no database at all*. He built a
+pipeline that reads **physical receipts and bills** and populates the website's product/stock
+database. The defensible metrics are data-entry hours eliminated, catalogue accuracy, or
+number of receipts processed — **`STILL NEEDED`**.
+
+### 9.3 The CV contains a claim he cannot support 🔴
+CV, internship bullet: *"Improved answer relevance by tuning chunking and retrieval, **validated
+on a labeled eval set**."* He now states there is no concrete eval.
+
+- This is the most senior-sounding line in the CV and it is the one most likely to be probed.
+- **It will not appear on the portfolio.** Recommend he also soften it on the CV, or actually run
+  an eval and earn the line back.
+
+## 10. New project — Shoe Shop Receipt Automation (not on the CV)
+
+Physical receipts and bills → extracted → website database updated. Built because the shop had
+no database of its own.
+
+**Why this matters more than he seems to think:** the CV claims OCR, OpenCV, and computer vision
+as core competencies, and the *only* supporting artifact on GitHub is an undocumented pothole
+detector. This project is **real computer vision solving a real business problem** — it closes
+the largest claim-vs-proof gap in the whole corpus. **Worth developing into a full case study.**
+
+`STILL NEEDED`: stack used (OCR engine? Gemini Vision? Tesseract? YOLO?), receipt volume,
+accuracy, and whether any repo or screenshots exist.
+
+## 11. Repository status — resolved
+
+| Repo | Status |
+|---|---|
+| Call Center QA System | **In employer (Saylani) repos.** No public link. Case study only. |
+| Qurbani Operations Dashboard | **In employer repos.** No public link. Case study only. |
+| `CB_voice-agent` | **Stays private. URL cannot be changed.** Case study, no link. |
+| `whatsapp-new` | Contributed via branches. **Not on his account; not findable publicly.** Owner/org unknown — `STILL NEEDED` if it is to be referenced at all. |
+| Repos with no README | **User's instruction: write the content later from the CV.** Tracked as a Phase 3/4 task, not a blocker. |
+
+**Correction to the Phase 1 finding:** `CB_voice-agent`'s clone URL pointing at
+`Furqan2004/Resturant-Agent` is **not plagiarism** — he contributed to that project on a branch.
+The earlier flag was wrong and is withdrawn.
+
+## 12. Revised gate status
+
+🟢 **Blocking gap #1 (no outcome numbers) is RESOLVED.** There are now enough defensible figures
+to support the result-first card inversion: **20 hrs/week**, **10% of calls**, **1.24 s**,
+**50+ students**, **22K chunks / 200 filings**, **40+ engineers**, **3 years of data**.
+
+🟢 **Blocking gap #2 (missing repos) is RESOLVED** — employer-owned, so both become link-less case
+studies. That is a normal and respectable pattern for production work.
+
+🔴 **Blocking gap #3 (employer permission) is NOT resolved.** The user answered "NI", which is
+ambiguous. **Phase 2 must not design pages around internal Saylani systems until this is an
+explicit yes.**
