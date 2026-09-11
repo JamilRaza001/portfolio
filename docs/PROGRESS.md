@@ -180,3 +180,8 @@ Awaiting user go-ahead at the gate.
   after review whether they stay.** Verified over local server; one legacy call fixed
   (`PCFSoftShadowMap` removed in r186 → `PCFShadowMap`). Published with 21 asset files.
   **Gate: awaiting user verdict on v2 to lock D10.**
+- **v3 prototype** (D11: no bat, more cinematic, dark cave with neon): camera rides a spline
+  through the cave with inertia; warm light = three oil lamps with flicker and shafts; cold light =
+  900 twinkling glow-worm points, sonar rings, and a light pulse running ahead down a shader-lit
+  trail; half-res UnrealBloom. Verified locally; wall scale normalised after the look. Bat removed
+  from the artifact. **Gate: awaiting user verdict on v3 to lock D10/D11.**

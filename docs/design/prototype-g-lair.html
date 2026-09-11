@@ -266,15 +266,18 @@ async function build() {
     gltf.loadAsync("web/rock_face_01.gltf"), gltf.loadAsync("web/moon_rock_01.gltf"), gltf.loadAsync("web/vintage_oil_lamp.gltf"),
   ]);
   const wallSrc = rockFace.scene; wallSrc.traverse(o => { if (o.isMesh) { o.material.envMapIntensity = 0.1; } });
+  // normalise the scan to a known size so clones never intrude on the path
+  const wb = new THREE.Box3().setFromObject(wallSrc), ws = new THREE.Vector3(); wb.getSize(ws);
+  const wallUnit = 5.0 / Math.max(ws.x, ws.y, ws.z);
   const f = { p: new THREE.Vector3(), t: new THREE.Vector3(), s: new THREE.Vector3() };
-  // walls: a clone every ~4 units on each side, faced inward, plus a ceiling clone every other step
+  // walls: a clone every ~2.5 units on each side, faced inward, plus a ceiling clone every other step
   for (let i = 0; i < 18; i++) {
     const u = (i + 0.5) / 18; frameAt(u, f);
     for (const side of [-1, 1]) {
-      const m = wallSrc.clone(); m.position.copy(f.p).addScaledVector(f.s, side * (3.4 + Math.random() * 0.6)); m.position.y -= 1.2 + Math.random() * 0.6;
-      m.lookAt(f.p.x, m.position.y, f.p.z); m.rotateY(Math.PI); m.rotation.z = (Math.random() - 0.5) * 0.4; m.scale.setScalar(2.6 + Math.random() * 1.2); scene.add(m);
+      const m = wallSrc.clone(); m.position.copy(f.p).addScaledVector(f.s, side * (4.6 + Math.random() * 0.8)); m.position.y -= 1.0 + Math.random() * 0.8;
+      m.lookAt(f.p.x, m.position.y, f.p.z); m.rotateY(Math.PI); m.rotation.z = (Math.random() - 0.5) * 0.5; m.scale.setScalar(wallUnit * (0.9 + Math.random() * 0.4)); scene.add(m);
     }
-    if (i % 2 === 0) { const m = wallSrc.clone(); m.position.copy(f.p); m.position.y += 3.6; m.rotation.set(Math.PI + (Math.random() - 0.5) * 0.3, Math.random() * 6.28, 0); m.scale.setScalar(3.2); scene.add(m); }
+    if (i % 2 === 0) { const m = wallSrc.clone(); m.position.copy(f.p); m.position.y += 4.8; m.rotation.set(Math.PI + (Math.random() - 0.5) * 0.3, Math.random() * 6.28, 0); m.scale.setScalar(wallUnit * 1.2); scene.add(m); }
   }
   let rockMesh = null; moonRock.scene.traverse(o => { if (o.isMesh && !rockMesh) rockMesh = o; });
   if (rockMesh) {
