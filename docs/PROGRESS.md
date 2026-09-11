@@ -142,3 +142,22 @@ exist for the result-first card inversion. Decisions D7–D9 recorded.
 
 **Next action:** Phase 2 — Design. **Requires model switch to Fable** per CLAUDE.md §2.
 Awaiting user go-ahead at the gate.
+
+---
+
+## 2026-09-11 — Session 1 (cont.) — Phase 2 Design (Fable 5.1)
+
+- Model switched to Fable 5.1 by user (`/model`). Confirmed.
+- Skills loaded per PLAN: `superpowers:brainstorming` (classified architectural), `frontend-design`.
+- Reference research done as user requested (three roundups read, three sites inspected in
+  browser). Principles and the rejected game-world pattern recorded in `docs/design/DIRECTIONS.md`.
+- Proposed 3 directions (A/B/C); user asked for more; proposed 3 more (D/E/F). User shortlisted
+  **D and B** and asked to see both before choosing.
+- Stitch MCP tools are not registered in this session (session predates `.mcp.json`); drove the
+  endpoint via raw JSON-RPC instead. Project `11074993871830386819`. Generated D and B hero
+  stills, one refinement pass each. Stills + token plans in `docs/design/`.
+- Shoe-shop metrics: none available (user). `whatsapp-new`: team project, no link.
+
+**Next action:** user picks D or B → record in DECISIONS.md → Phase 2.2 design system via Stitch
+`upload_design_md` → 2.3 motion spec → 2.4 layout → 2.5 reduced-motion → 2.6 sub-agent critique
+→ 2.7 performance budget.
