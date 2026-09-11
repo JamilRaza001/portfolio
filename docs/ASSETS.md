@@ -13,3 +13,9 @@ Rule (CLAUDE.md §3, PLAN 3.5): CC0 or equivalent only. No mixed-licence sources
 Status: downloaded 2026-09-11 for the direction-G prototype. **User has not yet approved keeping
 them** — decision follows review of the upgraded prototype. Phase 3 re-exports at build-time
 resolution (Draco geometry, KTX2 textures) inside the performance budget.
+
+**Artifact note (2026-09-11):** the artifact host serves only standard web media types, so
+`docs/design/web/` holds web-servable conversions — each `.bin` embedded as a base64 data URI
+inside its `.gltf` JSON, the GLB unpacked the same way, textures copied. The HDRI cannot be
+served there and the prototype uses a procedural `RoomEnvironment` fill instead; the HDRI stays
+in the repo for the Phase 3 build, which has a real static host.

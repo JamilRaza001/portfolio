@@ -136,7 +136,7 @@
 <script type="module">
 import * as THREE from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
-import { HDRLoader } from "three/addons/loaders/HDRLoader.js";
+import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
 
 gsap.registerPlugin(ScrollTrigger, ScrollSmoother);
 const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -181,22 +181,22 @@ const flame = new THREE.PointLight(0xE8B86D, 6, 6, 1.8); scene.add(flame);
 const manager = new THREE.LoadingManager();
 manager.onProgress = (url, n, total) => { status.textContent = `Loading the cave… ${Math.round(n / total * 100)}%`; };
 const gltf = new GLTFLoader(manager);
-const hdr = new HDRLoader(manager);
+// fill light: a neutral procedural environment, kept faint — the lamp is the light source
+const pmrem = new THREE.PMREMGenerator(renderer);
+scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+pmrem.dispose();
 
 const heroGroup = new THREE.Group(); scene.add(heroGroup);
 let mixer = null, flyAction = null;
 const echoOrigin = new THREE.Vector3(0.9, 0.9, 0);
 
 async function build() {
-  const [env, bat, rockFace, moonRock, lamp] = await Promise.all([
-    hdr.loadAsync("assets/moonless_golf/moonless_golf_1k.hdr"),
-    gltf.loadAsync("assets/bat/bat.glb"),
-    gltf.loadAsync("assets/rock_face_01/rock_face_01_1k.gltf"),
-    gltf.loadAsync("assets/moon_rock_01/moon_rock_01_1k.gltf"),
-    gltf.loadAsync("assets/vintage_oil_lamp/vintage_oil_lamp_1k.gltf"),
+  const [bat, rockFace, moonRock, lamp] = await Promise.all([
+    gltf.loadAsync("web/bat.gltf"),
+    gltf.loadAsync("web/rock_face_01.gltf"),
+    gltf.loadAsync("web/moon_rock_01.gltf"),
+    gltf.loadAsync("web/vintage_oil_lamp.gltf"),
   ]);
-  env.mapping = THREE.EquirectangularReflectionMapping;
-  scene.environment = env;
 
   // --- hero bat: normalise scale, replace flat materials with a physical fur-like set ---
   const b = bat.scene;
@@ -205,9 +205,9 @@ async function build() {
   box.setFromObject(b); const c = new THREE.Vector3(); box.getCenter(c);
   b.position.set(0.9 - c.x, 0.55 - c.y, 0 - c.z);
   b.rotation.y = -0.35;
-  const fur = new THREE.MeshPhysicalMaterial({ color: 0x1B1613, roughness: 0.82, metalness: 0, sheen: 0.55, sheenColor: new THREE.Color(0x7A6A57), sheenRoughness: 0.7, envMapIntensity: 0.6 });
+  const fur = new THREE.MeshPhysicalMaterial({ color: 0x1B1613, roughness: 0.82, metalness: 0, sheen: 0.55, sheenColor: new THREE.Color(0x7A6A57), sheenRoughness: 0.7, envMapIntensity: 0.25 });
   const belly = fur.clone(); belly.color.set(0x2A231C);
-  const membrane = new THREE.MeshPhysicalMaterial({ color: 0x120F0D, roughness: 0.6, metalness: 0, transmission: 0.08, thickness: 0.2, envMapIntensity: 0.8 });
+  const membrane = new THREE.MeshPhysicalMaterial({ color: 0x120F0D, roughness: 0.6, metalness: 0, transmission: 0.08, thickness: 0.2, envMapIntensity: 0.3 });
   const eyes = new THREE.MeshStandardMaterial({ color: 0x000000, emissive: new THREE.Color(0xE8B86D), emissiveIntensity: 1.6, roughness: 0.3 });
   b.traverse(o => {
     if (!o.isMesh) return;
@@ -222,7 +222,7 @@ async function build() {
   flyAction.timeScale = reduce ? 0 : 0.9;
 
   // --- cave dressing ---
-  const wallSrc = rockFace.scene; wallSrc.traverse(o => { if (o.isMesh) { o.receiveShadow = true; o.material.envMapIntensity = 0.25; } });
+  const wallSrc = rockFace.scene; wallSrc.traverse(o => { if (o.isMesh) { o.receiveShadow = true; o.material.envMapIntensity = 0.12; } });
   const walls = [
     { p: [-5.5, -1.2, -2.5], r: [0, 1.1, 0.1], s: 3.2 }, { p: [5.8, -0.8, -4.5], r: [0, -1.3, -0.15], s: 3.6 },
     { p: [0.5, -1.4, -8.5], r: [0.2, 0.3, 0], s: 4.2 }, { p: [-3.5, 2.8, -6], r: [2.9, 0.4, 0.3], s: 3.0 },
@@ -230,7 +230,7 @@ async function build() {
   for (const w of walls) { const m = wallSrc.clone(); m.position.set(...w.p); m.rotation.set(...w.r); m.scale.setScalar(w.s); scene.add(m); }
   let rockMesh = null; moonRock.scene.traverse(o => { if (o.isMesh && !rockMesh) rockMesh = o; });
   if (rockMesh) {
-    rockMesh.material.envMapIntensity = 0.3;
+    rockMesh.material.envMapIntensity = 0.12;
     const rocks = new THREE.InstancedMesh(rockMesh.geometry, rockMesh.material, 14);
     rocks.receiveShadow = true; rocks.castShadow = true;
     const M = new THREE.Matrix4(), Q = new THREE.Quaternion(), S = new THREE.Vector3(), T = new THREE.Vector3(), E = new THREE.Euler();
