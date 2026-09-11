@@ -172,3 +172,11 @@ Awaiting user go-ahead at the gate.
   console errors. Replaced deprecated `THREE.Clock` with `THREE.Timer` (Context7-confirmed) and
   republished. Artifact: https://claude.ai/code/artifact/98072a00-d091-4bb0-8379-f9e0dce55cd2
   **Gate: awaiting user verdict on the motion to lock D10.**
+- **v2 prototype** (user: "make it like Oryzo"): one hero object. Rigged Quaternius bat (CC0,
+  228 KB, `Bat_Flying` clip) with a physical fur-sheen material; keyed by a real Poly Haven oil
+  lamp with a flickering flame, cool rim, moonless-night HDRI fill; `rock_face_01` walls and
+  instanced `moon_rock_01` rubble; ScrollSmoother inertia; spherical camera rig scrubbed through
+  three moves. Assets downloaded with permission, logged in `docs/ASSETS.md` — **user decides
+  after review whether they stay.** Verified over local server; one legacy call fixed
+  (`PCFSoftShadowMap` removed in r186 → `PCFShadowMap`). Published with 21 asset files.
+  **Gate: awaiting user verdict on v2 to lock D10.**
