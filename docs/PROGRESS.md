@@ -126,3 +126,19 @@ inversion that `PLAN.md` §1.5 carries over from the reference site.
 
 ### Next action
 User answers the Phase 1 gate questions. Then Phase 2 (Design) — **model switches to Fable**.
+
+### Phase 1 gate — closed 2026-09-11
+
+User supplied outcome metrics. **Blocking gaps 1 and 2 resolved**; enough defensible numbers now
+exist for the result-first card inversion. Decisions D7–D9 recorded.
+
+- **Permission resolved:** text + metrics + original diagrams. **No screenshots of internal UI.**
+- **Shoe-shop receipt automation promoted to featured case study** (new, not on CV).
+- Withdrew the `CB_voice-agent` plagiarism flag — branch contribution to an upstream repo.
+
+**Still needed before Phase 2 step 2.2 (design system):**
+- Shoe shop: extraction stack, receipt volume, manual hours removed.
+- `whatsapp-new`: owning org, if it is to be referenced at all.
+
+**Next action:** Phase 2 — Design. **Requires model switch to Fable** per CLAUDE.md §2.
+Awaiting user go-ahead at the gate.

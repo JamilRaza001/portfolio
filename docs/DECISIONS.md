@@ -75,3 +75,44 @@ overlapping design skills. BUILD-INSTRUCTIONS §0.4 warns that overlapping skill
 behaviour. Disabling them globally would degrade the user's other projects; a binding named list
 gets the same determinism with no collateral damage.
 **Status:** Taken as a default — user was asked and did not object. Reversible on request.
+
+## D7 — Employer work is published as text and architecture only; no screenshots
+
+**Date:** 2026-09-11
+**Decision:** Saylani internal systems (Call Center QA Analyzer, Qurbani Operations Dashboard,
+Voice Agent, the internship RAG chatbot) may be described in words, with their metrics, and
+illustrated with **original architecture and data-flow diagrams**. **No screenshots of internal
+UI, and no internal data.** The employer may be named.
+**Why:** User's explicit answer at the Phase 1 gate.
+**Consequence for design — this is a constraint that helps:** the portfolio cannot lean on product
+screenshots, which is the default and most generic way portfolios show work. It must instead show
+**system architecture**. For a scroll-driven 3D site that is a better fit anyway: screenshots sit
+badly inside a 3D scene, whereas pipelines, retrieval flows, and ASR→LLM→TTS chains are naturally
+spatial and can *be* the 3D subject rather than a flat image pasted into it.
+**Rejected:** Full screenshots (not permitted). Anonymising the employer (permitted to name them,
+and the name carries real weight — Pakistan's largest welfare organisation).
+
+## D8 — Shoe-shop receipt automation is a featured case study
+
+**Date:** 2026-09-11
+**Decision:** The shoe-shop receipt/bill extraction project gets a full case-study slot, despite
+not appearing on the CV.
+**Why:** User's choice at the Phase 1 gate, and it closes the widest claim-versus-proof gap in the
+corpus — the CV claims OCR, OpenCV, and computer vision as core competencies while the only
+supporting public artifact is an undocumented pothole detector.
+**Blocked on:** extraction stack, receipt volume, and manual hours removed are all still unknown.
+**These are required before Phase 2 step 2.2.** The seasonal revenue figure is NOT usable (see
+CONTENT.md §9.2).
+
+## D9 — Claims that will not appear on the site
+
+**Date:** 2026-09-11
+**Decision:** Three claims are barred from the portfolio regardless of how the design evolves:
+1. Any causal phrasing of the **32% donation growth** — he supported it with visibility, did not
+   cause it. Approved wording is in `CONTENT.md` §9.1.
+2. The **shoe-shop seasonal +20% revenue** as an outcome of the automation — seasonal retail
+   uplift is not attributable to it.
+3. **"Validated on a labeled eval set"** for the internship RAG chatbot — the user confirms no
+   concrete eval exists.
+**Why:** Each would fail under one interviewer question, and a portfolio that collapses under
+questioning is worse than a modest one that holds. Flagged to the user for the CV as well.
