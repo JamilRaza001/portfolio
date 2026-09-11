@@ -66,3 +66,72 @@ belong in a vector index.
 
 **Recommendation carried from 2.1:** D, on coverage — it holds every project without strain.
 B is the sharper positioning for RAG roles. **Decision pending user review.**
+
+---
+
+# Round 2 — user asked for "wow factor" (2026-09-11)
+
+User verdict on D: correct but not exciting. Asked for (1) a scenery direction and (2) a
+cave-lair direction inspired by the Batcave — theme only, no branding — each shown as hero AND a
+case-study section. Both grounded in content rather than fandom, and both rendered with the
+same Voice Agent case study so the comparison is fair.
+
+## G — The Lair  (hero `11ecd938240e4b5b9d81c4044685776c`, case `b733dc2015614201a59fd0039d7246ba`)
+
+**Idea:** underground cave command centre. **Content spine: echolocation** — sound out, echo
+back — which is the voice agent (speech in → answer out) and retrieval (query out → neighbours
+back). Bats and echo rings are the metaphor, not the fandom.
+
+| Token | Value | Why |
+|---|---|---|
+| Cave depth | `#15181B` | Dark cool stone. Not pure black, not navy. |
+| Rock | `#3A3F45` | Lit stone surfaces. |
+| Bone | `#E6E1D6` | Text and echo rings. |
+| Lamplight | `#E8B86D` | Light shaft and the single metric. The only accent. |
+
+**Type:** Big Shoulders Display black condensed (display) + Atkinson Hyperlegible (body — chosen
+for legibility on dark, and because it is an unusual, meaningful choice).
+**Motion vocabulary:** flock sweep as page transition; lamp travels deeper on scroll; echo ring on
+each metric reveal.
+**IP guard (binding):** no emblem, no signal, no cowl, no vehicle, no character or place names.
+
+**Still critique:** hero delivers the most immediate wow of any direction. Two faults: Stitch
+**fabricated a metric** in the hero body ("10,000 queries each week") — must never ship, see D9;
+and the case section collapsed the stone plinth into a **rounded grey SaaS card** — exactly the
+default the brief forbade. Both are prompt-level fixes, but they show how hard this direction
+pulls toward the generic dark-tech look.
+
+## H — The Observatory  (hero `00c911983f154a03a7da283251cb6981`, case `5080d2371f314e399130fd31306fac7c`)
+
+**Idea:** mountain observatory at night. **Content spine: one true point of light among
+millions** — what a retrieval engineer does. Dome slit opens on load (the one orchestrated
+moment); scroll pans the sky from object to object; architecture drawn as **star charts**.
+
+| Token | Value | Why |
+|---|---|---|
+| Night | `#101720` | Deep blue-black. |
+| Moonlit rock | `#7C8894` | Ridge and dome interior. |
+| Dome | `#E9E4D8` | Observatory domes are white. |
+| Night-vision red | `#D9453B` | Observatories use red light to preserve night vision. Metric and reticle only. |
+| Star / text | `#F2EFE6` | |
+
+**Type:** Newsreader, one family, optical sizes (display for headline and metric, text for body).
+**Motion vocabulary:** slit opening; sky pan; constellation lines draw in on approach.
+
+**Still critique:** the case-study section is the **best single screen produced in either round**
+— architecture as a star chart through the slit answers the no-screenshots constraint better than
+anything else tried. The hero is quieter than G: the sky came back far too sparse for a headline
+that says "among millions" (trivially fixed in the build — instanced stars are near-free), and the
+low-poly ridge reads slightly "3D template". Least likely of the three to drift generic.
+
+## Standing comparison
+
+| | D Ledger | G Lair | H Observatory |
+|---|---|---|---|
+| Wow in a still | low | **high** | medium |
+| Content truth | **high** | medium (echo spine) | medium-high (retrieval spine) |
+| Case-study treatment | stamps | card (defaulted) | **star chart** |
+| Risk of going generic | accounting | **dark-tech default** | 3D-template terrain |
+| Render cost | lowest | low-medium | low-medium |
+
+**Decision pending user.**

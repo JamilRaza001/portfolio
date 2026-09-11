@@ -161,3 +161,7 @@ Awaiting user go-ahead at the gate.
 **Next action:** user picks D or B → record in DECISIONS.md → Phase 2.2 design system via Stitch
 `upload_design_md` → 2.3 motion spec → 2.4 layout → 2.5 reduced-motion → 2.6 sub-agent critique
 → 2.7 performance budget.
+- Round 2 (user asked for wow): rendered G The Lair and H The Observatory, hero + Voice Agent
+  case study each. Caught a fabricated metric in G's hero and a defaulted SaaS card in G's case
+  section; both logged in DIRECTIONS.md. H's star-chart case study is the strongest screen so far.
+  **Decision pending: D / G / H.**
