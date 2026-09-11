@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node -e \"console.log('PORTFOLIO BUILD — before any work, read in order: BUILD-INSTRUCTIONS.md, docs/PROGRESS.md, docs/DECISIONS.md, docs/PLAN.md. The files are the truth; your recollection is not. Phase gates require a full stop and user approval.')\""
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/verify.cjs\""
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node -e \"const f=require('fs'),p=(process.env.CLAUDE_PROJECT_DIR||'.')+'/docs/PROGRESS.md';let s=0;try{s=(Date.now()-f.statSync(p).mtimeMs)/3600000}catch(e){s=99}if(s>2)console.log('REMINDER: docs/PROGRESS.md has not been updated in this work session. CLAUDE.md 6 requires appending progress before the session ends.')\""
+          }
+        ]
+      }
+    ]
+  }
+}

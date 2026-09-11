@@ -1,0 +1,33 @@
+# secrets — never commit
+.env
+.env.*
+!.env.example
+.claude/settings.local.json
+
+# dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# build output
+dist/
+build/
+.next/
+out/
+.output/
+.vercel/
+.wrangler/
+
+# cache
+.cache/
+.turbo/
+*.tsbuildinfo
+
+# os / editor
+.DS_Store
+Thumbs.db
+*.log
+npm-debug.log*
+
+# local scratch
+scratch/

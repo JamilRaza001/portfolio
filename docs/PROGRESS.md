@@ -1,0 +1,95 @@
+# PROGRESS.md
+
+Append-only log of where the work actually stands. Newest entry at the bottom.
+Write here **before** a session ends, is compacted, or runs low on context.
+
+**Current phase:** Phase 0 — Environment (at gate, awaiting user approval)
+**Next action:** User reviews Phase 0 gate report. On approval, begin Phase 1 (Content).
+
+---
+
+## 2026-09-11 — Session 1 — Phase 0 (Opus)
+
+### Done
+
+**Audit.** Full inventory taken of skills, plugins, MCP servers, hooks, sub-agents, runtimes.
+Project was a genuine cold start: two files (`CLAUDE.md`, `BUILD-INSTRUCTIONS.md`), no git, no
+`docs/`, no `.mcp.json`.
+
+- Plugins enabled: `frontend-design`, `code-review`, `superpowers` (6.3.0), `ecc` (2.0.0, stale),
+  `ponytail` (4.9.0). 278 ECC skills / 67 agents / 94 commands + 14 superpowers skills.
+- Hooks: none user-defined. All active hooks came from plugins (ECC Bash/Write/Edit preflight,
+  ponytail + superpowers SessionStart).
+- Runtimes: Node v24.15.0, npm 11.12.1, git 2.55.0. Python absent (irrelevant to this build).
+
+**MCP servers tested live, not assumed.**
+
+| Server | Result |
+|---|---|
+| `chrome-devtools` (ecc plugin) | PASS — `list_pages` returned |
+| Claude Browser (built-in) | PASS — navigated |
+| GitHub connector | PASS — auth'd as `JamilRaza001`, 54 public repos |
+| `playwright` | FAIL — diagnosed, see below |
+
+**Repair.** `playwright` MCP root cause found by running the binary outside Claude Code: npx cache
+entry `_npx/9833c18b2d85bc59` was half-written — `@playwright/mcp` present, its `playwright-core`
+dependency missing (`MODULE_NOT_FOUND` on `utilsBundle.js`). Not auth, not transport, not runtime.
+Removed the corrupted cache directory so it re-resolves cleanly on next use. Config entry retained
+as a dormant fallback per user instruction (D1).
+
+**Installed / configured.**
+- `.mcp.json` at project root with `chrome-devtools`, `context7`, `stitch` (D2).
+- Context7 configured direct as HTTP (`https://mcp.context7.com/mcp`) — works anonymously, no key.
+- Stitch verified by live JSON-RPC handshake before trusting any documentation (D4): HTTP 200,
+  protocol `2025-06-18`, 15 tools including `upload_design_md`.
+- Secrets wired via gitignored `.claude/settings.local.json` env block (D3). `.env.example` added.
+
+**Hooks configured** in `.claude/settings.json` (project-scoped, committed):
+- `SessionStart` — prints the CLAUDE.md §0 read-order reminder.
+- `PostToolUse` on `Edit|Write` — `.claude/hooks/verify.cjs`. Runs `npm run typecheck`/`lint`,
+  returns failures to Claude as blocking (exit 2). Throttled to one run per 15s. Silent no-op
+  until a `package.json` with those scripts exists, so it costs nothing before Phase 3.
+- `Stop` — warns if `docs/PROGRESS.md` has not been touched in over 2 hours.
+
+**Scaffolded** `docs/PLAN.md`, `docs/PROGRESS.md`, `docs/DECISIONS.md`. Git initialised on `main`,
+local only, no remote (D5). Verified `.env` and `.claude/settings.local.json` are both gitignored.
+
+**Wrote `docs/PLAN.md`** — the Phase 0 deliverable.
+
+### Decisions recorded
+D1–D6. See `DECISIONS.md`.
+
+### Open / carried forward
+- **Stack not yet chosen.** PLAN.md §Phase 3 carries a recommendation (Vite + React + R3F, static
+  to Cloudflare Pages) and the reasoning against Next.js. Must be locked before Phase 3 starts.
+- **GitHub private-repo reach untested.** The connector works for the authenticated user; whether
+  it reads private repos is unverified. Test at Phase 1 step 1.2 and only then ask for a PAT.
+- **ECC plugin is ~2 months stale** (local `754b8dd` 2026-07-17 vs remote `c9148d0`). Not updated —
+  updating mid-build changes hook behaviour under us. Revisit between phases if an ECC skill misfires.
+- **Git email is `jamilraza001@gamil.com`** — likely a typo for `gmail`. Commits will not link to
+  the GitHub account. Left unchanged (user's config); flagged for the user to fix.
+
+### Phase 0 verification (end of session 1)
+
+`claude mcp list` run from the project root:
+
+```
+plugin:ecc:chrome-devtools  - Connected
+playwright                  - Connected   <- repair confirmed working
+chrome-devtools  (.mcp.json) - Pending approval
+context7         (.mcp.json) - Pending approval
+stitch           (.mcp.json) - Pending approval
+```
+
+- **playwright is fixed.** It went from `CONNECTION_CLOSED` to `Connected` after the corrupted
+  npx cache directory was removed. Dormant fallback per D1, but a working one.
+- **The three project-scoped servers show `Pending approval`** — this is normal and expected.
+  Claude Code requires a one-time user approval for servers declared in a project `.mcp.json`,
+  because that file is executable config that travels with a repo. **The user must approve them
+  once** before Phase 2/3 can use them.
+- Both HTTP servers were additionally verified out-of-band with raw JSON-RPC, independent of
+  Claude Code: Stitch returned 15 tools, Context7 returned `resolve-library-id` + `query-docs`.
+- `chrome-devtools` is now declared twice — once by the ECC plugin, once project-scoped. They get
+  distinct tool prefixes so there is no collision, and each only spawns when called. **Phase 3
+  should consistently use the project-scoped one** so the build does not depend on ECC staying
+  installed.
