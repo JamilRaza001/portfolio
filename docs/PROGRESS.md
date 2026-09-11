@@ -189,3 +189,7 @@ Awaiting user go-ahead at the gate.
   = Direction I, The Instrument**: procedural speaker driver on a drafting mat, studio light,
   drawing overlay with metrics as dimension lines. Verified locally (renders correctly, no
   errors), published. **Gate: awaiting user verdict on v4 to lock the direction.**
+- User rejected v4 (D13): brief restated as dark + motion + must relate to AI engineering.
+  **v5 = Direction J, The Lab** — underground AI laboratory, all procedural. Verified in the pane;
+  found and fixed a reduced-motion camera bug (`scrub:false` → `scrub:true`) present since v1.
+  Published. **Gate: awaiting user verdict on v5 to lock the direction.**

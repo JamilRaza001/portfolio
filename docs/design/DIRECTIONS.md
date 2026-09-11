@@ -188,3 +188,31 @@ cleanup). Artifact: https://claude.ai/code/artifact/98072a00-d091-4bb0-8379-f9e0
 
 **Alternates in reserve:** receipt stack (D as an object); rotary telephone dial.
 **Status:** awaiting user verdict to lock.
+
+---
+
+# Round 5 — Direction J "The Lab" (2026-09-11, D13)
+
+User rejected The Instrument: the brief is **dark, in motion, and it must relate to AI
+engineering** — borrowing the feel of Dexter's Laboratory / SWAT Kats / ThunderCats without
+branding. The lab maps onto the work directly: a console that listens (voice agent), archive
+racks that blink (retrieval, 22K chunks), pipes carrying signal (pipelines), a bench under a
+hazard lamp (case study), a blast door that opens (contact). Hangar grammar from SWAT Kats;
+palette from the Dexter world. ThunderCats not used.
+
+| Token | Value | Why |
+|---|---|---|
+| Lab | `#0B1B21` | Deep teal-black. Not pure black. |
+| Panel | `#123039` / seams `#0B1B21` / rivets `#1C4552` | Riveted steel walls, drawn to canvas |
+| Teal | `#3FE0D0` | Fixtures, screen waveform, storage LEDs, signal pulses — the cold light |
+| Hazard | `#F2C14E` | Bands on pillars, console trim, bench lamp, metrics — the warm light |
+| Bone | `#E8EEEE` | Text |
+
+Type unchanged. Half-res UnrealBloom on emissives only. All procedural; zero downloads.
+
+**Verification notes:** the browser pane runs with `prefers-reduced-motion: reduce`, so every
+pane screenshot shows the reduced path. That exposed a real bug present since v1: `scrub:false`
+under reduced motion makes the camera tween play to its end on enter. Fixed to `scrub:true`.
+
+**File:** `prototype-g-lair.html` (name kept for URL stability; rename in Phase 3).
+**Status:** awaiting user verdict to lock.
