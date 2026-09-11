@@ -136,3 +136,21 @@ stronger case-study treatment.
   the build must not.
 **Rejected:** D (too quiet for the user), H (better system, less wow), B (structural mismatch
 with voice/dashboard work), A/C/E/F (not shortlisted).
+
+## D11 — G amended: no hero bat; cinematic path camera; dark cave with bioluminescent neon
+
+**Date:** 2026-09-11
+**Decision:** After reviewing prototype v2 the user asked to (1) remove the bat, (2) make it more
+cinematic, (3) go dark-theme with neon animations "like a dark cave". Supersedes the hero-object
+approach of v2 while keeping D10's direction G and its constraints.
+**How the neon is kept specific rather than generic:** the cold light is **glow-worm
+bioluminescence** — a real cave phenomenon — as blue-green points across the ceiling and as
+sonar rings of light; the warm light stays the oil lamp's flame. Two motivated hues, no others.
+The echolocation spine survives as sonar: signal out, answer back.
+**Camera:** a spline path through the cave scrubbed by scroll (the Cartier / Primland pattern),
+with bloom post-processing so emissive light actually glows.
+**Assets:** bat removed from the page and the artifact. Rocks and lamp stay. HDRI remains unused
+in the prototype (host cannot serve it); kept for Phase 3.
+**Risk acknowledged:** near-black with a neon accent is the most common AI-generated look. The
+mitigation is motivation — every light source is something that exists in a cave — and
+restraint: bloom on emissives only, one cold hue.

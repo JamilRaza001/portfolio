@@ -4,15 +4,15 @@
 <style>
   :root{
     --cave:#15181B; --rock:#3A3F45; --bone:#E6E1D6; --bone-dim:rgba(230,225,214,.62);
-    --lamp:#E8B86D;
+    --lamp:#E8B86D; --glow:#8FF7E0;
     --display:"Big Shoulders Display","Impact","Arial Narrow",sans-serif;
     --body:"Atkinson Hyperlegible","Helvetica Neue",Arial,sans-serif;
   }
   html,body{margin:0;background:var(--cave);color:var(--bone);font-family:var(--body);font-size:17px;line-height:1.55}
   body{overflow-x:hidden}
-  #stage{position:fixed;inset:0;z-index:0;display:block;opacity:0;transition:opacity 1.6s ease}
+  #stage{position:fixed;inset:0;z-index:0;display:block;opacity:0;transition:opacity 1.8s ease}
   #stage.ready{opacity:1}
-  .veil{position:fixed;inset:0;z-index:1;pointer-events:none;background:radial-gradient(130% 90% at 62% 45%,transparent 0%,rgba(21,24,27,.25)60%,rgba(21,24,27,.78) 100%)}
+  .veil{position:fixed;inset:0;z-index:1;pointer-events:none;background:radial-gradient(120% 85% at 50% 50%,transparent 0%,rgba(21,24,27,.2)55%,rgba(21,24,27,.82) 100%)}
   nav{position:fixed;top:0;left:0;right:0;z-index:5;display:flex;align-items:center;justify-content:space-between;padding:22px 40px;font-size:15px}
   nav .name{font-weight:700}
   nav ul{display:flex;gap:28px;list-style:none;margin:0;padding:0;align-items:center}
@@ -41,9 +41,9 @@
   .stack{color:var(--bone-dim);font-size:14px;margin-top:20px}
   .etch{width:100%;max-width:720px;overflow:visible;align-self:end}
   .etch text{font-family:var(--body);font-size:13px;fill:var(--bone)}
-  .etch .l{stroke:var(--bone);stroke-width:1.2;fill:none;stroke-linecap:round}
+  .etch .l{stroke:var(--glow);stroke-width:1.2;fill:none;stroke-linecap:round;filter:drop-shadow(0 0 4px rgba(143,247,224,.7))}
   .etch .n{fill:var(--cave);stroke:var(--bone);stroke-width:1.2}
-  .etch .r{stroke:var(--lamp);stroke-width:1;fill:none;opacity:.7}
+  .etch .r{stroke:var(--glow);stroke-width:1;fill:none;opacity:.6}
   .foot{position:fixed;bottom:18px;left:40px;right:40px;z-index:5;display:flex;justify-content:space-between;font-size:13px;color:var(--bone-dim)}
   #status{transition:opacity .6s}
   @media (max-width:760px){
@@ -79,7 +79,7 @@
   <section id="echo">
     <div class="col">
       <h2>Sound out. Answer back.</h2>
-      <p>A bat finds its way by sending a call into the dark and reading what returns. The systems I ship work the same way: a question goes out, the right answer comes back.</p>
+      <p>A sonar call goes into the dark and the echo comes back carrying the shape of the room. The systems I ship work the same way: a question goes out, the right answer returns.</p>
       <div class="metrics" aria-label="Outcomes">
         <div class="metric"><b>20 hrs</b><span>saved every week by automation workflows</span></div>
         <div class="metric"><b>10%</b><span>of inbound calls handled with no human on the line</span></div>
@@ -137,160 +137,180 @@
 import * as THREE from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
+import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js";
+import { RenderPass } from "three/addons/postprocessing/RenderPass.js";
+import { UnrealBloomPass } from "three/addons/postprocessing/UnrealBloomPass.js";
+import { OutputPass } from "three/addons/postprocessing/OutputPass.js";
 
 gsap.registerPlugin(ScrollTrigger, ScrollSmoother);
 const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
 let paused = false;
 const status = document.getElementById("status");
+const GLOW = new THREE.Color(0x8FF7E0), LAMP = new THREE.Color(0xE8B86D);
 
-// ---------- renderer / scene / camera ----------
+// ---------- renderer / composer ----------
 const canvas = document.getElementById("stage");
-const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: "high-performance" });
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: false, powerPreference: "high-performance" });
 renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));
 renderer.setSize(innerWidth, innerHeight);
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure = 1.0;
-renderer.shadowMap.enabled = true;
-renderer.shadowMap.type = THREE.PCFShadowMap;
+renderer.toneMappingExposure = 0.95;
 
 const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x15181B);
-scene.fog = new THREE.FogExp2(0x15181B, 0.075);
+scene.background = new THREE.Color(0x0E1013);
+scene.fog = new THREE.FogExp2(0x0E1013, 0.085);
+const camera = new THREE.PerspectiveCamera(50, innerWidth / innerHeight, 0.1, 70);
 
-const camera = new THREE.PerspectiveCamera(42, innerWidth / innerHeight, 0.1, 80);
-// orbit rig around the hero object: spherical coords + look target
-const rig = { radius: 4.6, theta: -0.55, phi: 1.32, tx: 0.9, ty: 0.55, tz: 0, ox: 0.35 };
-function placeCamera(t) {
-  const r = rig.radius, th = rig.theta + Math.sin(t * 0.18) * 0.03, ph = rig.phi + Math.sin(t * 0.23) * 0.015;
-  camera.position.set(rig.tx + r * Math.sin(ph) * Math.sin(th), rig.ty + r * Math.cos(ph), rig.tz + r * Math.sin(ph) * Math.cos(th));
-  camera.lookAt(rig.tx - rig.ox, rig.ty, rig.tz);
-}
+const composer = new EffectComposer(renderer);
+composer.addPass(new RenderPass(scene, camera));
+const bloom = new UnrealBloomPass(new THREE.Vector2(innerWidth / 2, innerHeight / 2), 0.85, 0.55, 0.72);
+composer.addPass(bloom);
+composer.addPass(new OutputPass());
 
-// ---------- lighting: key from the lamp, cool rim, HDR fill ----------
-scene.add(new THREE.AmbientLight(0xC9C2B4, 0.05));
-const key = new THREE.SpotLight(0xE8B86D, 60, 18, 0.55, 0.6, 1.4);
-key.position.set(-2.2, 1.1, 2.4); key.target.position.set(0.9, 0.5, 0);
-key.castShadow = true; key.shadow.mapSize.set(1024, 1024); key.shadow.bias = -0.0005;
-scene.add(key, key.target);
-const rim = new THREE.SpotLight(0xB9C4D6, 14, 16, 0.8, 0.7, 1.5);
-rim.position.set(2.6, 2.4, -3.2); rim.target.position.set(0.9, 0.6, 0);
-scene.add(rim, rim.target);
-const flame = new THREE.PointLight(0xE8B86D, 6, 6, 1.8); scene.add(flame);
-
-// ---------- loaders ----------
-const manager = new THREE.LoadingManager();
-manager.onProgress = (url, n, total) => { status.textContent = `Loading the cave… ${Math.round(n / total * 100)}%`; };
-const gltf = new GLTFLoader(manager);
-// fill light: a neutral procedural environment, kept faint — the lamp is the light source
 const pmrem = new THREE.PMREMGenerator(renderer);
 scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
 pmrem.dispose();
 
-const heroGroup = new THREE.Group(); scene.add(heroGroup);
-let mixer = null, flyAction = null;
-const echoOrigin = new THREE.Vector3(0.9, 0.9, 0);
+// ---------- the path through the cave ----------
+const curve = new THREE.CatmullRomCurve3([
+  new THREE.Vector3(0, 0.4, 6), new THREE.Vector3(0.8, 0.3, 0), new THREE.Vector3(-1.2, 0.1, -7),
+  new THREE.Vector3(1.8, -0.2, -14), new THREE.Vector3(-0.6, -0.3, -21), new THREE.Vector3(1.0, 0.2, -28), new THREE.Vector3(0, 0.6, -34),
+], false, "catmullrom", 0.6);
+const cam = { u: 0 };
+const P = new THREE.Vector3(), A = new THREE.Vector3(), TAN = new THREE.Vector3(), SIDE = new THREE.Vector3(), UP = new THREE.Vector3(0, 1, 0);
+function frameAt(u, out) { curve.getPointAt(u, out.p); curve.getTangentAt(u, out.t); out.s.crossVectors(out.t, UP).normalize(); return out; }
+const F = { p: new THREE.Vector3(), t: new THREE.Vector3(), s: new THREE.Vector3() };
+function placeCamera(t) {
+  frameAt(cam.u, F);
+  camera.position.copy(F.p).addScaledVector(F.s, Math.sin(t * 0.21) * 0.08).add(new THREE.Vector3(0, 0.9 + Math.sin(t * 0.33) * 0.03, 0));
+  curve.getPointAt(Math.min(cam.u + 0.05, 1), A); A.y += 0.6;
+  camera.lookAt(A);
+  camera.rotateZ(Math.sin(t * 0.17) * 0.012); // a breath of roll — cinematic, not seasick
+}
 
+// ---------- warm light: oil lamps along the path ----------
+const lampsAt = [0.1, 0.62, 0.88];
+const lampsGroup = new THREE.Group(); scene.add(lampsGroup);
+const flames = [];
+function shaft(from, to) {
+  const h = from.distanceTo(to);
+  const cone = new THREE.Mesh(new THREE.ConeGeometry(h * 0.5, h, 24, 1, true),
+    new THREE.MeshBasicMaterial({ color: 0xE8B86D, transparent: true, opacity: 0.035, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide, fog: false }));
+  cone.position.copy(from).lerp(to, 0.5); cone.lookAt(to); cone.rotateX(-Math.PI / 2); scene.add(cone);
+}
+
+// ---------- cold light: glow-worm ceiling ----------
+function spriteTexture() {
+  const c = document.createElement("canvas"); c.width = c.height = 64; const g = c.getContext("2d");
+  const r = g.createRadialGradient(32, 32, 0, 32, 32, 32); r.addColorStop(0, "rgba(255,255,255,1)"); r.addColorStop(0.25, "rgba(255,255,255,.55)"); r.addColorStop(1, "rgba(255,255,255,0)");
+  g.fillStyle = r; g.fillRect(0, 0, 64, 64); const tex = new THREE.CanvasTexture(c); tex.colorSpace = THREE.SRGBColorSpace; return tex;
+}
+const WORMS = 900;
+const wormGeo = new THREE.BufferGeometry();
+const wormPos = new Float32Array(WORMS * 3), wormCol = new Float32Array(WORMS * 3), wormPhase = new Float32Array(WORMS);
+{
+  const f = { p: new THREE.Vector3(), t: new THREE.Vector3(), s: new THREE.Vector3() };
+  for (let i = 0; i < WORMS; i++) {
+    const u = Math.random(); frameAt(u, f);
+    const side = (Math.random() - 0.5) * 5.2, up = 2.3 + Math.random() * 1.4 - Math.abs(side) * 0.25;
+    wormPos[i*3] = f.p.x + f.s.x * side; wormPos[i*3+1] = f.p.y + up; wormPos[i*3+2] = f.p.z + f.s.z * side;
+    wormPhase[i] = Math.random() * 6.28;
+  }
+}
+wormGeo.setAttribute("position", new THREE.BufferAttribute(wormPos, 3));
+wormGeo.setAttribute("color", new THREE.BufferAttribute(wormCol, 3));
+const worms = new THREE.Points(wormGeo, new THREE.PointsMaterial({ size: 0.09, map: spriteTexture(), vertexColors: true, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, sizeAttenuation: true }));
+scene.add(worms);
+function updateWorms(t) {
+  for (let i = 0; i < WORMS; i++) {
+    const k = reduce ? 0.7 : 0.45 + 0.55 * Math.max(0, Math.sin(t * 0.7 + wormPhase[i])) ** 3;
+    const b = 1.6 * k; // >1 so bloom picks them up
+    wormCol[i*3] = GLOW.r * b; wormCol[i*3+1] = GLOW.g * b; wormCol[i*3+2] = GLOW.b * b;
+  }
+  wormGeo.attributes.color.needsUpdate = true;
+}
+
+// ---------- the signal: a pulse running down the tunnel, with a fading trail ----------
+const trailMat = new THREE.ShaderMaterial({
+  transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, fog: false,
+  uniforms: { uHead: { value: 0 }, uColor: { value: GLOW.clone() }, uGain: { value: 1 } },
+  vertexShader: `varying float vU; void main(){ vU = uv.x; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }`,
+  fragmentShader: `uniform float uHead; uniform vec3 uColor; uniform float uGain; varying float vU;
+    void main(){ float d = uHead - vU; float a = d > 0.0 ? exp(-d * 28.0) : exp(d * 400.0); a *= uGain; gl_FragColor = vec4(uColor * 2.4 * a, a * 0.9); }`,
+});
+const trail = new THREE.Mesh(new THREE.TubeGeometry(curve, 400, 0.05, 8, false), trailMat); scene.add(trail);
+const pulse = new THREE.Mesh(new THREE.SphereGeometry(0.11, 16, 16), new THREE.MeshBasicMaterial({ color: GLOW.clone().multiplyScalar(3), fog: false })); scene.add(pulse);
+const pulseLight = new THREE.PointLight(0x8FF7E0, 4, 7, 1.8); scene.add(pulseLight);
+const sig = { speed: 0.055, gain: 1 };
+function updateSignal(t) {
+  const head = reduce ? Math.min(cam.u + 0.12, 0.98) : (cam.u + 0.06 + (t * sig.speed) % 0.3) % 1;
+  trailMat.uniforms.uHead.value = head; trailMat.uniforms.uGain.value = sig.gain;
+  curve.getPointAt(head, P); P.y += 0.35; pulse.position.copy(P); pulseLight.position.copy(P);
+  pulse.visible = pulseLight.visible = sig.gain > 0.05;
+}
+
+// ---------- sonar rings: cold light answering back ----------
+const rings = [0, 1, 2].map(i => { const r = new THREE.Mesh(new THREE.RingGeometry(0.985, 1, 128), new THREE.MeshBasicMaterial({ color: GLOW.clone().multiplyScalar(2.2), transparent: true, opacity: 0, side: THREE.DoubleSide, depthWrite: false, fog: false })); r.userData.k = i / 3; scene.add(r); return r; });
+const echo = { gain: 0.12, u: 0.42 };
+function updateRings(t) {
+  curve.getPointAt(echo.u, P); P.y += 0.9;
+  for (const r of rings) { const k = ((t / 3.4) + r.userData.k) % 1;
+    r.position.copy(P); r.quaternion.copy(camera.quaternion);
+    r.scale.setScalar(0.2 + k * 6); r.material.opacity = (1 - k) * (1 - k) * echo.gain * (reduce ? 0.6 : 1); }
+}
+
+// ---------- rock ----------
+const gltf = new GLTFLoader(new THREE.LoadingManager(undefined, (url, n, total) => { status.textContent = `Loading the cave… ${Math.round(n / total * 100)}%`; }));
 async function build() {
-  const [bat, rockFace, moonRock, lamp] = await Promise.all([
-    gltf.loadAsync("web/bat.gltf"),
-    gltf.loadAsync("web/rock_face_01.gltf"),
-    gltf.loadAsync("web/moon_rock_01.gltf"),
-    gltf.loadAsync("web/vintage_oil_lamp.gltf"),
+  const [rockFace, moonRock, lamp] = await Promise.all([
+    gltf.loadAsync("web/rock_face_01.gltf"), gltf.loadAsync("web/moon_rock_01.gltf"), gltf.loadAsync("web/vintage_oil_lamp.gltf"),
   ]);
-
-  // --- hero bat: normalise scale, replace flat materials with a physical fur-like set ---
-  const b = bat.scene;
-  const box = new THREE.Box3().setFromObject(b); const size = new THREE.Vector3(); box.getSize(size);
-  const s = 1.7 / Math.max(size.x, size.y, size.z); b.scale.setScalar(s);
-  box.setFromObject(b); const c = new THREE.Vector3(); box.getCenter(c);
-  b.position.set(0.9 - c.x, 0.55 - c.y, 0 - c.z);
-  b.rotation.y = -0.35;
-  const fur = new THREE.MeshPhysicalMaterial({ color: 0x1B1613, roughness: 0.82, metalness: 0, sheen: 0.55, sheenColor: new THREE.Color(0x7A6A57), sheenRoughness: 0.7, envMapIntensity: 0.25 });
-  const belly = fur.clone(); belly.color.set(0x2A231C);
-  const membrane = new THREE.MeshPhysicalMaterial({ color: 0x120F0D, roughness: 0.6, metalness: 0, transmission: 0.08, thickness: 0.2, envMapIntensity: 0.3 });
-  const eyes = new THREE.MeshStandardMaterial({ color: 0x000000, emissive: new THREE.Color(0xE8B86D), emissiveIntensity: 1.6, roughness: 0.3 });
-  b.traverse(o => {
-    if (!o.isMesh) return;
-    o.castShadow = true; o.frustumCulled = false;
-    const n = (o.material && o.material.name) || "";
-    o.material = /Eyes/i.test(n) ? eyes : /Belly/i.test(n) ? belly : /Black/i.test(n) ? membrane : fur;
-  });
-  heroGroup.add(b);
-  mixer = new THREE.AnimationMixer(b);
-  const fly = bat.animations.find(a => /Flying/i.test(a.name)) || bat.animations[0];
-  flyAction = mixer.clipAction(fly); flyAction.play();
-  flyAction.timeScale = reduce ? 0 : 0.9;
-
-  // --- cave dressing ---
-  const wallSrc = rockFace.scene; wallSrc.traverse(o => { if (o.isMesh) { o.receiveShadow = true; o.material.envMapIntensity = 0.12; } });
-  const walls = [
-    { p: [-5.5, -1.2, -2.5], r: [0, 1.1, 0.1], s: 3.2 }, { p: [5.8, -0.8, -4.5], r: [0, -1.3, -0.15], s: 3.6 },
-    { p: [0.5, -1.4, -8.5], r: [0.2, 0.3, 0], s: 4.2 }, { p: [-3.5, 2.8, -6], r: [2.9, 0.4, 0.3], s: 3.0 },
-  ];
-  for (const w of walls) { const m = wallSrc.clone(); m.position.set(...w.p); m.rotation.set(...w.r); m.scale.setScalar(w.s); scene.add(m); }
+  const wallSrc = rockFace.scene; wallSrc.traverse(o => { if (o.isMesh) { o.material.envMapIntensity = 0.1; } });
+  const f = { p: new THREE.Vector3(), t: new THREE.Vector3(), s: new THREE.Vector3() };
+  // walls: a clone every ~4 units on each side, faced inward, plus a ceiling clone every other step
+  for (let i = 0; i < 18; i++) {
+    const u = (i + 0.5) / 18; frameAt(u, f);
+    for (const side of [-1, 1]) {
+      const m = wallSrc.clone(); m.position.copy(f.p).addScaledVector(f.s, side * (3.4 + Math.random() * 0.6)); m.position.y -= 1.2 + Math.random() * 0.6;
+      m.lookAt(f.p.x, m.position.y, f.p.z); m.rotateY(Math.PI); m.rotation.z = (Math.random() - 0.5) * 0.4; m.scale.setScalar(2.6 + Math.random() * 1.2); scene.add(m);
+    }
+    if (i % 2 === 0) { const m = wallSrc.clone(); m.position.copy(f.p); m.position.y += 3.6; m.rotation.set(Math.PI + (Math.random() - 0.5) * 0.3, Math.random() * 6.28, 0); m.scale.setScalar(3.2); scene.add(m); }
+  }
   let rockMesh = null; moonRock.scene.traverse(o => { if (o.isMesh && !rockMesh) rockMesh = o; });
   if (rockMesh) {
-    rockMesh.material.envMapIntensity = 0.12;
-    const rocks = new THREE.InstancedMesh(rockMesh.geometry, rockMesh.material, 14);
-    rocks.receiveShadow = true; rocks.castShadow = true;
+    rockMesh.material.envMapIntensity = 0.1;
+    const N = 44, rocks = new THREE.InstancedMesh(rockMesh.geometry, rockMesh.material, N);
     const M = new THREE.Matrix4(), Q = new THREE.Quaternion(), S = new THREE.Vector3(), T = new THREE.Vector3(), E = new THREE.Euler();
-    const spots = [[-1.9,-1.55,1.2,1.1],[1.4,-1.6,1.9,0.8],[3.1,-1.5,-0.6,1.4],[-3.4,-1.5,-1.1,1.6],[0.2,-1.6,-2.6,1.2],[-1.1,-1.62,-0.4,0.6],[2.2,-1.55,-3.4,1.9],[-2.6,-1.5,-3.9,1.3],[4.4,-1.5,2.4,1.0],[-4.2,-1.5,1.8,1.2],[1.0,-1.58,3.4,0.7],[-0.6,-1.6,2.8,0.5],[3.8,-1.5,-5.5,2.2],[-4.8,-1.45,-5.2,2.4]];
-    spots.forEach((sp, i) => { T.set(sp[0], sp[1], sp[2]); E.set(Math.random()*3, Math.random()*6, Math.random()*3); Q.setFromEuler(E); S.setScalar(sp[3]); M.compose(T, Q, S); rocks.setMatrixAt(i, M); });
+    for (let i = 0; i < N; i++) { const u = Math.random(); frameAt(u, f); const side = (Math.random() - 0.5) * 5.5;
+      T.copy(f.p).addScaledVector(f.s, side); T.y -= 1.55 + Math.random() * 0.1; E.set(Math.random()*3, Math.random()*6, Math.random()*3); Q.setFromEuler(E);
+      S.setScalar(0.35 + Math.random() * 1.4 * (Math.abs(side) / 2.8)); M.compose(T, Q, S); rocks.setMatrixAt(i, M); }
     scene.add(rocks);
   }
-  const floor = new THREE.Mesh(new THREE.CircleGeometry(30, 48), new THREE.MeshStandardMaterial({ color: 0x1F2327, roughness: 1, metalness: 0 }));
-  floor.rotation.x = -Math.PI / 2; floor.position.y = -1.62; floor.receiveShadow = true; scene.add(floor);
+  const floor = new THREE.Mesh(new THREE.PlaneGeometry(30, 60), new THREE.MeshStandardMaterial({ color: 0x1B1F23, roughness: 1 }));
+  floor.rotation.x = -Math.PI / 2; floor.position.set(0, -1.62, -14); scene.add(floor);
 
-  // --- the lamp: the visible light source, sat on a rock left of the bat ---
-  const L = lamp.scene; const lb = new THREE.Box3().setFromObject(L); const ls = new THREE.Vector3(); lb.getSize(ls);
-  L.scale.setScalar(0.9 / ls.y); lb.setFromObject(L); const lc = new THREE.Vector3(); lb.getCenter(lc);
-  L.position.set(-2.2 - lc.x, -1.55 - lb.min.y, 1.2 - lc.z);
-  L.traverse(o => { if (o.isMesh) { o.castShadow = true; if (/flame/i.test(o.material.name || "")) { o.material.emissive = new THREE.Color(0xE8B86D); o.material.emissiveIntensity = 3; } } });
-  scene.add(L);
-  flame.position.set(-2.2, -1.0, 1.2); key.position.set(-2.2, -0.6, 1.2);
-
-  canvas.classList.add("ready"); status.textContent = "Motion prototype v2 — direction G";
+  // lamps
+  const L0 = lamp.scene; const lb = new THREE.Box3().setFromObject(L0); const ls = new THREE.Vector3(); lb.getSize(ls); L0.scale.setScalar(0.75 / ls.y);
+  L0.traverse(o => { if (o.isMesh && /flame/i.test(o.material.name || "")) { o.material.emissive = new THREE.Color(0xE8B86D); o.material.emissiveIntensity = 4; } });
+  for (const u of lampsAt) {
+    frameAt(u, f); const L = L0.clone(); const side = u < 0.5 ? -1 : 1;
+    const base = f.p.clone().addScaledVector(f.s, side * 1.9); base.y = -1.55; L.position.copy(base); L.rotation.y = Math.random() * 6.28; lampsGroup.add(L);
+    const fl = new THREE.PointLight(0xE8B86D, 7, 9, 1.7); fl.position.copy(base).add(new THREE.Vector3(0, 0.55, 0)); scene.add(fl); flames.push(fl);
+    const key = new THREE.SpotLight(0xE8B86D, 40, 14, 0.7, 0.7, 1.5); key.position.copy(fl.position); key.target.position.copy(base).addScaledVector(f.s, -side * 2.5); key.target.position.y = -1; scene.add(key, key.target);
+    shaft(fl.position.clone().add(new THREE.Vector3(0, 3.2, 0)), base.clone().addScaledVector(f.s, -side * 1.2));
+  }
+  scene.add(new THREE.AmbientLight(0x9FB4C2, 0.04));
+  canvas.classList.add("ready"); status.textContent = "Motion prototype v3 — direction G";
   gsap.to(status, { opacity: 0, delay: 3, duration: 1 });
 }
 build().catch(err => { status.textContent = "Scene failed to load — " + err.message; console.error(err); });
 
-// ---------- far flock: atmosphere only, two draw calls ----------
-const N = 70;
-function wing(dir) { const g = new THREE.BufferGeometry(); g.setAttribute("position", new THREE.BufferAttribute(new Float32Array([0,0,-0.32, 0,0,0.30, dir,0,0.14, dir,0,0.14, dir*0.55,0,0.36, 0,0,0.30]), 3)); return g; }
-const batMat = new THREE.MeshBasicMaterial({ color: 0x0B0D0F, side: THREE.DoubleSide, fog: true });
-const wingL = new THREE.InstancedMesh(wing(-1), batMat, N), wingR = new THREE.InstancedMesh(wing(1), batMat, N);
-scene.add(wingL, wingR);
-const flockData = Array.from({ length: N }, () => ({ ox: (Math.random()-.5)*8, oy: (Math.random()-.5)*3, oz: (Math.random()-.5)*5, phase: Math.random()*6.28, freq: 7+Math.random()*5, drift: Math.random()*6.28, scale: 0.07+Math.random()*0.08 }));
-const flock = { x: 5, y: 3.4, z: -6, spread: 1 };
-const M = new THREE.Matrix4(), Q = new THREE.Quaternion(), S = new THREE.Vector3(), T = new THREE.Vector3(), E = new THREE.Euler();
-function updateFlock(t) {
-  for (let i = 0; i < N; i++) { const b = flockData[i], w = Math.sin(t*0.6+b.drift);
-    T.set(flock.x + (b.ox + w*0.6)*flock.spread, flock.y + (b.oy + Math.cos(t*0.5+b.drift)*0.4)*flock.spread, flock.z + b.oz*flock.spread);
-    const flap = reduce ? 0.35 : Math.sin(t*b.freq+b.phase)*0.85, yaw = Math.atan2(flock.x-T.x, 6) + w*0.3; S.setScalar(b.scale);
-    E.set(0,yaw,flap,"YXZ"); Q.setFromEuler(E); M.compose(T,Q,S); wingL.setMatrixAt(i,M);
-    E.set(0,yaw,-flap,"YXZ"); Q.setFromEuler(E); M.compose(T,Q,S); wingR.setMatrixAt(i,M); }
-  wingL.instanceMatrix.needsUpdate = true; wingR.instanceMatrix.needsUpdate = true;
-}
-
-// ---------- echo rings from the bat's call ----------
-const rings = [0,1,2].map(i => { const r = new THREE.Mesh(new THREE.RingGeometry(0.985, 1, 128), new THREE.MeshBasicMaterial({ color: 0xE6E1D6, transparent: true, opacity: 0, side: THREE.DoubleSide, depthWrite: false })); r.userData.k = i/3; scene.add(r); return r; });
-const echo = { gain: 0.18 };
-function updateRings(t) {
-  for (const r of rings) { const u = ((t/3.2) + r.userData.k) % 1;
-    r.position.copy(echoOrigin); r.quaternion.copy(camera.quaternion);
-    r.scale.setScalar(0.15 + u*5); r.material.opacity = (1-u)*(1-u)*echo.gain*(reduce?0.5:1); }
-}
-
 // ---------- scroll choreography (inertial) ----------
-if (!reduce) ScrollSmoother.create({ smooth: 1.2, effects: false, smoothTouch: 0.1 });
-const scrub = reduce ? false : 1;
-const tl = gsap.timeline({ scrollTrigger: { trigger: "#smooth-content", start: "top top", end: "bottom bottom", scrub } });
-tl.to(rig, { theta: 0.45, phi: 1.42, radius: 3.6, ox: 0.1, ease: "none", duration: 1 })                 // hero -> echo: swing round to the bat's flank
-  .to(rig, { theta: 1.35, phi: 1.55, radius: 4.8, ty: 0.1, ox: -0.4, ease: "none", duration: 1 })      // echo -> case: drop toward the lamp and rocks
-  .to(rig, { theta: 2.1, phi: 1.25, radius: 7.5, ty: 0.4, ease: "none", duration: 1 });                // case -> close: pull back into the fog
-const sweep = (from, to) => { if (reduce) return; gsap.timeline().to(flock, { x: from, spread: 1.5, duration: 0.01 }).to(flock, { x: to, duration: 1.6, ease: "power2.inOut" }).to(flock, { spread: 1, duration: 0.8 }, "-=0.5"); };
-ScrollTrigger.create({ trigger: "#echo", start: "top 60%", onEnter: () => { echo.gain = 0.75; sweep(7, -8); if (flyAction) flyAction.timeScale = 1.2; }, onLeaveBack: () => { echo.gain = 0.18; sweep(-8, 6); if (flyAction) flyAction.timeScale = 0.9; } });
-ScrollTrigger.create({ trigger: "#case", start: "top 60%", onEnter: () => { echo.gain = 0.1; sweep(-8, 8); if (flyAction) flyAction.timeScale = 0.6; }, onLeaveBack: () => { echo.gain = 0.75; sweep(8, -8); if (flyAction) flyAction.timeScale = 1.2; } });
+if (!reduce) ScrollSmoother.create({ smooth: 1.3, effects: false, smoothTouch: 0.1 });
+gsap.to(cam, { u: 0.92, ease: "none", scrollTrigger: { trigger: "#smooth-content", start: "top top", end: "bottom bottom", scrub: reduce ? false : 1.2 } });
+ScrollTrigger.create({ trigger: "#echo", start: "top 60%", onEnter: () => { echo.gain = 0.9; sig.gain = 1.6; }, onLeaveBack: () => { echo.gain = 0.12; sig.gain = 1; } });
+ScrollTrigger.create({ trigger: "#case", start: "top 60%", onEnter: () => { echo.gain = 0.15; sig.gain = 0.7; }, onLeaveBack: () => { echo.gain = 0.9; sig.gain = 1.6; } });
+ScrollTrigger.create({ trigger: "#close", start: "top 60%", onEnter: () => { sig.gain = 0.25; }, onLeaveBack: () => { sig.gain = 0.7; } });
 const strokes = document.querySelectorAll("#etchLines .l, #etchLines .r");
 strokes.forEach(el => { const L = el.getTotalLength ? el.getTotalLength() : 400; el.style.strokeDasharray = L; el.style.strokeDashoffset = L; });
 gsap.to(strokes, { strokeDashoffset: 0, duration: 1.6, stagger: 0.12, ease: "power2.out", scrollTrigger: { trigger: "#case", start: "top 55%", toggleActions: "play none none reverse" } });
@@ -300,14 +320,13 @@ const timer = new THREE.Timer();
 let t = 0;
 renderer.setAnimationLoop((ts) => {
   timer.update(ts);
-  const dt = timer.getDelta();
-  if (!paused) { t += dt; if (mixer) mixer.update(dt); }
+  if (!paused) t += timer.getDelta();
   placeCamera(t);
-  if (!reduce && !paused) flame.intensity = 6 + Math.sin(t * 9.1) * 0.5 + Math.sin(t * 23.7) * 0.25;
-  updateFlock(t); updateRings(t);
-  renderer.render(scene, camera);
+  if (!reduce && !paused) flames.forEach((fl, i) => { fl.intensity = 7 + Math.sin(t * 9.1 + i) * 0.6 + Math.sin(t * 23.7 + i * 2) * 0.3; });
+  updateWorms(t); updateSignal(t); updateRings(t);
+  composer.render();
 });
-addEventListener("resize", () => { camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix(); renderer.setSize(innerWidth, innerHeight); });
+addEventListener("resize", () => { camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix(); renderer.setSize(innerWidth, innerHeight); composer.setSize(innerWidth, innerHeight); bloom.resolution.set(innerWidth / 2, innerHeight / 2); });
 
 const btn = document.getElementById("pause");
 btn.addEventListener("click", () => {
