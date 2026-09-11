@@ -1,62 +1,80 @@
-<title>Echo Lair</title>
+<title>The Instrument</title>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;900&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
 <style>
   :root{
-    --cave:#15181B; --rock:#3A3F45; --bone:#E6E1D6; --bone-dim:rgba(230,225,214,.62);
-    --lamp:#E8B86D; --glow:#8FF7E0;
+    --mat:#2E343B; --grid:#3A4149; --bone:#EDE8DF; --bone-dim:rgba(237,232,223,.64);
+    --amber:#E8B86D; --paper:#C9A57A;
     --display:"Big Shoulders Display","Impact","Arial Narrow",sans-serif;
     --body:"Atkinson Hyperlegible","Helvetica Neue",Arial,sans-serif;
   }
-  html,body{margin:0;background:var(--cave);color:var(--bone);font-family:var(--body);font-size:17px;line-height:1.55}
+  html,body{margin:0;background:var(--mat);color:var(--bone);font-family:var(--body);font-size:17px;line-height:1.55}
   body{overflow-x:hidden}
-  #stage{position:fixed;inset:0;z-index:0;display:block;opacity:0;transition:opacity 1.8s ease}
-  #stage.ready{opacity:1}
-  .veil{position:fixed;inset:0;z-index:1;pointer-events:none;background:radial-gradient(120% 85% at 50% 50%,transparent 0%,rgba(21,24,27,.2)55%,rgba(21,24,27,.82) 100%)}
+  #stage{position:fixed;inset:0;z-index:0;display:block}
+  #draw{position:fixed;inset:0;z-index:1;pointer-events:none;width:100%;height:100%}
+  #draw text{font-family:var(--body);font-size:13px;fill:var(--bone)}
+  #draw .d{stroke:var(--amber);stroke-width:1;fill:none;stroke-linecap:round}
+  #draw .c{stroke:var(--bone);stroke-width:.8;fill:none;opacity:.55}
+  #draw .m{font-family:var(--display);font-weight:900;font-size:44px;fill:var(--amber)}
+  #draw g{opacity:0}
   nav{position:fixed;top:0;left:0;right:0;z-index:5;display:flex;align-items:center;justify-content:space-between;padding:22px 40px;font-size:15px}
   nav .name{font-weight:700}
   nav ul{display:flex;gap:28px;list-style:none;margin:0;padding:0;align-items:center}
   nav a{color:var(--bone);text-decoration:none;opacity:.85}
   nav a:hover,nav a:focus-visible{opacity:1;outline:none;text-decoration:underline;text-underline-offset:4px}
   #pause{width:34px;height:34px;border-radius:50%;border:1.5px solid var(--bone-dim);background:transparent;color:var(--bone);cursor:pointer;display:grid;place-items:center;padding:0}
-  #pause:focus-visible{outline:2px solid var(--lamp);outline-offset:3px}
+  #pause:focus-visible{outline:2px solid var(--amber);outline-offset:3px}
   #pause svg{width:12px;height:12px;fill:currentColor}
   #smooth-wrapper{position:relative;z-index:2}
   section{min-height:100vh;display:flex;align-items:center;padding:0 40px;box-sizing:border-box}
   .col{max-width:600px}
   h1,h2{font-family:var(--display);font-weight:900;line-height:.9;margin:0 0 22px;text-wrap:balance}
-  h1{font-size:clamp(60px,9.5vw,140px)}
+  h1{font-size:clamp(64px,10.5vw,156px)}
   h2{font-size:clamp(44px,6.5vw,96px)}
-  p{max-width:56ch;margin:0 0 14px;color:var(--bone-dim)}
+  p{max-width:54ch;margin:0 0 14px;color:var(--bone-dim)}
   p strong{color:var(--bone);font-weight:700}
-  .metrics{display:grid;grid-template-columns:repeat(3,auto);gap:44px;margin-top:36px}
-  .metric{display:flex;flex-direction:column;gap:4px}
-  .metric b{font-family:var(--display);font-weight:900;font-size:clamp(40px,5vw,72px);line-height:1;color:var(--lamp);font-variant-numeric:tabular-nums}
-  .metric span{font-size:15px;color:var(--bone-dim);max-width:16ch}
+  #echo .col{max-width:520px}
   #case .case-wrap{display:grid;grid-template-columns:minmax(280px,440px) 1fr;gap:56px;align-items:end;width:100%;max-width:1200px}
   .lead{display:flex;align-items:baseline;gap:18px;margin-bottom:26px}
-  .lead b{font-family:var(--display);font-weight:900;font-size:clamp(72px,10vw,150px);line-height:.85;color:var(--lamp)}
+  .lead b{font-family:var(--display);font-weight:900;font-size:clamp(72px,10vw,150px);line-height:.85;color:var(--amber)}
   .lead span{max-width:16ch;color:var(--bone-dim);font-size:16px}
   .org{color:var(--bone-dim);font-size:15px;margin-bottom:14px}
   .stack{color:var(--bone-dim);font-size:14px;margin-top:20px}
   .etch{width:100%;max-width:720px;overflow:visible;align-self:end}
   .etch text{font-family:var(--body);font-size:13px;fill:var(--bone)}
-  .etch .l{stroke:var(--glow);stroke-width:1.2;fill:none;stroke-linecap:round;filter:drop-shadow(0 0 4px rgba(143,247,224,.7))}
-  .etch .n{fill:var(--cave);stroke:var(--bone);stroke-width:1.2}
-  .etch .r{stroke:var(--glow);stroke-width:1;fill:none;opacity:.6}
+  .etch .l{stroke:var(--amber);stroke-width:1.1;fill:none;stroke-linecap:round}
+  .etch .n{fill:var(--mat);stroke:var(--bone);stroke-width:1}
+  .etch .r{stroke:var(--amber);stroke-width:.9;fill:none;opacity:.6}
   .foot{position:fixed;bottom:18px;left:40px;right:40px;z-index:5;display:flex;justify-content:space-between;font-size:13px;color:var(--bone-dim)}
-  #status{transition:opacity .6s}
   @media (max-width:760px){
     nav{padding:18px 20px} section{padding:0 20px;align-items:flex-end;padding-bottom:12vh}
     #case .case-wrap{grid-template-columns:1fr;gap:28px}
-    .metrics{grid-template-columns:1fr;gap:18px}
     .foot{left:20px;right:20px}
+    #draw{display:none}
   }
-  @media (prefers-reduced-motion:reduce){ .etch .l,.etch .r{stroke-dasharray:none!important;stroke-dashoffset:0!important} #stage{transition:none} }
+  @media (prefers-reduced-motion:reduce){ .etch .l,.etch .r,#draw .d,#draw .c{stroke-dasharray:none!important;stroke-dashoffset:0!important} #draw g{opacity:1} }
 </style>
 
 <canvas id="stage" aria-hidden="true"></canvas>
-<div class="veil"></div>
+
+<!-- engineering-drawing overlay: callouts for the object, metrics as dimension lines -->
+<svg id="draw" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+  <g id="dHero">
+    <line class="c" x1="960" y1="450" x2="1240" y2="450"/><line class="c" x1="1100" y1="310" x2="1100" y2="590"/>
+    <circle class="c" cx="1100" cy="450" r="150"/><circle class="c" cx="1100" cy="450" r="42"/>
+    <line class="d" x1="1140" y1="415" x2="1290" y2="300"/><line class="d" x1="1290" y1="300" x2="1400" y2="300"/><text x="1296" y="292">Paper cone</text>
+    <line class="d" x1="1218" y1="516" x2="1300" y2="600"/><line class="d" x1="1300" y1="600" x2="1400" y2="600"/><text x="1306" y="592">Rubber surround</text>
+    <line class="d" x1="1100" y1="408" x2="1100" y2="230"/><line class="d" x1="1100" y1="230" x2="1200" y2="230"/><text x="1206" y="222">Dust cap</text>
+  </g>
+  <g id="dEcho">
+    <line class="d" x1="940" y1="380" x2="1260" y2="380"/><line class="d" x1="940" y1="368" x2="940" y2="392"/><line class="d" x1="1260" y1="368" x2="1260" y2="392"/>
+    <text class="m" x="1100" y="362" text-anchor="middle">1.24 s</text><text x="1100" y="404" text-anchor="middle">to first spoken response, English</text>
+    <line class="d" x1="940" y1="520" x2="1260" y2="520"/><line class="d" x1="940" y1="508" x2="940" y2="532"/><line class="d" x1="1260" y1="508" x2="1260" y2="532"/>
+    <text class="m" x="1100" y="502" text-anchor="middle">10%</text><text x="1100" y="544" text-anchor="middle">of inbound calls handled with no human on the line</text>
+    <line class="d" x1="940" y1="660" x2="1260" y2="660"/><line class="d" x1="940" y1="648" x2="940" y2="672"/><line class="d" x1="1260" y1="648" x2="1260" y2="672"/>
+    <text class="m" x="1100" y="642" text-anchor="middle">20 hrs</text><text x="1100" y="684" text-anchor="middle">saved every week by automation workflows</text>
+  </g>
+</svg>
 
 <nav aria-label="Primary">
   <span class="name">Jamil Raza</span>
@@ -79,12 +97,7 @@
   <section id="echo">
     <div class="col">
       <h2>Sound out. Answer back.</h2>
-      <p>A sonar call goes into the dark and the echo comes back carrying the shape of the room. The systems I ship work the same way: a question goes out, the right answer returns.</p>
-      <div class="metrics" aria-label="Outcomes">
-        <div class="metric"><b>20 hrs</b><span>saved every week by automation workflows</span></div>
-        <div class="metric"><b>10%</b><span>of inbound calls handled with no human on the line</span></div>
-        <div class="metric"><b>1.24 s</b><span>to first spoken response, English</span></div>
-      </div>
+      <p>A driver pushes a signal into the room and the room answers. The systems I ship work the same way: a question goes out, the right answer comes back &mdash; measured, not promised.</p>
     </div>
   </section>
 
@@ -122,7 +135,7 @@
   </section>
 </div></div>
 
-<div class="foot"><span id="status">Loading the cave&hellip;</span><span>Karachi, Pakistan</span></div>
+<div class="foot"><span>Motion prototype v4 &mdash; direction I</span><span>Karachi, Pakistan</span></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.15.0/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.15.0/ScrollTrigger.min.js"></script>
@@ -135,185 +148,103 @@
 </script>
 <script type="module">
 import * as THREE from "three";
-import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
-import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js";
-import { RenderPass } from "three/addons/postprocessing/RenderPass.js";
-import { UnrealBloomPass } from "three/addons/postprocessing/UnrealBloomPass.js";
-import { OutputPass } from "three/addons/postprocessing/OutputPass.js";
 
 gsap.registerPlugin(ScrollTrigger, ScrollSmoother);
 const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
 let paused = false;
-const status = document.getElementById("status");
-const GLOW = new THREE.Color(0x8FF7E0), LAMP = new THREE.Color(0xE8B86D);
 
-// ---------- renderer / composer ----------
+// ---------- renderer / scene ----------
 const canvas = document.getElementById("stage");
-const renderer = new THREE.WebGLRenderer({ canvas, antialias: false, powerPreference: "high-performance" });
-renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: "high-performance" });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
 renderer.setSize(innerWidth, innerHeight);
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure = 0.95;
+renderer.toneMappingExposure = 1.0;
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFShadowMap;
 
 const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x0E1013);
-scene.fog = new THREE.FogExp2(0x0E1013, 0.085);
-const camera = new THREE.PerspectiveCamera(50, innerWidth / innerHeight, 0.1, 70);
-
-const composer = new EffectComposer(renderer);
-composer.addPass(new RenderPass(scene, camera));
-const bloom = new UnrealBloomPass(new THREE.Vector2(innerWidth / 2, innerHeight / 2), 0.85, 0.55, 0.72);
-composer.addPass(bloom);
-composer.addPass(new OutputPass());
-
+scene.background = new THREE.Color(0x2E343B);
+const camera = new THREE.PerspectiveCamera(38, innerWidth / innerHeight, 0.1, 60);
 const pmrem = new THREE.PMREMGenerator(renderer);
 scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
 pmrem.dispose();
 
-// ---------- the path through the cave ----------
-const curve = new THREE.CatmullRomCurve3([
-  new THREE.Vector3(0, 0.4, 6), new THREE.Vector3(0.8, 0.3, 0), new THREE.Vector3(-1.2, 0.1, -7),
-  new THREE.Vector3(1.8, -0.2, -14), new THREE.Vector3(-0.6, -0.3, -21), new THREE.Vector3(1.0, 0.2, -28), new THREE.Vector3(0, 0.6, -34),
-], false, "catmullrom", 0.6);
-const cam = { u: 0 };
-const P = new THREE.Vector3(), A = new THREE.Vector3(), TAN = new THREE.Vector3(), SIDE = new THREE.Vector3(), UP = new THREE.Vector3(0, 1, 0);
-function frameAt(u, out) { curve.getPointAt(u, out.p); curve.getTangentAt(u, out.t); out.s.crossVectors(out.t, UP).normalize(); return out; }
-const F = { p: new THREE.Vector3(), t: new THREE.Vector3(), s: new THREE.Vector3() };
+// orbit rig: the object stays put; the camera moves around and into it
+const rig = { radius: 6.2, theta: -0.55, phi: 0.98, tx: 1.1, ty: 0, tz: 0 };
 function placeCamera(t) {
-  frameAt(cam.u, F);
-  camera.position.copy(F.p).addScaledVector(F.s, Math.sin(t * 0.21) * 0.08).add(new THREE.Vector3(0, 0.9 + Math.sin(t * 0.33) * 0.03, 0));
-  curve.getPointAt(Math.min(cam.u + 0.05, 1), A); A.y += 0.6;
-  camera.lookAt(A);
-  camera.rotateZ(Math.sin(t * 0.17) * 0.012); // a breath of roll — cinematic, not seasick
+  const th = rig.theta + Math.sin(t * 0.16) * 0.02, ph = rig.phi + Math.sin(t * 0.21) * 0.01;
+  camera.position.set(rig.tx + rig.radius * Math.sin(ph) * Math.sin(th), rig.ty + rig.radius * Math.cos(ph), rig.tz + rig.radius * Math.sin(ph) * Math.cos(th));
+  camera.lookAt(rig.tx, rig.ty, rig.tz);
 }
 
-// ---------- warm light: oil lamps along the path ----------
-const lampsAt = [0.1, 0.62, 0.88];
-const lampsGroup = new THREE.Group(); scene.add(lampsGroup);
-const flames = [];
-function shaft(from, to) {
-  const h = from.distanceTo(to);
-  const cone = new THREE.Mesh(new THREE.ConeGeometry(h * 0.5, h, 24, 1, true),
-    new THREE.MeshBasicMaterial({ color: 0xE8B86D, transparent: true, opacity: 0.035, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide, fog: false }));
-  cone.position.copy(from).lerp(to, 0.5); cone.lookAt(to); cone.rotateX(-Math.PI / 2); scene.add(cone);
+// ---------- the drafting mat: slate with a millimetre grid ----------
+function gridTexture() {
+  const c = document.createElement("canvas"); c.width = c.height = 1024; const g = c.getContext("2d");
+  g.fillStyle = "#2E343B"; g.fillRect(0, 0, 1024, 1024);
+  g.strokeStyle = "#39404A"; g.lineWidth = 1;
+  for (let i = 0; i <= 1024; i += 16) { g.beginPath(); g.moveTo(i + .5, 0); g.lineTo(i + .5, 1024); g.stroke(); g.beginPath(); g.moveTo(0, i + .5); g.lineTo(1024, i + .5); g.stroke(); }
+  g.strokeStyle = "#48505A"; for (let i = 0; i <= 1024; i += 160) { g.beginPath(); g.moveTo(i + .5, 0); g.lineTo(i + .5, 1024); g.stroke(); g.beginPath(); g.moveTo(0, i + .5); g.lineTo(1024, i + .5); g.stroke(); }
+  const tex = new THREE.CanvasTexture(c); tex.colorSpace = THREE.SRGBColorSpace; tex.wrapS = tex.wrapT = THREE.RepeatWrapping; tex.repeat.set(8, 8); tex.anisotropy = 8; return tex;
 }
+const mat = new THREE.Mesh(new THREE.PlaneGeometry(60, 60), new THREE.MeshStandardMaterial({ map: gridTexture(), roughness: 0.92, metalness: 0, envMapIntensity: 0.15 }));
+mat.rotation.x = -Math.PI / 2; mat.position.y = -1.5; mat.receiveShadow = true; scene.add(mat);
 
-// ---------- cold light: glow-worm ceiling ----------
-function spriteTexture() {
-  const c = document.createElement("canvas"); c.width = c.height = 64; const g = c.getContext("2d");
-  const r = g.createRadialGradient(32, 32, 0, 32, 32, 32); r.addColorStop(0, "rgba(255,255,255,1)"); r.addColorStop(0.25, "rgba(255,255,255,.55)"); r.addColorStop(1, "rgba(255,255,255,0)");
-  g.fillStyle = r; g.fillRect(0, 0, 64, 64); const tex = new THREE.CanvasTexture(c); tex.colorSpace = THREE.SRGBColorSpace; return tex;
-}
-const WORMS = 900;
-const wormGeo = new THREE.BufferGeometry();
-const wormPos = new Float32Array(WORMS * 3), wormCol = new Float32Array(WORMS * 3), wormPhase = new Float32Array(WORMS);
-{
-  const f = { p: new THREE.Vector3(), t: new THREE.Vector3(), s: new THREE.Vector3() };
-  for (let i = 0; i < WORMS; i++) {
-    const u = Math.random(); frameAt(u, f);
-    const side = (Math.random() - 0.5) * 5.2, up = 2.3 + Math.random() * 1.4 - Math.abs(side) * 0.25;
-    wormPos[i*3] = f.p.x + f.s.x * side; wormPos[i*3+1] = f.p.y + up; wormPos[i*3+2] = f.p.z + f.s.z * side;
-    wormPhase[i] = Math.random() * 6.28;
-  }
-}
-wormGeo.setAttribute("position", new THREE.BufferAttribute(wormPos, 3));
-wormGeo.setAttribute("color", new THREE.BufferAttribute(wormCol, 3));
-const worms = new THREE.Points(wormGeo, new THREE.PointsMaterial({ size: 0.09, map: spriteTexture(), vertexColors: true, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, sizeAttenuation: true }));
-scene.add(worms);
-function updateWorms(t) {
-  for (let i = 0; i < WORMS; i++) {
-    const k = reduce ? 0.7 : 0.45 + 0.55 * Math.max(0, Math.sin(t * 0.7 + wormPhase[i])) ** 3;
-    const b = 1.6 * k; // >1 so bloom picks them up
-    wormCol[i*3] = GLOW.r * b; wormCol[i*3+1] = GLOW.g * b; wormCol[i*3+2] = GLOW.b * b;
-  }
-  wormGeo.attributes.color.needsUpdate = true;
-}
+// ---------- the object: a speaker driver, built from profiles ----------
+const paper = new THREE.MeshPhysicalMaterial({ color: 0xC9A57A, roughness: 0.94, metalness: 0, sheen: 0.35, sheenColor: new THREE.Color(0xEBD9B8), sheenRoughness: 0.9, envMapIntensity: 0.35, side: THREE.DoubleSide });
+const rubber = new THREE.MeshPhysicalMaterial({ color: 0x17181A, roughness: 0.55, metalness: 0, clearcoat: 0.18, clearcoatRoughness: 0.5, envMapIntensity: 0.6 });
+const metal = new THREE.MeshPhysicalMaterial({ color: 0xB9BDC2, roughness: 0.34, metalness: 0.96, anisotropy: 0.55, envMapIntensity: 1.0 });
+const magnetMat = new THREE.MeshPhysicalMaterial({ color: 0x3A3F45, roughness: 0.48, metalness: 0.85, envMapIntensity: 0.7 });
 
-// ---------- the signal: a pulse running down the tunnel, with a fading trail ----------
-const trailMat = new THREE.ShaderMaterial({
-  transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, fog: false,
-  uniforms: { uHead: { value: 0 }, uColor: { value: GLOW.clone() }, uGain: { value: 1 } },
-  vertexShader: `varying float vU; void main(){ vU = uv.x; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }`,
-  fragmentShader: `uniform float uHead; uniform vec3 uColor; uniform float uGain; varying float vU;
-    void main(){ float d = uHead - vU; float a = d > 0.0 ? exp(-d * 28.0) : exp(d * 400.0); a *= uGain; gl_FragColor = vec4(uColor * 2.4 * a, a * 0.9); }`,
-});
-const trail = new THREE.Mesh(new THREE.TubeGeometry(curve, 400, 0.05, 8, false), trailMat); scene.add(trail);
-const pulse = new THREE.Mesh(new THREE.SphereGeometry(0.11, 16, 16), new THREE.MeshBasicMaterial({ color: GLOW.clone().multiplyScalar(3), fog: false })); scene.add(pulse);
-const pulseLight = new THREE.PointLight(0x8FF7E0, 4, 7, 1.8); scene.add(pulseLight);
-const sig = { speed: 0.055, gain: 1 };
+const driver = new THREE.Group(); driver.position.set(1.1, 0, 0); scene.add(driver);
+const moving = new THREE.Group(); driver.add(moving); // cone + dust cap: this part breathes
+const lathe = (pts, m) => { const g = new THREE.Mesh(new THREE.LatheGeometry(pts.map(p => new THREE.Vector2(p[0], p[1])), 128), m); g.castShadow = true; g.receiveShadow = true; return g; };
+moving.add(lathe([[0.42, 0.34], [0.52, 0.30], [0.9, 0.19], [1.3, 0.085], [1.56, 0.015], [1.62, 0.0]], paper));
+{ const pts = []; for (let i = 0; i <= 10; i++) { const a = (i / 10) * 1.22; pts.push([0.42 * Math.sin(a), 0.34 + 0.42 * (Math.cos(a) - Math.cos(1.22))]); } moving.add(lathe(pts.reverse(), paper)); }
+const surround = new THREE.Mesh(new THREE.TorusGeometry(1.7, 0.115, 24, 128), rubber); surround.rotation.x = Math.PI / 2; surround.position.y = -0.02; surround.castShadow = true; driver.add(surround);
+const flange = new THREE.Mesh(new THREE.RingGeometry(1.62, 2.05, 128), metal); flange.rotation.x = -Math.PI / 2; flange.position.y = -0.12; flange.receiveShadow = true; driver.add(flange);
+const lip = new THREE.Mesh(new THREE.TorusGeometry(2.03, 0.05, 12, 128), metal); lip.rotation.x = Math.PI / 2; lip.position.y = -0.12; driver.add(lip);
+for (let i = 0; i < 8; i++) { const a = i / 8 * Math.PI * 2; const b = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, 0.05, 6), magnetMat); b.position.set(Math.cos(a) * 1.9, -0.095, Math.sin(a) * 1.9); b.rotation.y = a; driver.add(b); }
+for (let i = 0; i < 6; i++) { const a = i / 6 * Math.PI * 2 + 0.3; const s = new THREE.Mesh(new THREE.CylinderGeometry(0.045, 0.045, 1.0, 10), metal); s.position.set(Math.cos(a) * 1.2, -0.62, Math.sin(a) * 1.2); s.castShadow = true; driver.add(s); }
+const back = new THREE.Mesh(new THREE.CylinderGeometry(0.95, 0.95, 0.08, 64), metal); back.position.y = -1.08; driver.add(back);
+const magnet = new THREE.Mesh(new THREE.CylinderGeometry(0.72, 0.72, 0.42, 64), magnetMat); magnet.position.y = -1.29; magnet.castShadow = true; driver.add(magnet);
+driver.rotation.y = 0.4;
+
+// ---------- studio lighting: key, fill, rim ----------
+const key = new THREE.SpotLight(0xFFF1DC, 90, 30, 0.6, 0.55, 1.6); key.position.set(-4, 7, 4); key.target = driver;
+key.castShadow = true; key.shadow.mapSize.set(2048, 2048); key.shadow.bias = -0.0004; key.shadow.radius = 6; scene.add(key);
+const fill = new THREE.SpotLight(0xD8E2EE, 26, 30, 0.9, 0.8, 1.6); fill.position.set(6, 4, 3); fill.target = driver; scene.add(fill);
+const rim = new THREE.SpotLight(0xE8B86D, 30, 30, 0.5, 0.7, 1.6); rim.position.set(2, 5, -6); rim.target = driver; scene.add(rim);
+scene.add(new THREE.AmbientLight(0xBFC6CE, 0.08));
+
+// ---------- the signal: measured rings, thin lines, no glow ----------
+const ringGeo = new THREE.BufferGeometry().setFromPoints(new THREE.EllipseCurve(0, 0, 1, 1, 0, Math.PI * 2, false, 0).getPoints(160));
+const rings = [0, 1, 2].map(i => { const r = new THREE.LineLoop(ringGeo, new THREE.LineBasicMaterial({ color: 0xE8B86D, transparent: true, opacity: 0 })); r.rotation.x = -Math.PI / 2; r.position.set(1.1, 0.36, 0); r.userData.k = i / 3; scene.add(r); return r; });
+const sig = { gain: 0.35, excursion: 0.6 };
 function updateSignal(t) {
-  const head = reduce ? Math.min(cam.u + 0.12, 0.98) : (cam.u + 0.06 + (t * sig.speed) % 0.3) % 1;
-  trailMat.uniforms.uHead.value = head; trailMat.uniforms.uGain.value = sig.gain;
-  curve.getPointAt(head, P); P.y += 0.35; pulse.position.copy(P); pulseLight.position.copy(P);
-  pulse.visible = pulseLight.visible = sig.gain > 0.05;
+  const beat = Math.sin(t * 2 * Math.PI * 1.1) * 0.5 + Math.sin(t * 2 * Math.PI * 2.7) * 0.25;
+  moving.position.y = reduce ? 0 : beat * 0.018 * sig.excursion;
+  for (const r of rings) { const k = ((t / 2.6) + r.userData.k) % 1;
+    r.scale.setScalar(0.45 + k * 4.2); r.material.opacity = (1 - k) * (1 - k) * sig.gain * (reduce ? 0.6 : 1); }
 }
-
-// ---------- sonar rings: cold light answering back ----------
-const rings = [0, 1, 2].map(i => { const r = new THREE.Mesh(new THREE.RingGeometry(0.985, 1, 128), new THREE.MeshBasicMaterial({ color: GLOW.clone().multiplyScalar(2.2), transparent: true, opacity: 0, side: THREE.DoubleSide, depthWrite: false, fog: false })); r.userData.k = i / 3; scene.add(r); return r; });
-const echo = { gain: 0.12, u: 0.42 };
-function updateRings(t) {
-  curve.getPointAt(echo.u, P); P.y += 0.9;
-  for (const r of rings) { const k = ((t / 3.4) + r.userData.k) % 1;
-    r.position.copy(P); r.quaternion.copy(camera.quaternion);
-    r.scale.setScalar(0.2 + k * 6); r.material.opacity = (1 - k) * (1 - k) * echo.gain * (reduce ? 0.6 : 1); }
-}
-
-// ---------- rock ----------
-const gltf = new GLTFLoader(new THREE.LoadingManager(undefined, (url, n, total) => { status.textContent = `Loading the cave… ${Math.round(n / total * 100)}%`; }));
-async function build() {
-  const [rockFace, moonRock, lamp] = await Promise.all([
-    gltf.loadAsync("web/rock_face_01.gltf"), gltf.loadAsync("web/moon_rock_01.gltf"), gltf.loadAsync("web/vintage_oil_lamp.gltf"),
-  ]);
-  const wallSrc = rockFace.scene; wallSrc.traverse(o => { if (o.isMesh) { o.material.envMapIntensity = 0.1; } });
-  // normalise the scan to a known size so clones never intrude on the path
-  const wb = new THREE.Box3().setFromObject(wallSrc), ws = new THREE.Vector3(); wb.getSize(ws);
-  const wallUnit = 5.0 / Math.max(ws.x, ws.y, ws.z);
-  const f = { p: new THREE.Vector3(), t: new THREE.Vector3(), s: new THREE.Vector3() };
-  // walls: a clone every ~2.5 units on each side, faced inward, plus a ceiling clone every other step
-  for (let i = 0; i < 18; i++) {
-    const u = (i + 0.5) / 18; frameAt(u, f);
-    for (const side of [-1, 1]) {
-      const m = wallSrc.clone(); m.position.copy(f.p).addScaledVector(f.s, side * (4.6 + Math.random() * 0.8)); m.position.y -= 1.0 + Math.random() * 0.8;
-      m.lookAt(f.p.x, m.position.y, f.p.z); m.rotateY(Math.PI); m.rotation.z = (Math.random() - 0.5) * 0.5; m.scale.setScalar(wallUnit * (0.9 + Math.random() * 0.4)); scene.add(m);
-    }
-    if (i % 2 === 0) { const m = wallSrc.clone(); m.position.copy(f.p); m.position.y += 4.8; m.rotation.set(Math.PI + (Math.random() - 0.5) * 0.3, Math.random() * 6.28, 0); m.scale.setScalar(wallUnit * 1.2); scene.add(m); }
-  }
-  let rockMesh = null; moonRock.scene.traverse(o => { if (o.isMesh && !rockMesh) rockMesh = o; });
-  if (rockMesh) {
-    rockMesh.material.envMapIntensity = 0.1;
-    const N = 44, rocks = new THREE.InstancedMesh(rockMesh.geometry, rockMesh.material, N);
-    const M = new THREE.Matrix4(), Q = new THREE.Quaternion(), S = new THREE.Vector3(), T = new THREE.Vector3(), E = new THREE.Euler();
-    for (let i = 0; i < N; i++) { const u = Math.random(); frameAt(u, f); const side = (Math.random() - 0.5) * 5.5;
-      T.copy(f.p).addScaledVector(f.s, side); T.y -= 1.55 + Math.random() * 0.1; E.set(Math.random()*3, Math.random()*6, Math.random()*3); Q.setFromEuler(E);
-      S.setScalar(0.35 + Math.random() * 1.4 * (Math.abs(side) / 2.8)); M.compose(T, Q, S); rocks.setMatrixAt(i, M); }
-    scene.add(rocks);
-  }
-  const floor = new THREE.Mesh(new THREE.PlaneGeometry(30, 60), new THREE.MeshStandardMaterial({ color: 0x1B1F23, roughness: 1 }));
-  floor.rotation.x = -Math.PI / 2; floor.position.set(0, -1.62, -14); scene.add(floor);
-
-  // lamps
-  const L0 = lamp.scene; const lb = new THREE.Box3().setFromObject(L0); const ls = new THREE.Vector3(); lb.getSize(ls); L0.scale.setScalar(0.75 / ls.y);
-  L0.traverse(o => { if (o.isMesh && /flame/i.test(o.material.name || "")) { o.material.emissive = new THREE.Color(0xE8B86D); o.material.emissiveIntensity = 4; } });
-  for (const u of lampsAt) {
-    frameAt(u, f); const L = L0.clone(); const side = u < 0.5 ? -1 : 1;
-    const base = f.p.clone().addScaledVector(f.s, side * 1.9); base.y = -1.55; L.position.copy(base); L.rotation.y = Math.random() * 6.28; lampsGroup.add(L);
-    const fl = new THREE.PointLight(0xE8B86D, 7, 9, 1.7); fl.position.copy(base).add(new THREE.Vector3(0, 0.55, 0)); scene.add(fl); flames.push(fl);
-    const key = new THREE.SpotLight(0xE8B86D, 40, 14, 0.7, 0.7, 1.5); key.position.copy(fl.position); key.target.position.copy(base).addScaledVector(f.s, -side * 2.5); key.target.position.y = -1; scene.add(key, key.target);
-    shaft(fl.position.clone().add(new THREE.Vector3(0, 3.2, 0)), base.clone().addScaledVector(f.s, -side * 1.2));
-  }
-  scene.add(new THREE.AmbientLight(0x9FB4C2, 0.04));
-  canvas.classList.add("ready"); status.textContent = "Motion prototype v3 — direction G";
-  gsap.to(status, { opacity: 0, delay: 3, duration: 1 });
-}
-build().catch(err => { status.textContent = "Scene failed to load — " + err.message; console.error(err); });
 
 // ---------- scroll choreography (inertial) ----------
-if (!reduce) ScrollSmoother.create({ smooth: 1.3, effects: false, smoothTouch: 0.1 });
-gsap.to(cam, { u: 0.92, ease: "none", scrollTrigger: { trigger: "#smooth-content", start: "top top", end: "bottom bottom", scrub: reduce ? false : 1.2 } });
-ScrollTrigger.create({ trigger: "#echo", start: "top 60%", onEnter: () => { echo.gain = 0.9; sig.gain = 1.6; }, onLeaveBack: () => { echo.gain = 0.12; sig.gain = 1; } });
-ScrollTrigger.create({ trigger: "#case", start: "top 60%", onEnter: () => { echo.gain = 0.15; sig.gain = 0.7; }, onLeaveBack: () => { echo.gain = 0.9; sig.gain = 1.6; } });
-ScrollTrigger.create({ trigger: "#close", start: "top 60%", onEnter: () => { sig.gain = 0.25; }, onLeaveBack: () => { sig.gain = 0.7; } });
+if (!reduce) ScrollSmoother.create({ smooth: 1.25, effects: false, smoothTouch: 0.1 });
+const scrub = reduce ? false : 1.1;
+gsap.timeline({ scrollTrigger: { trigger: "#smooth-content", start: "top top", end: "bottom bottom", scrub } })
+  .to(rig, { radius: 3.4, phi: 0.32, theta: 0.15, tx: 1.1, ease: "none", duration: 1 })             // hero -> echo: dolly down into the cone (the Oryzo Z move)
+  .to(rig, { radius: 6.0, phi: 1.18, theta: 1.55, tx: 0.6, ty: -0.5, ease: "none", duration: 1 })  // echo -> case: drop low to see the basket and spokes
+  .to(rig, { radius: 9.0, phi: 0.85, theta: 2.5, tx: 0.2, ty: -0.2, ease: "none", duration: 1 });  // case -> close: pull back across the mat
+const drawIn = (sel, on) => {
+  const g = document.getElementById(sel), strokes = g.querySelectorAll(".d, .c");
+  strokes.forEach(el => { const L = el.getTotalLength ? el.getTotalLength() : 300; el.style.strokeDasharray = L; el.style.strokeDashoffset = on ? 0 : L; });
+  return gsap.timeline({ paused: true }).to(g, { opacity: 1, duration: 0.3 }).from(strokes, { strokeDashoffset: (i, el) => el.getTotalLength ? el.getTotalLength() : 300, duration: 0.9, stagger: 0.05, ease: "power2.out" }, "<");
+};
+const heroDraw = drawIn("dHero"), echoDraw = drawIn("dEcho");
+if (reduce) { heroDraw.progress(1); } else { gsap.delayedCall(0.6, () => heroDraw.play()); }
+ScrollTrigger.create({ trigger: "#echo", start: "top 65%", onEnter: () => { heroDraw.reverse(); echoDraw.play(); sig.gain = 0.9; sig.excursion = 1.6; }, onLeaveBack: () => { echoDraw.reverse(); heroDraw.play(); sig.gain = 0.35; sig.excursion = 0.6; } });
+ScrollTrigger.create({ trigger: "#case", start: "top 65%", onEnter: () => { echoDraw.reverse(); sig.gain = 0.15; sig.excursion = 0.4; }, onLeaveBack: () => { echoDraw.play(); sig.gain = 0.9; sig.excursion = 1.6; } });
 const strokes = document.querySelectorAll("#etchLines .l, #etchLines .r");
 strokes.forEach(el => { const L = el.getTotalLength ? el.getTotalLength() : 400; el.style.strokeDasharray = L; el.style.strokeDashoffset = L; });
 gsap.to(strokes, { strokeDashoffset: 0, duration: 1.6, stagger: 0.12, ease: "power2.out", scrollTrigger: { trigger: "#case", start: "top 55%", toggleActions: "play none none reverse" } });
@@ -324,12 +255,10 @@ let t = 0;
 renderer.setAnimationLoop((ts) => {
   timer.update(ts);
   if (!paused) t += timer.getDelta();
-  placeCamera(t);
-  if (!reduce && !paused) flames.forEach((fl, i) => { fl.intensity = 7 + Math.sin(t * 9.1 + i) * 0.6 + Math.sin(t * 23.7 + i * 2) * 0.3; });
-  updateWorms(t); updateSignal(t); updateRings(t);
-  composer.render();
+  placeCamera(t); updateSignal(t);
+  renderer.render(scene, camera);
 });
-addEventListener("resize", () => { camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix(); renderer.setSize(innerWidth, innerHeight); composer.setSize(innerWidth, innerHeight); bloom.resolution.set(innerWidth / 2, innerHeight / 2); });
+addEventListener("resize", () => { camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix(); renderer.setSize(innerWidth, innerHeight); });
 
 const btn = document.getElementById("pause");
 btn.addEventListener("click", () => {
