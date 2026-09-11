@@ -287,11 +287,11 @@ strokes.forEach(el => { const L = el.getTotalLength ? el.getTotalLength() : 400;
 gsap.to(strokes, { strokeDashoffset: 0, duration: 1.6, stagger: 0.12, ease: "power2.out", scrollTrigger: { trigger: "#case", start: "top 55%", toggleActions: "play none none reverse" } });
 
 // ---------- loop / controls ----------
-const clock = new THREE.Clock();
+const timer = new THREE.Timer();
 let t = 0;
-renderer.setAnimationLoop(() => {
-  if (!paused) t += clock.getDelta();
-  else clock.getDelta();
+renderer.setAnimationLoop((ts) => {
+  timer.update(ts);
+  if (!paused) t += timer.getDelta();
   camera.position.set(camRig.x + Math.sin(t * 0.25) * 0.15, camRig.y + Math.sin(t * 0.4) * 0.06, camRig.z);
   camera.lookAt(camRig.x, camRig.y - 0.6, camRig.z - 10);
   updateBats(t); updateRings(t);

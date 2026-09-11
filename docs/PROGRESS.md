@@ -168,3 +168,7 @@ Awaiting user go-ahead at the gate.
 - User chose **G — The Lair** provisionally (D10) on condition of seeing it move. Built a
   Three.js/GSAP motion prototype (spike, throwaway) against Context7-verified current APIs and
   published it as an artifact. Awaiting verdict to lock D10 and proceed to 2.2.
+- Prototype verified running via local preview server: module loads, scroll scrub works, no
+  console errors. Replaced deprecated `THREE.Clock` with `THREE.Timer` (Context7-confirmed) and
+  republished. Artifact: https://claude.ai/code/artifact/98072a00-d091-4bb0-8379-f9e0dce55cd2
+  **Gate: awaiting user verdict on the motion to lock D10.**
