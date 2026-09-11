@@ -157,3 +157,34 @@ path (no flapping, no sweeps, no scrub smoothing, etched lines pre-drawn).
 
 **Status:** spike. Throwaway code — the Phase 3 build starts from the design spec, not from
 this file. Awaiting user verdict on the motion.
+
+---
+
+# Round 4 — Direction I "The Instrument" (2026-09-11, D12)
+
+The user judged the cave (G, v1–v3) unsuited to the Oryzo treatment and asked for the downloaded
+assets to go and for a theme that suits it. What Oryzo actually is: one crafted object, studio
+light, material realism, technical-drawing language, calm temperament.
+
+**I — The Instrument.** A speaker driver — paper cone, rubber surround, brushed anisotropic metal
+basket, magnet — built entirely from lathe profiles and primitives (no assets, instant load),
+lying on a slate drafting mat with a millimetre grid. Three-point studio light with a soft-shadow
+key. Scroll: dolly down into the cone (Oryzo's Z move) → drop low to the basket → pull back across
+the mat, with inertia. An engineering-drawing overlay draws in part callouts on the hero and
+renders the outcome metrics as **dimension lines** on the echo section. The cone breathes; thin
+measured rings expand from it. No neon, no bloom, no black.
+
+| Token | Value | Why |
+|---|---|---|
+| Mat | `#2E343B` / grid `#39404A` `#48505A` | Slate drafting mat — the surface, not a void |
+| Paper | `#C9A57A` | Kraft cone |
+| Amber | `#E8B86D` | Callouts, dimension lines, rings — the one accent |
+| Bone | `#EDE8DF` | Text |
+
+Type unchanged: Big Shoulders Display + Atkinson Hyperlegible.
+
+**File:** `prototype-g-lair.html` (name kept so the artifact URL is stable; rename in Phase 3
+cleanup). Artifact: https://claude.ai/code/artifact/98072a00-d091-4bb0-8379-f9e0dce55cd2
+
+**Alternates in reserve:** receipt stack (D as an object); rotary telephone dial.
+**Status:** awaiting user verdict to lock.

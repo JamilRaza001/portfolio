@@ -185,3 +185,7 @@ Awaiting user go-ahead at the gate.
   900 twinkling glow-worm points, sonar rings, and a light pulse running ahead down a shader-lit
   trail; half-res UnrealBloom. Verified locally; wall scale normalised after the look. Bat removed
   from the artifact. **Gate: awaiting user verdict on v3 to lock D10/D11.**
+- User rejected the cave for the Oryzo treatment (D12). Assets removed from tree. **v4 prototype
+  = Direction I, The Instrument**: procedural speaker driver on a drafting mat, studio light,
+  drawing overlay with metrics as dimension lines. Verified locally (renders correctly, no
+  errors), published. **Gate: awaiting user verdict on v4 to lock the direction.**
