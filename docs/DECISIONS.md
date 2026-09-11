@@ -193,3 +193,17 @@ ThunderCats not used — a fortress and a sword do not read as software.
 **Superseded:** D12 (The Instrument). D10/D11 already superseded.
 **Carried forward:** typography, pause control, reduced-motion path, spline camera with inertia,
 bloom on emissives only, no downloaded assets (all procedural).
+
+## D14 — J locked in spirit; refine toward Dexter's Laboratory, modernised
+
+**Date:** 2026-09-11
+**Decision:** The user accepted the lab world (J) and asked to refine it explicitly toward
+Dexter's Laboratory: reference the show's actual lab scenes, animate the space the way the lab
+looked (modernised), add prop winks such as the pink ballet slippers, and show "Jamil's
+Laboratory" on the big screen in the show's title style.
+**IP boundary (binding):** no characters, no names of characters or the show, no logo lettering
+reproduction. The title is set in a free display face of the same mid-century cartoon spirit,
+not the show's logo. Props that evoke the world (slippers, lab coat + purple gloves on a hook,
+round glasses on a desk, bubbling tubes, giant levers, a curved computer wall) are fine.
+**Method:** research the lab's set from a reference source before building; render it with modern
+materials and lighting rather than flat cel colour.
