@@ -19,3 +19,7 @@ resolution (Draco geometry, KTX2 textures) inside the performance budget.
 inside its `.gltf` JSON, the GLB unpacked the same way, textures copied. The HDRI cannot be
 served there and the prototype uses a procedural `RoomEnvironment` fill instead; the HDRI stays
 in the repo for the Phase 3 build, which has a real static host.
+
+**2026-09-11 — all of the above removed** at the user's direction (D12). The direction no longer
+uses downloaded assets; the hero object is procedural. Files remain in git history
+(`f56ad68` and earlier) if Phase 3 wants them.

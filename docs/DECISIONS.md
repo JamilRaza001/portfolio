@@ -154,3 +154,24 @@ in the prototype (host cannot serve it); kept for Phase 3.
 **Risk acknowledged:** near-black with a neon accent is the most common AI-generated look. The
 mitigation is motivation — every light source is something that exists in a cave — and
 restraint: bloom on emissives only, one cold hue.
+
+## D12 — G superseded: an Oryzo-suited direction with a procedural hero object; assets dropped
+
+**Date:** 2026-09-11
+**Decision:** After v3 the user judged that the dark cave does not suit the Oryzo treatment he
+wants, asked for the downloaded assets to be removed, and for a different theme that does suit
+it. New direction **I — "The Instrument"**: a single procedural speaker driver (paper cone,
+rubber surround, brushed-metal basket) under studio light on a slate drafting mat with a
+millimetre grid, annotated like an engineering drawing. Scroll dollies into the object on Z and
+orbits it; annotations draw in per section; **outcome metrics are rendered as dimension lines**
+measured against the object.
+**Why it suits Oryzo:** one crafted object, product-photography lighting, material realism from
+shaders rather than scans, technical-drawing language, calm temperament.
+**Why it fits the content:** the driver is the sonar idea made physical — sound out, answer
+back — and voice is one of his two strongest areas. The dimension-line metrics keep the
+result-first inversion.
+**Alternates held in reserve:** a receipt stack (D as an object); a rotary telephone dial.
+**Superseded:** D10 (G The Lair) and D11. Bat, rocks, lamp, HDRI removed from the repo tree.
+**Carried forward:** typography (Big Shoulders Display + Atkinson Hyperlegible) and the pause /
+reduced-motion requirements. Colour system changes: slate mat, kraft paper, amber callouts,
+bone text. No neon, no black.
