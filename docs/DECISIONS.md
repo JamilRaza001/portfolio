@@ -175,3 +175,21 @@ result-first inversion.
 **Carried forward:** typography (Big Shoulders Display + Atkinson Hyperlegible) and the pause /
 reduced-motion requirements. Colour system changes: slate mat, kraft paper, amber callouts,
 bone text. No neon, no black.
+
+## D13 — I superseded: dark theme, must relate to AI engineering → "The Lab"
+
+**Date:** 2026-09-11
+**Decision:** The user rejected The Instrument (v4) and restated the brief: **dark theme with
+motion, and it must relate to his AI engineering work**; failing that, refine the lair, or draw on
+Dexter's Laboratory, SWAT Kats, or ThunderCats — colour themes and locations only, **no
+branding, no characters, no names**. New direction **J — "The Lab"**: a hidden underground AI
+laboratory. Content mapping: a central console that listens and answers (voice agent); archive
+racks with blinking storage (retrieval, 22K chunks); pipes carrying signal pulses between
+machines (pipelines); a work bench under a hazard lamp (the case study); a blast door that slides
+open at the end (the contact CTA). Location grammar from the SWAT Kats hangar (hidden, launch
+tunnel, blast door); palette from the Dexter's Lab world (deep teal, cool metal, hazard yellow).
+ThunderCats not used — a fortress and a sword do not read as software.
+**IP guard (binding):** no character, no logo, no name, no catchphrase, no signature object.
+**Superseded:** D12 (The Instrument). D10/D11 already superseded.
+**Carried forward:** typography, pause control, reduced-motion path, spline camera with inertia,
+bloom on emissives only, no downloaded assets (all procedural).
