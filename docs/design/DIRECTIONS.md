@@ -216,3 +216,41 @@ under reduced motion makes the camera tween play to its end on enter. Fixed to `
 
 **File:** `prototype-g-lair.html` (name kept for URL stability; rename in Phase 3).
 **Status:** awaiting user verdict to lock.
+
+---
+
+# Round 6 — "Jamil's Laboratory" (2026-09-11/12, D14)
+
+Direction J refined toward the show's lab, modernised. The hero is now an **entrance reveal**:
+you arrive on a deck through a lit doorway high on the wall and look out over the lab, with
+**JAMIL'S LABORATORY** glowing on the giant computer across from you. Scroll takes you down off
+the deck and along the floor, past the archive racks, to the bench, and out through the vault door.
+
+| Token | Value | Role |
+|---|---|---|
+| Lab | `#0E2A44` | Deep blue ground (fog matches) |
+| Tile | `#1B4F73` / `#1E5A82` / `#174668` | Chequered shining floor |
+| Wall | `#2A6E8C` | Riveted steel panels |
+| Cyan | `#5FE3F0` | Screens, storage LEDs, pipeline pulses, ceiling stars — the cold light |
+| Sun | `#F5B42C` | Title, metrics, hazard bands, bench lamp — the warm light |
+| Bone | `#EAF2F7` | Body text |
+
+Type: **Luckiest Guy** for the lab title only (a free face with the mid-century cartoon-title
+spirit — *not* the show's lettering), Big Shoulders Display for headlines, Atkinson Hyperlegible
+for body.
+
+**Props (world, not branding):** pink ballet slippers left on the entrance deck, a lab coat with
+purple gloves on a hook, round glasses on the console desk, bubbling glass tubes, domed pods,
+giant red-knobbed levers.
+
+### Fixes made this round, each found by probing rather than guessing
+
+| Symptom | Actual cause | Fix |
+|---|---|---|
+| Only "L" and "Y" of the title visible | The navy shell (radius 7) bulges **through** the flat screen at its centre — raycast showed shell at 19.57 vs screen at 19.84 dead centre, and the reverse at the edges | Screen moved past the shell apex to local z 7.15, resized 7.0×3.5 to match the canvas's 2:1 |
+| Blown white blob under the hero copy | Not an emissive — the **chrome entrance deck** directly under the camera, lit by the door light 2.74 units away | Deck given a walked-on metal material (rough 0.78, metal 0.45); door light 10 → 6 |
+| Whole scene bloomed to white (earlier) | Bloom threshold too low for a blue palette, and chrome reflecting `RoomEnvironment` — a lit white studio | Bloom threshold 0.96 / strength 0.38; purpose-built dark-blue env map with cyan panels |
+| Copy washing out over bright scene areas | Structural: legibility was left to chance | **Copy scrim** — a directional gradient behind the text column (left-to-right on desktop, bottom-up on mobile). Directly answers the first failure mode in BUILD-INSTRUCTIONS §2.6 |
+
+**Verified:** desktop and mobile (375×812), console clean, reduced-motion path follows scroll.
+**Status:** awaiting user verdict to lock.

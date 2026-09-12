@@ -12,6 +12,9 @@
   body{overflow-x:hidden}
   #stage{position:fixed;inset:0;z-index:0;display:block}
   .veil{position:fixed;inset:0;z-index:1;pointer-events:none;background:radial-gradient(120% 85% at 50% 50%,transparent 0%,rgba(14,42,68,.12)55%,rgba(14,42,68,.75) 100%)}
+  /* copy scrim: the text column keeps its contrast wherever the scene's lights happen to fall */
+  .scrim{position:fixed;inset:0;z-index:1;pointer-events:none;background:linear-gradient(100deg,rgba(8,26,44,.88) 0%,rgba(8,26,44,.66) 26%,rgba(8,26,44,.18) 48%,transparent 64%)}
+  @media (max-width:760px){ .scrim{background:linear-gradient(0deg,rgba(8,26,44,.92) 0%,rgba(8,26,44,.72) 42%,rgba(8,26,44,.2) 72%,transparent 100%)} }
   nav{position:fixed;top:0;left:0;right:0;z-index:5;display:flex;align-items:center;justify-content:space-between;padding:22px 40px;font-size:15px}
   nav .name{font-family:var(--title);font-size:20px;letter-spacing:.02em;color:var(--sun)}
   nav ul{display:flex;gap:28px;list-style:none;margin:0;padding:0;align-items:center}
@@ -56,6 +59,7 @@
 
 <canvas id="stage" aria-hidden="true"></canvas>
 <div class="veil"></div>
+<div class="scrim"></div>
 
 <nav aria-label="Primary">
   <span class="name">Jamil's Laboratory</span>
@@ -149,7 +153,7 @@ const canvas = document.getElementById("stage");
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: false, powerPreference: "high-performance" });
 renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));
 renderer.setSize(innerWidth, innerHeight);
-renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 0.82;
+renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 0.95;
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x0E2A44);
 scene.fog = new THREE.FogExp2(0x0E2A44, 0.034);
@@ -180,7 +184,8 @@ function steelTex() {
   g.fillStyle = "#3D8AAA"; for (let x = 16; x < 512; x += 256) for (let y = 16; y < 512; y += 256) for (const [dx, dy] of [[0,0],[224,0],[0,224],[224,224]]) { g.beginPath(); g.arc(x + dx, y + dy, 5, 0, 6.3); g.fill(); }
   const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.wrapS = t.wrapT = THREE.RepeatWrapping; t.anisotropy = 8; return t;
 }
-const tile = new THREE.MeshPhysicalMaterial({ map: tileTex(), roughness: 0.28, metalness: 0.1, clearcoat: 0.3, clearcoatRoughness: 0.25, envMapIntensity: 0.3 });
+// shiny, but rough enough to spread the ceiling-light highlight instead of blowing a white hole in the floor
+const tile = new THREE.MeshPhysicalMaterial({ map: tileTex(), roughness: 0.42, metalness: 0.1, clearcoat: 0.18, clearcoatRoughness: 0.35, envMapIntensity: 0.3 });
 const steel = new THREE.MeshStandardMaterial({ map: steelTex(), roughness: 0.6, metalness: 0.55, envMapIntensity: 0.25 });
 const chrome = new THREE.MeshStandardMaterial({ color: 0xB4C3CC, roughness: 0.35, metalness: 0.9, envMapIntensity: 0.45 });
 const navy = new THREE.MeshStandardMaterial({ color: 0x14395A, roughness: 0.6, metalness: 0.4 });
@@ -208,9 +213,11 @@ const floor = new THREE.Mesh(new THREE.PlaneGeometry(W * 2, LEN), tile); floor.r
 for (const side of [-1, 1]) { const w = new THREE.Mesh(new THREE.PlaneGeometry(LEN, H), steel); w.rotation.y = side < 0 ? Math.PI / 2 : -Math.PI / 2; w.position.set(side * W, H / 2 - 1.2, -12); scene.add(w); }
 // the doorway we arrive through: a slab wall behind the ledge with a rectangular opening of light
 { const back = new THREE.Mesh(new THREE.PlaneGeometry(W * 2, H), steel); back.position.set(0, H / 2 - 1.2, 13.5); back.rotation.y = Math.PI; scene.add(back);
-  const ledge = new THREE.Mesh(new THREE.BoxGeometry(3.2, 0.3, 3), chrome); ledge.position.set(0, 7.7, 11.8); scene.add(ledge);
+  // a walked-on deck, not a mirror: chrome here sat right under the camera and blew out against the door light
+  const deckMat = new THREE.MeshStandardMaterial({ color: 0x53646F, roughness: 0.78, metalness: 0.45, envMapIntensity: 0.2 });
+  const ledge = new THREE.Mesh(new THREE.BoxGeometry(3.2, 0.3, 3), deckMat); ledge.position.set(0, 7.7, 11.8); scene.add(ledge);
   const doorLight = new THREE.Mesh(new THREE.PlaneGeometry(2.2, 3.4), new THREE.MeshBasicMaterial({ color: 0xFFE9B8, fog: false })); doorLight.position.set(0, 9.8, 13.45); doorLight.rotation.y = Math.PI; scene.add(doorLight);
-  const spill = new THREE.PointLight(0xFFE0A0, 10, 12, 1.7); spill.position.set(0, 9.4, 12.6); scene.add(spill);
+  const spill = new THREE.PointLight(0xFFE0A0, 6, 12, 1.7); spill.position.set(0, 9.4, 12.6); scene.add(spill);
   // pink ballet slippers, left on the ledge — someone got in again
   for (const dx of [-0.35, 0.25]) { const s = new THREE.Mesh(new THREE.CapsuleGeometry(0.11, 0.3, 6, 12), new THREE.MeshStandardMaterial({ color: 0xF48FB1, roughness: 0.6 })); s.rotation.z = Math.PI / 2; s.rotation.y = dx < 0 ? 0.3 : -0.2; s.position.set(0.9 + dx, 7.96, 11.3); scene.add(s); }
 }
@@ -218,16 +225,19 @@ for (const side of [-1, 1]) { const w = new THREE.Mesh(new THREE.PlaneGeometry(L
 { const N = 700, pos = new Float32Array(N * 3); for (let i = 0; i < N; i++) { pos[i*3] = (Math.random() - .5) * W * 2; pos[i*3+1] = H - 1.4 - Math.random() * 0.6; pos[i*3+2] = 14 - Math.random() * LEN; }
   const g = new THREE.BufferGeometry(); g.setAttribute("position", new THREE.BufferAttribute(pos, 3));
   scene.add(new THREE.Points(g, new THREE.PointsMaterial({ color: CYAN.clone().multiplyScalar(1.5), size: 0.07, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, sizeAttenuation: true })));
-  for (let z = 8; z > -40; z -= 8) { const l = new THREE.PointLight(0x9FD8E8, 5, 14, 1.7); l.position.set(0, H - 2.4, z); scene.add(l); } }
+  for (let z = 8; z > -40; z -= 8) { const l = new THREE.PointLight(0x9FD8E8, 6, 15, 1.7); l.position.set(0, H - 2.4, z); scene.add(l); } }
 scene.add(new THREE.AmbientLight(0x7FA8C4, 0.05));
 
 // ---------- the giant computer: a curved screen wall that reads "JAMIL'S LABORATORY" ----------
 const scr = document.createElement("canvas"); scr.width = 1024; scr.height = 512; const sg = scr.getContext("2d");
 const screenTex = new THREE.CanvasTexture(scr); screenTex.colorSpace = THREE.SRGBColorSpace;
-const computer = new THREE.Group(); computer.position.set(-2.6, -1.2, -13.5); computer.rotation.y = 0.62; scene.add(computer);
+const computer = new THREE.Group(); computer.position.set(-2.4, -1.2, -14.5); computer.rotation.y = 0.3; scene.add(computer);
 {
   const shell = new THREE.Mesh(new THREE.CylinderGeometry(7, 7, 6.6, 48, 1, true, -0.55, 1.1), navy); shell.position.y = 3.3; shell.material.side = THREE.DoubleSide; computer.add(shell);
-  const screen = new THREE.Mesh(new THREE.CylinderGeometry(6.85, 6.85, 4.2, 48, 1, true, -0.5, 1.0), new THREE.MeshBasicMaterial({ map: screenTex, side: THREE.DoubleSide, fog: false })); screen.position.y = 3.6; computer.add(screen);
+  // the screen faces the entrance so the title reads from the ledge. It must clear the shell's
+  // apex (radius 7 at theta 0) or the curve cuts through the middle of the title; 2:1 to match the canvas.
+  const screen = new THREE.Mesh(new THREE.PlaneGeometry(7.0, 3.5), new THREE.MeshBasicMaterial({ map: screenTex, fog: false, toneMapped: false })); screen.position.set(0, 3.7, 7.15); computer.add(screen);
+  const bezel = new THREE.Mesh(new THREE.PlaneGeometry(7.5, 4.0), navy); bezel.position.set(0, 3.7, 7.10); computer.add(bezel);
   const base = new THREE.Mesh(new THREE.CylinderGeometry(7.3, 7.6, 0.9, 48, 1, false, -0.6, 1.2), chrome); base.position.y = 0.45; computer.add(base);
   for (let i = 0; i < 14; i++) { const a = -0.5 + (i / 13) * 1.0; const btn = new THREE.Mesh(new THREE.CylinderGeometry(0.11, 0.11, 0.08, 12), i % 5 === 0 ? red : (i % 2 ? sun : chrome)); btn.position.set(Math.sin(a) * 7.4, 0.95, Math.cos(a) * 7.4); computer.add(btn); }
   const glow = new THREE.PointLight(0x5FE3F0, 10, 16, 1.6); glow.position.set(0, 3.6, 5.5); computer.add(glow);

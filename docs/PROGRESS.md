@@ -193,3 +193,20 @@ Awaiting user go-ahead at the gate.
   **v5 = Direction J, The Lab** — underground AI laboratory, all procedural. Verified in the pane;
   found and fixed a reduced-motion camera bug (`scrub:false` → `scrub:true`) present since v1.
   Published. **Gate: awaiting user verdict on v5 to lock the direction.**
+
+## 2026-09-12 — Session 2 — Phase 2.1 continued (Opus)
+
+**Model note:** CLAUDE.md §2 routes design to Fable; the user switched the session to Opus 5
+themselves, so Phase 2 continues on Opus. Recorded rather than silently substituted.
+
+- **v6 = "Jamil's Laboratory"** (D14) — direction J refined toward the show's lab, modernised.
+  Entrance reveal hero, giant computer showing the title, archive racks, bubbling tubes, pods,
+  levers, prop winks, vault door.
+- Four defects found and fixed, each diagnosed by raycast/light probing rather than guessed:
+  shell geometry cutting through the screen; the chrome entrance deck blowing out under the
+  hero copy; bloom+env washing the scene white; and copy legibility left to chance.
+- Added a **copy scrim** so text contrast no longer depends on where the scene's lights fall —
+  this is a structural answer to BUILD-INSTRUCTIONS §2.6's first named failure mode.
+- Verified desktop + mobile 375×812, console clean.
+
+**Gate: awaiting user verdict on v6 to lock the direction and start 2.2.**
