@@ -274,3 +274,23 @@ was unresolved, though D7 settled it at the Phase 1 gate. Corrected to defer to 
 whether AlphaLens is actually running.
 
 **Next action:** Phase 2 gate. User decides §10.1 items 1–4. Then Phase 3 (Build, Sonnet).
+
+### PHASE 2 COMPLETE — gate closed 2026-09-12
+
+Direction locked (D15/D16), design system written, critique run and dispositioned, gate questions
+answered (D20–D22).
+
+**Deliverables:** `docs/DESIGN.md` (the Phase 3 contract, §10 carries the critique disposition),
+`docs/design/DESIGN-system-for-stitch.md`, Stitch project `4379139906673047730` with a design
+system and a validation screen, and the locked motion prototype.
+
+**Phase 3 must start by reading `DESIGN.md` §10.2** — the amendments list. In particular:
+`index.html` needs a viewport meta or the entire mobile design is dead code; the budget is
+per-bay, not whole-site; the case grid breakpoint is 1080px; and the scene state must be derived
+from `cam.u` on refresh, not only from enter/leave callbacks.
+
+**Still outstanding, and not blocking Phase 3 start:** a resume PDF (Resume is removed from the
+nav until one exists); shoe-shop extraction stack and receipt volume for its case study; the
+`whatsapp-new` owning org.
+
+**Next action:** Phase 3 — Build. **Model switches to Sonnet** per CLAUDE.md §2.
