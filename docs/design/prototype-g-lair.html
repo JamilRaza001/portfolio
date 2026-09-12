@@ -16,7 +16,8 @@
   .scrim{position:fixed;inset:0;z-index:1;pointer-events:none;background:linear-gradient(100deg,rgba(8,26,44,.88) 0%,rgba(8,26,44,.66) 26%,rgba(8,26,44,.18) 48%,transparent 64%)}
   @media (max-width:760px){ .scrim{background:linear-gradient(0deg,rgba(8,26,44,.92) 0%,rgba(8,26,44,.72) 42%,rgba(8,26,44,.2) 72%,transparent 100%)} }
   nav{position:fixed;top:0;left:0;right:0;z-index:5;display:flex;align-items:center;justify-content:space-between;padding:22px 40px;font-size:15px}
-  nav .name{font-family:var(--title);font-size:20px;letter-spacing:.02em;color:var(--sun)}
+  nav .name{display:flex;align-items:center;gap:9px;font-family:var(--title);font-size:22px;letter-spacing:.05em;color:var(--sun)}
+  nav .name i{width:9px;height:9px;background:var(--cyan);box-shadow:0 0 9px var(--cyan);display:block}
   nav ul{display:flex;gap:28px;list-style:none;margin:0;padding:0;align-items:center}
   nav a{color:var(--bone);text-decoration:none;opacity:.85}
   nav a:hover,nav a:focus-visible{opacity:1;outline:none;text-decoration:underline;text-underline-offset:4px}
@@ -62,7 +63,7 @@
 <div class="scrim"></div>
 
 <nav aria-label="Primary">
-  <span class="name">Jamil's Laboratory</span>
+  <span class="name" aria-label="MJR, Muhammad Jamil Raza"><i aria-hidden="true"></i>MJR</span>
   <ul>
     <li><a href="#case">Work</a></li>
     <li><a href="#close">About</a></li>
@@ -158,7 +159,10 @@ const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x0E2A44);
 scene.fog = new THREE.FogExp2(0x0E2A44, 0.034);
 const camera = new THREE.PerspectiveCamera(56, innerWidth / innerHeight, 0.1, 120);
-const composer = new EffectComposer(renderer);
+// 4x MSAA so edges are clean (a composer otherwise bypasses the renderer's antialias), and a
+// half-float buffer so the bloom does not band across the large flat blues.
+const rt = new THREE.WebGLRenderTarget(innerWidth, innerHeight, { type: THREE.HalfFloatType, samples: 4 });
+const composer = new EffectComposer(renderer, rt);
 composer.addPass(new RenderPass(scene, camera));
 const bloom = new UnrealBloomPass(new THREE.Vector2(innerWidth / 2, innerHeight / 2), 0.38, 0.45, 0.96); // emissives only
 composer.addPass(bloom); composer.addPass(new OutputPass());
@@ -202,11 +206,17 @@ const curve = new THREE.CatmullRomCurve3([
 const cam = { u: 0 };
 const F = { p: new THREE.Vector3(), t: new THREE.Vector3(), s: new THREE.Vector3() }, A = new THREE.Vector3(), UP = new THREE.Vector3(0, 1, 0);
 function frameAt(u, o) { curve.getPointAt(u, o.p); curve.getTangentAt(u, o.t); o.s.crossVectors(o.t, UP).normalize(); return o; }
+const T2 = new THREE.Vector3(); let bank = 0;
 function placeCamera(t) {
   frameAt(cam.u, F);
-  camera.position.copy(F.p).addScaledVector(F.s, Math.sin(t * 0.2) * 0.05); camera.position.y += Math.sin(t * 0.3) * 0.02;
+  // idle drift from two unrelated frequencies, so it never resolves into a visible loop
+  camera.position.copy(F.p).addScaledVector(F.s, Math.sin(t * 0.17) * 0.04 + Math.sin(t * 0.09) * 0.03);
+  camera.position.y += Math.sin(t * 0.23) * 0.018 + Math.sin(t * 0.13) * 0.012;
   curve.getPointAt(Math.min(cam.u + 0.06, 1), A); A.y -= 0.25; camera.lookAt(A);
-  camera.rotateZ(Math.sin(t * 0.15) * 0.006);
+  // bank into the turn from the path's own curvature rather than a timer, eased so it never snaps
+  curve.getTangentAt(Math.min(cam.u + 0.02, 1), T2);
+  bank += ((T2.x * F.t.z - T2.z * F.t.x) * 9 - bank) * 0.06;
+  camera.rotateZ(bank + Math.sin(t * 0.11) * 0.004);
 }
 tile.map.repeat.set(4, 26); steel.map.repeat.set(4, 2);
 const floor = new THREE.Mesh(new THREE.PlaneGeometry(W * 2, LEN), tile); floor.rotation.x = -Math.PI / 2; floor.position.set(0, -1.2, -12); scene.add(floor);
@@ -222,10 +232,18 @@ for (const side of [-1, 1]) { const w = new THREE.Mesh(new THREE.PlaneGeometry(L
   for (const dx of [-0.35, 0.25]) { const s = new THREE.Mesh(new THREE.CapsuleGeometry(0.11, 0.3, 6, 12), new THREE.MeshStandardMaterial({ color: 0xF48FB1, roughness: 0.6 })); s.rotation.z = Math.PI / 2; s.rotation.y = dx < 0 ? 0.3 : -0.2; s.position.set(0.9 + dx, 7.96, 11.3); scene.add(s); }
 }
 // starry ceiling lights: a field of tiny points far above
+const ceiling = [];
 { const N = 700, pos = new Float32Array(N * 3); for (let i = 0; i < N; i++) { pos[i*3] = (Math.random() - .5) * W * 2; pos[i*3+1] = H - 1.4 - Math.random() * 0.6; pos[i*3+2] = 14 - Math.random() * LEN; }
   const g = new THREE.BufferGeometry(); g.setAttribute("position", new THREE.BufferAttribute(pos, 3));
   scene.add(new THREE.Points(g, new THREE.PointsMaterial({ color: CYAN.clone().multiplyScalar(1.5), size: 0.07, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, sizeAttenuation: true })));
-  for (let z = 8; z > -40; z -= 8) { const l = new THREE.PointLight(0x9FD8E8, 6, 15, 1.7); l.position.set(0, H - 2.4, z); scene.add(l); } }
+  // strip lights with a visible fixture — a light with no source on screen always reads as fake
+  for (let z = 8; z > -40; z -= 8) {
+    const l = new THREE.PointLight(0x9FD8E8, 0, 15, 1.7); l.position.set(0, H - 2.4, z); scene.add(l);
+    const tube = new THREE.Mesh(new THREE.BoxGeometry(3.4, 0.07, 0.24), new THREE.MeshBasicMaterial({ color: 0x000000, fog: false, toneMapped: false }));
+    tube.position.set(0, H - 2.3, z); scene.add(tube);
+    const housing = new THREE.Mesh(new THREE.BoxGeometry(3.7, 0.18, 0.42), navy); housing.position.set(0, H - 2.18, z); scene.add(housing);
+    ceiling.push({ l, tube, target: 6 });
+  } }
 scene.add(new THREE.AmbientLight(0x7FA8C4, 0.05));
 
 // ---------- the giant computer: a curved screen wall that reads "JAMIL'S LABORATORY" ----------
@@ -246,18 +264,40 @@ const computer = new THREE.Group(); computer.position.set(-2.4, -1.2, -14.5); co
   for (const dx of [-0.19, 0.19]) { const r = new THREE.Mesh(new THREE.TorusGeometry(0.17, 0.018, 8, 32), navy); r.rotation.x = Math.PI / 2; r.position.set(dx, 1.43, 6.5); computer.add(r); }
   const bridge = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.018, 0.02), navy); bridge.position.set(0, 1.43, 6.5); computer.add(bridge);
 }
-const voice = { level: 0.3 };
+const power = { on: reduce ? 1 : 0 };   // CRT turn-on, driven by the load sequence
 let titleReady = false; document.fonts.ready.then(() => { titleReady = true; });
 function drawScreen(t) {
+  const p = power.on;
+  sg.fillStyle = "#04161F"; sg.fillRect(0, 0, 1024, 512);
+  if (p < 0.02) { screenTex.needsUpdate = true; return; }
+
+  // the tube striking: a bright band opens vertically from the centre before any content shows
+  if (p < 0.45) {
+    const k = p / 0.45, h = Math.max(2, 512 * k * k);
+    const grad = sg.createLinearGradient(0, 256 - h / 2, 0, 256 + h / 2);
+    grad.addColorStop(0, "rgba(95,227,240,0)"); grad.addColorStop(0.5, `rgba(215,250,255,${0.5 + 0.5 * k})`); grad.addColorStop(1, "rgba(95,227,240,0)");
+    sg.fillStyle = grad; sg.fillRect(0, 256 - h / 2, 1024, h);
+    screenTex.needsUpdate = true; return;
+  }
+  const a = (p - 0.45) / 0.55;   // content fades up once the tube is lit
+
+  sg.globalAlpha = a;
   sg.fillStyle = "#06232F"; sg.fillRect(0, 0, 1024, 512);
-  sg.strokeStyle = "rgba(95,227,240,.16)"; sg.lineWidth = 1; for (let x = 0; x < 1024; x += 48) { sg.beginPath(); sg.moveTo(x, 0); sg.lineTo(x, 512); sg.stroke(); }
-  sg.textAlign = "center"; sg.fillStyle = "#F5B42C"; sg.font = (titleReady ? "88px 'Luckiest Guy'" : "bold 80px Impact, sans-serif"); sg.fillText("JAMIL'S", 512, 150); sg.fillText("LABORATORY", 512, 250);
-  sg.strokeStyle = "#5FE3F0"; sg.lineWidth = 4; sg.beginPath();
-  for (let x = 0; x <= 1024; x += 6) { const k = x / 1024, env = Math.exp(-Math.pow((k - 0.5) * 3.0, 2));
-    const y = 390 + Math.sin(x * 0.07 + t * 9) * 34 * env * voice.level + Math.sin(x * 0.019 - t * 4) * 50 * env * voice.level; x === 0 ? sg.moveTo(x, y) : sg.lineTo(x, y); }
-  sg.stroke();
-  sg.textAlign = "left"; sg.fillStyle = "#EAF2F7"; sg.font = "26px Atkinson Hyperlegible, Arial"; sg.fillText("listening", 40, 470);
-  sg.textAlign = "right"; sg.fillStyle = "#5FE3F0"; sg.fillText(reduce ? "online" : (Math.sin(t * 2) > 0 ? "● online" : "online"), 984, 470);
+  sg.strokeStyle = "rgba(95,227,240,.14)"; sg.lineWidth = 1;
+  for (let x = 0; x < 1024; x += 48) { sg.beginPath(); sg.moveTo(x, 0); sg.lineTo(x, 512); sg.stroke(); }
+
+  sg.textAlign = "center"; sg.font = titleReady ? "104px 'Luckiest Guy'" : "bold 94px Impact, sans-serif";
+  sg.fillStyle = "rgba(95,227,240,.30)"; sg.fillText("JAMIL'S", 516, 214); sg.fillText("LABORATORY", 516, 330);  // offset ghost, like a misconverged tube
+  sg.fillStyle = "#F5B42C"; sg.fillText("JAMIL'S", 512, 210); sg.fillText("LABORATORY", 512, 326);
+
+  // scanlines and a soft tube vignette — the screen reads as a screen, not a pasted image
+  sg.globalAlpha = a * 0.5; sg.fillStyle = "#04161F";
+  for (let y = 0; y < 512; y += 4) sg.fillRect(0, y, 1024, 2);
+  sg.globalAlpha = a;
+  const vig = sg.createRadialGradient(512, 256, 180, 512, 256, 620);
+  vig.addColorStop(0, "rgba(0,0,0,0)"); vig.addColorStop(1, "rgba(0,0,0,.75)");
+  sg.fillStyle = vig; sg.fillRect(0, 0, 1024, 512);
+  sg.globalAlpha = 1;
   screenTex.needsUpdate = true;
 }
 
@@ -335,10 +375,23 @@ function updateDoor() { doorL.position.x = -W / 2 - door.open * W * 0.95; doorR.
 if (!reduce) ScrollSmoother.create({ smooth: 1.3, effects: false, smoothTouch: 0.1 });
 gsap.to(cam, { u: 0.92, ease: "none", scrollTrigger: { trigger: "#smooth-content", start: "top top", end: "bottom bottom", scrub: reduce ? true : 1.2 } });
 const sig = { gain: 0.9, speed: 0.06 };
-ScrollTrigger.create({ trigger: "#echo", start: "top 60%", onEnter: () => { archive.activity = 0.9; voice.level = 0.25; }, onLeaveBack: () => { archive.activity = 0.25; voice.level = 0.7; } });
+ScrollTrigger.create({ trigger: "#echo", start: "top 60%", onEnter: () => { archive.activity = 0.9; }, onLeaveBack: () => { archive.activity = 0.25; } });
 ScrollTrigger.create({ trigger: "#case", start: "top 60%", onEnter: () => { archive.activity = 0.35; sig.gain = 1.4; }, onLeaveBack: () => { archive.activity = 0.9; sig.gain = 0.9; } });
 ScrollTrigger.create({ trigger: "#close", start: "top 70%", onEnter: () => gsap.to(door, { open: 1, duration: reduce ? 0 : 2.2, ease: "power3.inOut" }), onLeaveBack: () => gsap.to(door, { open: 0, duration: reduce ? 0 : 1.4, ease: "power3.inOut" }) });
-gsap.delayedCall(0.4, () => { if (!reduce) gsap.to(voice, { level: 0.7, duration: 1.8, ease: "power2.out" }); else voice.level = 0.6; });
+// ---------- the one orchestrated moment: the lab powers up, once, on load ----------
+// Everything else in the scene is ambient or scroll-driven. Spend the attention here.
+if (reduce) { ceiling.forEach(c => { c.l.intensity = c.target; c.tube.material.color.setHex(0x9FD8E8); }); }
+else {
+  const boot = gsap.timeline({ delay: 0.35 });
+  ceiling.forEach((c, i) => {
+    const at = i * 0.09;
+    boot.to(c.l, { intensity: c.target * 0.35, duration: 0.05 }, at)          // strike
+        .to(c.l, { intensity: c.target * 0.05, duration: 0.07 }, at + 0.05)   // stutter
+        .to(c.l, { intensity: c.target, duration: 0.45, ease: "power2.out" }, at + 0.12)
+        .to(c.tube.material.color, { r: 0.624, g: 0.847, b: 0.906, duration: 0.5, ease: "power2.out" }, at + 0.12);
+  });
+  boot.to(power, { on: 1, duration: 1.5, ease: "power2.inOut" }, 0.7);
+}
 const strokes = document.querySelectorAll("#etchLines .l, #etchLines .r");
 strokes.forEach(el => { const L = el.getTotalLength ? el.getTotalLength() : 400; el.style.strokeDasharray = L; el.style.strokeDashoffset = L; });
 gsap.to(strokes, { strokeDashoffset: 0, duration: 1.6, stagger: 0.12, ease: "power2.out", scrollTrigger: { trigger: "#case", start: "top 55%", toggleActions: "play none none reverse" } });
@@ -353,7 +406,7 @@ renderer.setAnimationLoop((ts) => {
   pipes.forEach((m, i) => { m.uniforms.uHead.value = reduce ? Math.min(cam.u + 0.1, 0.98) : ((t * sig.speed + i * 0.19) % 1); m.uniforms.uGain.value = sig.gain; });
   composer.render();
 });
-addEventListener("resize", () => { camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix(); renderer.setSize(innerWidth, innerHeight); composer.setSize(innerWidth, innerHeight); bloom.resolution.set(innerWidth / 2, innerHeight / 2); });
+addEventListener("resize", () => { camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix(); renderer.setSize(innerWidth, innerHeight); composer.setSize(innerWidth, innerHeight); bloom.resolution.set(innerWidth / 2, innerHeight / 2); ScrollTrigger.refresh(); });
 
 const btn = document.getElementById("pause");
 btn.addEventListener("click", () => {

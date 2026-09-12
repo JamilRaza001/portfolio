@@ -210,3 +210,32 @@ themselves, so Phase 2 continues on Opus. Recorded rather than silently substitu
 - Verified desktop + mobile 375×812, console clean.
 
 **Gate: awaiting user verdict on v6 to lock the direction and start 2.2.**
+
+### Phase 2.1 CLOSED — direction locked 2026-09-12 (D15, D16)
+
+User locked "Jamil's Laboratory" with three changes, all applied:
+
+1. **Screen shows only "JAMIL'S LABORATORY"** — status text removed; the panel now reads as a real
+   CRT (scanlines, a slightly misconverged cyan ghost behind the title, tube vignette).
+2. **Nav mark is MJR** with a small cyan power indicator.
+3. **Professional polish pass:**
+   - **4× MSAA via a multisampled render target** — an EffectComposer bypasses the renderer's own
+     antialias, so every edge in the lab was jagged. Single biggest quality gain.
+   - **Half-float composer buffer** so the bloom stops banding across the large flat blues.
+   - **The one orchestrated moment (D16):** the lab powers up on load — strip lights strike,
+     stutter, and settle in series down the hall, then the computer's tube strikes and the title
+     resolves. Skipped entirely under reduced motion.
+   - **Visible light fixtures** — housings and tubes, because a light with no source on screen
+     always reads as fake.
+   - **Camera banks into turns from the path's own curvature**, eased, replacing a sine-timer
+     roll; idle drift rebuilt from two unrelated frequencies so it never resolves into a loop.
+   - `ScrollTrigger.refresh()` on resize.
+
+**Verification note:** the browser pane forces `prefers-reduced-motion: reduce`, so the power-up
+sequence cannot be seen there — its objects and tween shapes were verified programmatically
+instead (6 lights, 6 fixtures, no throw). Late in the session the pane stopped painting frames
+entirely (window occlusion, reported by the tool); DOM and scene state were probed directly to
+confirm the page was correct rather than trusting a blank capture.
+
+**Next action:** Phase 2.2 — design system and `DESIGN.md` via Stitch, motion spec with named GSAP
+mechanisms, section-by-section layout, reduced-motion path, sub-agent critique, performance budget.

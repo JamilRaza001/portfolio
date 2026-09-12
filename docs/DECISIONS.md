@@ -207,3 +207,27 @@ not the show's logo. Props that evoke the world (slippers, lab coat + purple glo
 round glasses on a desk, bubbling tubes, giant levers, a curved computer wall) are fine.
 **Method:** research the lab's set from a reference source before building; render it with modern
 materials and lighting rather than flat cel colour.
+
+## D15 — Direction LOCKED: "Jamil's Laboratory" (J, refined per D14)
+
+**Date:** 2026-09-12
+**Decision:** The user locked the direction with changes. This settles Phase 2.1. Do not revisit.
+**The locked changes:**
+1. The giant screen carries **only** the words "JAMIL'S LABORATORY" — no status text, no labels.
+2. The navigation mark is **MJR**, not the lab name.
+3. Animation and 3D quality raised to a professional finish (see PROGRESS for what that meant).
+**Superseded:** D10, D11, D12 as directions; D13/D14 stand as the lineage of this one.
+**Model note:** the user moved the session to Opus 5, so Phase 2 continues on Opus rather than
+Fable (CLAUDE.md §2 fallback). Recorded, not silently substituted.
+
+## D16 — One orchestrated motion moment, not scattered effects
+
+**Date:** 2026-09-12
+**Decision:** The page spends its motion budget on a single page-load sequence — the lab powers
+up: ceiling strip lights strike, stutter, and settle in series down the hall, then the giant
+computer's tube strikes and the title resolves. Sections themselves do **not** fade-and-slide in.
+**Why:** a fade-up on every section plus a hover transition on every card is the generic default
+and reads as machine-made. One orchestrated moment lands harder and leaves the scroll motion
+(camera, pipelines, archive) as the continuous layer. Everything else stays ambient or
+scroll-driven.
+**Reduced motion:** the sequence does not play; the lab is simply already on.
