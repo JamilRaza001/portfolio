@@ -12,9 +12,12 @@
   body{overflow-x:hidden}
   #stage{position:fixed;inset:0;z-index:0;display:block}
   .veil{position:fixed;inset:0;z-index:1;pointer-events:none;background:radial-gradient(120% 85% at 50% 50%,transparent 0%,rgba(14,42,68,.12)55%,rgba(14,42,68,.75) 100%)}
-  /* copy scrim: the text column keeps its contrast wherever the scene's lights happen to fall */
-  .scrim{position:fixed;inset:0;z-index:1;pointer-events:none;background:linear-gradient(100deg,rgba(8,26,44,.88) 0%,rgba(8,26,44,.66) 26%,rgba(8,26,44,.18) 48%,transparent 64%)}
-  @media (max-width:760px){ .scrim{background:linear-gradient(0deg,rgba(8,26,44,.92) 0%,rgba(8,26,44,.72) 42%,rgba(8,26,44,.2) 72%,transparent 100%)} }
+  /* Copy scrim. Not decoration: it is what holds WCAG AA behind the text column when the scene's
+     own lights move. Stops are derived against a blown-white worst case — at the column's far
+     edge (~46vw) this keeps --bone at 6.24 and large --sun at 3.85. Do not lighten it. */
+  .scrim{position:fixed;inset:0;z-index:1;pointer-events:none;
+    background:linear-gradient(100deg,rgba(8,26,44,.90) 0%,rgba(8,26,44,.86) 30%,rgba(8,26,44,.72) 46%,rgba(8,26,44,.40) 58%,transparent 68%)}
+  @media (max-width:760px){ .scrim{background:linear-gradient(0deg,rgba(8,26,44,.93) 0%,rgba(8,26,44,.88) 46%,rgba(8,26,44,.5) 70%,transparent 92%)} }
   nav{position:fixed;top:0;left:0;right:0;z-index:5;display:flex;align-items:center;justify-content:space-between;padding:22px 40px;font-size:15px}
   nav .name{display:flex;align-items:center;gap:9px;font-family:var(--title);font-size:22px;letter-spacing:.05em;color:var(--sun)}
   nav .name i{width:9px;height:9px;background:var(--cyan);box-shadow:0 0 9px var(--cyan);display:block}
@@ -31,16 +34,18 @@
   h1,h2{font-family:var(--display);font-weight:900;line-height:.9;margin:0 0 22px;text-wrap:balance}
   h1{font-size:clamp(60px,9.5vw,140px)}
   h2{font-size:clamp(44px,6.5vw,96px)}
-  p{max-width:56ch;margin:0 0 14px;color:var(--bone-dim)}
-  p strong{color:var(--bone);font-weight:700}
+  /* Prose and captions are full --bone. --bone-dim measured 2.97 at the column's far edge, below
+     the 4.5 bar, so it is reserved for metadata only (org, stack, footer) which sits far left. */
+  p{max-width:56ch;margin:0 0 14px;color:var(--bone)}
+  p strong{font-weight:700}
   .metrics{display:grid;grid-template-columns:repeat(3,auto);gap:44px;margin-top:36px}
   .metric{display:flex;flex-direction:column;gap:4px}
   .metric b{font-family:var(--display);font-weight:900;font-size:clamp(40px,5vw,72px);line-height:1;color:var(--sun);font-variant-numeric:tabular-nums}
-  .metric span{font-size:15px;color:var(--bone-dim);max-width:16ch}
+  .metric span{font-size:15px;color:var(--bone);max-width:16ch}
   #case .case-wrap{display:grid;grid-template-columns:minmax(280px,440px) 1fr;gap:56px;align-items:end;width:100%;max-width:1200px}
   .lead{display:flex;align-items:baseline;gap:18px;margin-bottom:26px}
   .lead b{font-family:var(--display);font-weight:900;font-size:clamp(72px,10vw,150px);line-height:.85;color:var(--sun)}
-  .lead span{max-width:16ch;color:var(--bone-dim);font-size:16px}
+  .lead span{max-width:16ch;color:var(--bone);font-size:16px}
   .org{color:var(--bone-dim);font-size:15px;margin-bottom:14px}
   .stack{color:var(--bone-dim);font-size:14px;margin-top:20px}
   .etch{width:100%;max-width:720px;overflow:visible;align-self:end}
@@ -172,7 +177,7 @@ composer.addPass(bloom); composer.addPass(new OutputPass());
   const panel = (x, y, z, w, h, c) => { const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshBasicMaterial({ color: c, side: THREE.DoubleSide })); m.position.set(x, y, z); m.lookAt(0, 0, 0); env.add(m); };
   panel(0, 9, 0, 6, 1.2, 0x9FD8E8); panel(-8, 3, 4, 3, 3, 0x2A7A99); panel(8, 2, -5, 2.5, 2.5, 0x5FE3F0); panel(0, -2, 10, 4, 2, 0x1B4F73);
   const pmrem = new THREE.PMREMGenerator(renderer); scene.environment = pmrem.fromScene(env, 0.02).texture; pmrem.dispose(); }
-window.__lab = { THREE, scene, camera }; // prototype-only debug handle
+window.__lab = { THREE, scene, camera, renderer, composer }; // prototype-only debug handle
 
 // ---------- textures drawn in code ----------
 function tileTex() {

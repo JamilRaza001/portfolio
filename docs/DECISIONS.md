@@ -231,3 +231,42 @@ and reads as machine-made. One orchestrated moment lands harder and leaves the s
 (camera, pipelines, archive) as the continuous layer. Everything else stays ambient or
 scroll-driven.
 **Reduced motion:** the sequence does not play; the lab is simply already on.
+
+## D17 — Body copy is full `--bone`; `--bone-dim` is metadata only
+
+**Date:** 2026-09-12
+**Decision:** All prose, captions, headings and metric labels use `--bone` (#EAF2F7).
+`--bone-dim` is restricted to metadata — organisation line, stack line, footer.
+**Why — measured, not aesthetic:** against a blown-white worst case at the text column's far edge
+(~46vw), `--bone-dim` scores **2.97**, below the 4.5 AA bar, while `--bone` scores **6.24**.
+`--bone-dim` on the lit floor tile measures 3.66, also failing. Metadata survives because it sits
+in the first 30vw where the scrim holds .86 and the ratio is 4.89. Dimmed body text is also a
+common generated-design tell.
+**Rejected:** thickening the scrim to rescue dimmed text — it would have needed ~.84 opacity right
+across the column, which reads as a black panel bolted over the scene rather than as lighting.
+
+## D18 — The copy scrim is an accessibility component with derived stops
+
+**Date:** 2026-09-12
+**Decision:** Scrim stops are `.90 / .86 @30% / .72 @46% / .40 @58% / transparent @68%`
+(desktop) and a bottom-up equivalent on mobile. **It must not be lightened to reveal more scene.**
+**Why:** derived against a blown-white worst case so the text column holds AA wherever the
+camera's lights fall. This is the build's structural answer to the first failure mode in
+BUILD-INSTRUCTIONS §2.6.
+
+## D19 — Performance budget, set before assets and grounded in measurement
+
+**Date:** 2026-09-12
+**Decision:** See `DESIGN.md` §7. Headlines: **≤600 KB total transfer (brotli, incl. fonts)**,
+60 fps desktop / **≥40 fps mid-range Android**, LCP <2.5 s on 4× throttled CPU, **≤260 draw
+calls**, **≤65,000 triangles**, **≤16 lights**, zero console errors.
+**Why these numbers:** measured on the locked prototype on Intel UHD Graphics 620 — 212 draw
+calls, 43,532 triangles, 32 programs, **2.59 ms per render**, 450 KB uncompressed JS+HTML,
+DOMContentLoaded 196 ms. The budget is set just above measured reality so regressions are caught,
+rather than at a round number the build could drift into.
+**Note:** `PLAN.md` §2.7 proposed ≤2.5 MB. That is now **superseded as far too loose** — the scene
+is fully procedural, so there is no asset weight to spend. Banking that slack would have invited
+exactly the bloat the budget exists to prevent.
+**Mobile is a decision, not a port** (DESIGN.md §7.5): the corridor is kept because a
+forward-moving camera down a narrow space suits 9:16 better than landscape; bloom off, DPR capped
+1.5, lights 6→3, LEDs 1600→500. Must be validated on a real mid-range Android in Phase 3.
