@@ -345,7 +345,7 @@ same thing. `u` is the camera's normalised position along the curve.
 | 2 | Proof | 0.12–0.22 | Descending into the hall | **20 hrs/week**, each figure named to its system |
 | 3 | Voice agent | 0.22–0.36 | The console | **10%** |
 | 4 | Call centre QA | 0.36–0.50 | Transcription bench | **Bilingual Urdu and English** |
-| 5 | AlphaLens | 0.50–0.64 | Archive racks | **22,000 chunks** |
+| 5 | AlphaLens | 0.50–0.64 | Archive racks | **22,000 chunks** — *stated as in progress, see D21* |
 | 6 | Qurbani dashboard | 0.64–0.74 | Chart wall | **3 years, two calendars** |
 | 7 | Shoe-shop receipts | 0.74–0.84 | Scanner bench | **A shop with no database** |
 | 8 | Range | 0.84–0.90 | Capability wall | technical range |
@@ -375,6 +375,9 @@ parked at `opacity:0` waiting on an observer.
 - §7 must **not** use the seasonal +20%. The lead is that the shop had no database at all
   (`CONTENT.md` §9.2).
 - The phrase "validated on a labeled eval set" appears nowhere (D9).
+- §5 (AlphaLens) **must say in its own copy that the system is still being built** (D21). Its
+  corpus figures describe the dataset and are fine; the `~15 s` answer time is a design target and
+  must never be written as measured. The word "measured" cannot appear in that section.
 
 ---
 

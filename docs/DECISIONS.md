@@ -270,3 +270,46 @@ exactly the bloat the budget exists to prevent.
 **Mobile is a decision, not a port** (DESIGN.md §7.5): the corridor is kept because a
 forward-moving camera down a narrow space suits 9:16 better than landscape; bloom off, DPR capped
 1.5, lights 6→3, LEDs 1600→500. Must be validated on a real mid-range Android in Phase 3.
+
+## D20 — The cartoon props stay, over the critique's objection
+
+**Date:** 2026-09-12
+**Decision:** The pink ballet slippers, purple gloves and round glasses remain in the scene.
+**Why:** the user's explicit call, made after reading the objection in full.
+**The objection, recorded so it is not lost and does not get re-litigated:** the Phase 2.6 critique
+judged the composite — slippers, white coat, purple gloves, a cartoon-caps title on a CRT — to be
+recognisable trade dress, and argued the risk is not legal but perception: a hiring manager who
+recognises it may read it as a professional identity built out of someone else's IP. It
+recommended keeping the machine room (which it called the strongest idea in the project) and
+cutting the fan service.
+**Standing guard (unchanged from D14):** no characters, no names, no logo lettering, no
+reproduction of the show's title type. Luckiest Guy is a free face, not the show's mark.
+**Reversible:** removing three props is a small change if the user later wants it.
+
+## D21 — AlphaLens is presented as in progress, in its own copy
+
+**Date:** 2026-09-12
+**Decision:** The AlphaLens case study states plainly that the system is still being built. Its
+architecture (LangGraph pipeline, hybrid pgvector + tsvector retrieval, Reciprocal Rank Fusion,
+cross-encoder reranking, dual-backend embeddings with failover) is described as designed and
+implemented; the `~22K chunks / 200 filings` corpus figures stay, since they describe the dataset;
+**`~15 seconds` is a design target and must never be stated as measured.**
+**Why:** the user confirmed it is not running. The repo README is public and badged "Phase 1 setup
+in progress" — a reader who clicks through after reading "measured, not promised" finds the one
+thing that undoes the credibility of everything else on the page. Saying so first costs nothing;
+being caught costs the interview.
+**Consequence:** `DESIGN.md` §6 section 5 cannot use the word "measured" and must not sit under a
+proof framing that implies a running system.
+
+## D22 — Hero copy is drawn from the user's own CV and LinkedIn positioning
+
+**Date:** 2026-09-12
+**Decision:** The hero leads with **"Production AI that replaces manual effort at scale."** —
+built from his own LinkedIn line, *"shipping solutions that replace manual effort at scale"* — and
+carries the 20 hrs/week figure in the opening paragraph.
+**Why:** the user asked for the professional content from the CV and LinkedIn rather than invented
+copy, and the Phase 2.6 critique found the previous hero ("Welcome to the lab.") carried no number,
+no company and no role on the one screen every visitor sees.
+**Rejected:** his LinkedIn tagline verbatim ("Building Production-Grade AI Systems That Drive Real
+Organizational Value") — accurate but corporate-register, and "drive real organisational value"
+says less than "replaces manual effort", which is concrete and measurable.
