@@ -239,3 +239,38 @@ confirm the page was correct rather than trusting a blank capture.
 
 **Next action:** Phase 2.2 — design system and `DESIGN.md` via Stitch, motion spec with named GSAP
 mechanisms, section-by-section layout, reduced-motion path, sub-agent critique, performance budget.
+
+### Phase 2.6 critique — 22 findings, 7 blocking (2026-09-12)
+
+An independent sub-agent reviewed `DESIGN.md`, `CONTENT.md` and the prototype. It was told that
+being agreeable would be a failure, and it earned that brief. Full disposition table is
+`DESIGN.md` §10 — every finding fixed, or accepted with a reason, or escalated.
+
+**Thirteen fixed this session.** The sharpest:
+- **The pause control desynchronised the whole page, and the spec specified the defect.**
+  `gsap.globalTimeline.timeScale(0)` freezes the scrubbed camera tween, so after pressing pause the
+  copy scrolls on while the camera stays parked in one bay. Verified fixed: `timeScale` now stays
+  at 1 and the camera is driven straight from scroll progress while paused.
+- **No call to action existed anywhere** on a site whose only job is to get him hired. The email
+  was plain body text; two of three nav links pointed at the same section.
+- **The `u`-to-section map was arithmetically impossible** — unequal camera ranges driven by one
+  linear tween across equal-height sections, five unbudgeted pins, and a tween ending at 0.92 for a
+  table needing 1.00. §5.2 rewritten to per-section triggers.
+- **The lead slot only ever worked for the easy case.** Two of five case studies have a figure;
+  "Bilingual Urdu and English" at 150px in a 440px column is four lines and ~510px tall. §4.2 now
+  has figure and phrase modes.
+- **The scrim protected the text column but not the nav, pause control or footer**, which sit past
+  its 68% stop directly over the lit scene. I had only measured to 46vw.
+- Diagram connectors were cyan with a 4px glow, breaking the two-colour rule in the single most
+  meaning-dense element on the page.
+- `nav a{outline:none}` deleted the focus ring §4.6 mandates.
+- Reduced motion still ran bubbles and a drifting, rolling camera.
+- `composer.setSize` silently re-allocates bloom at full resolution — 4x cost after any resize.
+
+**One finding was a stale file, not a violation:** `CONTENT.md` §12 still said employer permission
+was unresolved, though D7 settled it at the Phase 1 gate. Corrected to defer to `DECISIONS.md`.
+
+**Two escalated to the user** (`DESIGN.md` §10.1): whether to cut the fan-service props, and
+whether AlphaLens is actually running.
+
+**Next action:** Phase 2 gate. User decides §10.1 items 1–4. Then Phase 3 (Build, Sonnet).

@@ -18,12 +18,18 @@
   .scrim{position:fixed;inset:0;z-index:1;pointer-events:none;
     background:linear-gradient(100deg,rgba(8,26,44,.90) 0%,rgba(8,26,44,.86) 30%,rgba(8,26,44,.72) 46%,rgba(8,26,44,.40) 58%,transparent 68%)}
   @media (max-width:760px){ .scrim{background:linear-gradient(0deg,rgba(8,26,44,.93) 0%,rgba(8,26,44,.88) 46%,rgba(8,26,44,.5) 70%,transparent 92%)} }
-  nav{position:fixed;top:0;left:0;right:0;z-index:5;display:flex;align-items:center;justify-content:space-between;padding:22px 40px;font-size:15px}
-  nav .name{display:flex;align-items:center;gap:9px;font-family:var(--title);font-size:22px;letter-spacing:.05em;color:var(--sun)}
-  nav .name i{width:9px;height:9px;background:var(--cyan);box-shadow:0 0 9px var(--cyan);display:block}
+  .vh{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+  .topbar{position:fixed;top:0;left:0;right:0;z-index:5;display:flex;align-items:center;gap:28px;padding:22px 40px;font-size:15px}
+  .topbar nav{margin-left:auto}
+  .topbar .name{display:flex;align-items:center;gap:9px;font-family:var(--title);font-size:22px;letter-spacing:.05em;color:var(--sun);text-decoration:none;border-radius:2px}
+  .topbar .name:focus-visible{outline:2px solid var(--bone);outline-offset:4px}
+  .topbar .name i{width:9px;height:9px;background:var(--cyan);box-shadow:0 0 9px var(--cyan);display:block}
   nav ul{display:flex;gap:28px;list-style:none;margin:0;padding:0;align-items:center}
-  nav a{color:var(--bone);text-decoration:none;opacity:.85}
-  nav a:hover,nav a:focus-visible{opacity:1;outline:none;text-decoration:underline;text-underline-offset:4px}
+  /* Full --bone, never dimmed (D17), and the focus ring is never removed (DESIGN 4.6).
+     Hover and focus must look different or a keyboard user cannot tell focus from a stray cursor. */
+  nav a{color:var(--bone);text-decoration:none;border-radius:2px}
+  nav a:hover{text-decoration:underline;text-underline-offset:4px}
+  nav a:focus-visible{outline:2px solid var(--sun);outline-offset:4px;text-decoration:none}
   #pause{width:34px;height:34px;border-radius:50%;border:1.5px solid var(--bone-dim);background:transparent;color:var(--bone);cursor:pointer;display:grid;place-items:center;padding:0}
   #pause:focus-visible{outline:2px solid var(--sun);outline-offset:3px}
   #pause svg{width:12px;height:12px;fill:currentColor}
@@ -50,12 +56,29 @@
   .stack{color:var(--bone-dim);font-size:14px;margin-top:20px}
   .etch{width:100%;max-width:720px;overflow:visible;align-self:end}
   .etch text{font-family:var(--body);font-size:13px;fill:var(--bone)}
-  .etch .l{stroke:var(--cyan);stroke-width:1.2;fill:none;stroke-linecap:round;filter:drop-shadow(0 0 4px rgba(95,227,240,.6))}
-  .etch .n{fill:var(--lab);stroke:var(--bone);stroke-width:1.1}
-  .etch .r{stroke:var(--cyan);stroke-width:1;fill:none;opacity:.6}
-  .foot{position:fixed;bottom:18px;left:40px;right:40px;z-index:5;display:flex;justify-content:space-between;font-size:13px;color:var(--bone-dim)}
+  /* Amber, not cyan: this diagram is the most meaning-dense thing on the page, and cyan is
+     reserved for machine light that carries nothing you must read. No glow either — a drop-shadow
+     over a moving scene is the worst legibility choice available. */
+  .etch .l{stroke:var(--sun);stroke-width:1.2;fill:none;stroke-linecap:round}
+  .etch .n{fill:var(--lab);stroke:var(--sun);stroke-width:1.1}
+  .etch .r{stroke:var(--sun);stroke-width:1;fill:none;opacity:.55}
+  /* One primary action in the accent, secondaries as plain links. Amber is the only interactive
+     accent, so hierarchy is unambiguous without a second button competing. */
+  .actions{display:flex;align-items:center;gap:28px;margin-top:28px;flex-wrap:wrap}
+  .cta{display:inline-block;background:var(--sun);color:#0E2A44;font-weight:700;font-size:17px;
+       padding:14px 26px;border-radius:2px;text-decoration:none}
+  .cta:hover{background:#FFC94D}
+  .cta:focus-visible{outline:2px solid var(--bone);outline-offset:3px}
+  .link{color:var(--bone);font-size:17px;text-decoration:underline;text-underline-offset:4px;border-radius:2px}
+  .link:focus-visible{outline:2px solid var(--sun);outline-offset:4px}
+  /* The nav and footer sit outside the copy scrim's reach, directly over the lit scene.
+     They get their own local bands — measured at 100vw, not just across the text column. */
+  .band{position:fixed;left:0;right:0;z-index:4;pointer-events:none;height:104px}
+  .band.top{top:0;background:linear-gradient(180deg,rgba(8,26,44,.92) 0%,rgba(8,26,44,.6) 55%,transparent 100%)}
+  .band.bottom{bottom:0;height:72px;background:linear-gradient(0deg,rgba(8,26,44,.92) 0%,rgba(8,26,44,.55) 60%,transparent 100%)}
+  .foot{position:fixed;bottom:18px;left:40px;right:40px;z-index:5;display:flex;justify-content:space-between;font-size:13px;color:var(--bone)}
   @media (max-width:760px){
-    nav{padding:18px 20px} section{padding:0 20px;align-items:flex-end;padding-bottom:12vh}
+    .topbar{padding:18px 20px;gap:16px} section{padding:0 20px;align-items:flex-end;padding-bottom:12vh}
     #case .case-wrap{grid-template-columns:1fr;gap:28px}
     .metrics{grid-template-columns:1fr;gap:18px}
     .foot{left:20px;right:20px}
@@ -66,16 +89,21 @@
 <canvas id="stage" aria-hidden="true"></canvas>
 <div class="veil"></div>
 <div class="scrim"></div>
+<div class="band top"></div>
+<div class="band bottom"></div>
 
-<nav aria-label="Primary">
-  <span class="name" aria-label="MJR, Muhammad Jamil Raza"><i aria-hidden="true"></i>MJR</span>
-  <ul>
-    <li><a href="#case">Work</a></li>
-    <li><a href="#close">About</a></li>
-    <li><a href="#close">Resume</a></li>
-    <li><button id="pause" aria-pressed="false" aria-label="Pause motion" title="Pause motion"><svg viewBox="0 0 12 12"><rect x="1.5" y="1" width="3" height="10"/><rect x="7.5" y="1" width="3" height="10"/></svg></button></li>
-  </ul>
-</nav>
+<header class="topbar">
+  <!-- aria-label is ignored on a bare span, so the full name is real text, hidden visually only -->
+  <a class="name" href="#hero"><i aria-hidden="true"></i><span aria-hidden="true">MJR</span><span class="vh">Muhammad Jamil Raza — back to top</span></a>
+  <nav aria-label="Primary">
+    <ul>
+      <li><a href="#case">Work</a></li>
+      <li><a href="#close">Contact</a></li>
+    </ul>
+  </nav>
+  <!-- a motion control is not navigation, so it sits outside the nav landmark -->
+  <button id="pause" aria-pressed="false" aria-label="Pause motion" title="Pause motion"><svg viewBox="0 0 12 12" aria-hidden="true"><rect x="1.5" y="1" width="3" height="10"/><rect x="7.5" y="1" width="3" height="10"/></svg></button>
+</header>
 
 <div id="smooth-wrapper"><div id="smooth-content">
   <section id="hero">
@@ -89,7 +117,7 @@
     <div class="col">
       <h2>Twenty-two thousand chunks. One answer.</h2>
       <p>Retrieval is the archive that talks back: a question goes in, the right passage comes out with its source attached. Hybrid search, reranking, cited synthesis &mdash; measured, not promised.</p>
-      <div class="metrics" aria-label="Outcomes">
+      <div class="metrics" role="group" aria-label="Outcomes">
         <div class="metric"><b>20 hrs</b><span>saved every week by automation workflows</span></div>
         <div class="metric"><b>10%</b><span>of inbound calls handled with no human on the line</span></div>
         <div class="metric"><b>1.24 s</b><span>to first spoken response, English</span></div>
@@ -126,7 +154,12 @@
   <section id="close">
     <div class="col">
       <h2>Ask me something.</h2>
-      <p>Open to AI engineer roles, RAG and voice projects, and freelance collaborations. jamilraza001@gmail.com</p>
+      <p>Open to AI engineer roles, RAG and voice projects, and freelance collaborations.</p>
+      <div class="actions">
+        <a class="cta" href="mailto:jamilraza001@gmail.com">Email me</a>
+        <a class="link" href="https://github.com/JamilRaza001">GitHub</a>
+        <a class="link" href="https://www.linkedin.com/in/jamilrazaa/">LinkedIn</a>
+      </div>
     </div>
   </section>
 </div></div>
@@ -214,14 +247,21 @@ function frameAt(u, o) { curve.getPointAt(u, o.p); curve.getTangentAt(u, o.t); o
 const T2 = new THREE.Vector3(); let bank = 0;
 function placeCamera(t) {
   frameAt(cam.u, F);
-  // idle drift from two unrelated frequencies, so it never resolves into a visible loop
-  camera.position.copy(F.p).addScaledVector(F.s, Math.sin(t * 0.17) * 0.04 + Math.sin(t * 0.09) * 0.03);
-  camera.position.y += Math.sin(t * 0.23) * 0.018 + Math.sin(t * 0.13) * 0.012;
+  camera.position.copy(F.p);
+  // Idle drift from two unrelated frequencies, so it never resolves into a visible loop.
+  // Reduced motion gets no drift and no roll at all — a camera that keeps breathing is exactly
+  // what someone who asked the OS for no motion is trying to avoid.
+  if (!reduce) {
+    camera.position.addScaledVector(F.s, Math.sin(t * 0.17) * 0.04 + Math.sin(t * 0.09) * 0.03);
+    camera.position.y += Math.sin(t * 0.23) * 0.018 + Math.sin(t * 0.13) * 0.012;
+  }
   curve.getPointAt(Math.min(cam.u + 0.06, 1), A); A.y -= 0.25; camera.lookAt(A);
-  // bank into the turn from the path's own curvature rather than a timer, eased so it never snaps
-  curve.getTangentAt(Math.min(cam.u + 0.02, 1), T2);
-  bank += ((T2.x * F.t.z - T2.z * F.t.x) * 9 - bank) * 0.06;
-  camera.rotateZ(bank + Math.sin(t * 0.11) * 0.004);
+  if (!reduce) {
+    // bank into the turn from the path's own curvature rather than a timer, eased so it never snaps
+    curve.getTangentAt(Math.min(cam.u + 0.02, 1), T2);
+    bank += ((T2.x * F.t.z - T2.z * F.t.x) * 9 - bank) * 0.06;
+    camera.rotateZ(bank + Math.sin(t * 0.11) * 0.004);
+  }
 }
 tile.map.repeat.set(4, 26); steel.map.repeat.set(4, 2);
 const floor = new THREE.Mesh(new THREE.PlaneGeometry(W * 2, LEN), tile); floor.rotation.x = -Math.PI / 2; floor.position.set(0, -1.2, -12); scene.add(floor);
@@ -378,15 +418,18 @@ function updateDoor() { doorL.position.x = -W / 2 - door.open * W * 0.95; doorR.
 
 // ---------- scroll choreography (inertial; reduced motion follows scroll without smoothing) ----------
 if (!reduce) ScrollSmoother.create({ smooth: 1.3, effects: false, smoothTouch: 0.1 });
-gsap.to(cam, { u: 0.92, ease: "none", scrollTrigger: { trigger: "#smooth-content", start: "top top", end: "bottom bottom", scrub: reduce ? true : 1.2 } });
+const camTween = gsap.to(cam, { u: 0.92, ease: "none", scrollTrigger: { trigger: "#smooth-content", start: "top top", end: "bottom bottom", scrub: reduce ? true : 1.2 } });
+const camST = camTween.scrollTrigger;
 const sig = { gain: 0.9, speed: 0.06 };
 ScrollTrigger.create({ trigger: "#echo", start: "top 60%", onEnter: () => { archive.activity = 0.9; }, onLeaveBack: () => { archive.activity = 0.25; } });
 ScrollTrigger.create({ trigger: "#case", start: "top 60%", onEnter: () => { archive.activity = 0.35; sig.gain = 1.4; }, onLeaveBack: () => { archive.activity = 0.9; sig.gain = 0.9; } });
 ScrollTrigger.create({ trigger: "#close", start: "top 70%", onEnter: () => gsap.to(door, { open: 1, duration: reduce ? 0 : 2.2, ease: "power3.inOut" }), onLeaveBack: () => gsap.to(door, { open: 0, duration: reduce ? 0 : 1.4, ease: "power3.inOut" }) });
 // ---------- the one orchestrated moment: the lab powers up, once, on load ----------
 // Everything else in the scene is ambient or scroll-driven. Spend the attention here.
-if (reduce) { ceiling.forEach(c => { c.l.intensity = c.target; c.tube.material.color.setHex(0x9FD8E8); }); }
-else {
+// Landing mid-page from a shared link must not replay the entrance: the lab is simply already on.
+const landedMidPage = window.scrollY > 4;
+if (reduce || landedMidPage) { power.on = 1; ceiling.forEach(c => { c.l.intensity = c.target; c.tube.material.color.setHex(0x9FD8E8); }); }
+if (!reduce && !landedMidPage) {
   const boot = gsap.timeline({ delay: 0.35 });
   ceiling.forEach((c, i) => {
     const at = i * 0.09;
@@ -407,11 +450,35 @@ let t = 0;
 renderer.setAnimationLoop((ts) => {
   timer.update(ts);
   if (!paused) t += timer.getDelta();
-  placeCamera(t); drawScreen(t); updateLeds(t); updateBubbles(t); updateDoor();
+  // Pause freezes ambient motion only. The camera stays under the reader's hand — driving it
+  // straight from scroll progress, with the inertia removed. Freezing the global timeline
+  // instead (the obvious move) parks the camera in one bay while the copy scrolls on past it.
+  if (paused && camST) cam.u = camST.progress * 0.92;
+  placeCamera(t); drawScreen(t); updateLeds(t); updateDoor();
+  if (!reduce && !paused) updateBubbles(t);
   pipes.forEach((m, i) => { m.uniforms.uHead.value = reduce ? Math.min(cam.u + 0.1, 0.98) : ((t * sig.speed + i * 0.19) % 1); m.uniforms.uGain.value = sig.gain; });
   composer.render();
 });
-addEventListener("resize", () => { camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix(); renderer.setSize(innerWidth, innerHeight); composer.setSize(innerWidth, innerHeight); bloom.resolution.set(innerWidth / 2, innerHeight / 2); ScrollTrigger.refresh(); });
+addEventListener("resize", () => {
+  camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix();
+  renderer.setSize(innerWidth, innerHeight); composer.setSize(innerWidth, innerHeight);
+  // composer.setSize re-allocates the bloom mip chain at FULL resolution; mutating .resolution
+  // afterwards changes nothing. setSize is the only call that actually re-allocates, so without
+  // this the bloom silently costs 4x after the first resize — i.e. after every phone rotation.
+  bloom.setSize(innerWidth / 2, innerHeight / 2);
+  ScrollTrigger.refresh();
+});
+
+// ScrollSmoother uses transform-based scrolling and does not intercept native anchor jumps,
+// so in-page links simply do not work without this.
+document.querySelectorAll('a[href^="#"]').forEach(a => a.addEventListener("click", e => {
+  const target = document.querySelector(a.getAttribute("href"));
+  if (!target) return;
+  e.preventDefault();
+  const s = typeof ScrollSmoother !== "undefined" && ScrollSmoother.get();
+  if (s) s.scrollTo(target, true);
+  else target.scrollIntoView({ behavior: reduce ? "auto" : "smooth" });
+}));
 
 const btn = document.getElementById("pause");
 btn.addEventListener("click", () => {
@@ -419,6 +486,5 @@ btn.addEventListener("click", () => {
   btn.setAttribute("aria-pressed", String(paused));
   btn.setAttribute("aria-label", paused ? "Resume motion" : "Pause motion");
   btn.innerHTML = paused ? '<svg viewBox="0 0 12 12"><path d="M2 1.5v9l8-4.5z"/></svg>' : '<svg viewBox="0 0 12 12"><rect x="1.5" y="1" width="3" height="10"/><rect x="7.5" y="1" width="3" height="10"/></svg>';
-  gsap.globalTimeline.timeScale(paused ? 0 : 1);
 });
 </script>

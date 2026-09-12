@@ -166,12 +166,23 @@ stack. Right column: the architecture diagram. Same edges, same baselines, same 
 it sits in and from whitespace. This is deliberate: identical rounded cards with one shadow
 stamped on each is the generated-page default, and it would also fight the scene behind it.
 
-### 4.2 Lead metric
-`--t-metric-lead` in `--amber`, baseline-aligned with a `--t-lead` sentence in `--bone`.
-**The number comes first and the project name second** — the content inversion carried from
-Phase 1 (`PLAN.md` §1.5). Where a project has no defensible number (Call Centre QA, the shoe
-shop), the slot takes its **most distinctive fact** in the same position and the same type, never
-an invented figure (D9).
+### 4.2 Lead slot — two modes, one position
+
+**The lead comes first and the project name second** — the content inversion carried from Phase 1
+(`PLAN.md` §1.5). Only **2 of 5** case studies have a defensible figure, so the slot has two modes.
+Hierarchy is carried by **position and `--amber`**, not by size.
+
+| | **Figure mode** (§6 cases 3, 5) | **Phrase mode** (§6 cases 4, 6, 7) |
+|---|---|---|
+| Example | `10%` · `22,000 chunks` | "Bilingual Urdu and English" · "A shop with no database" |
+| Size | `--t-metric-lead` `clamp(72px,10vw,150px)` | `--t-h3` `clamp(34px,4.2vw,58px)` |
+| Sentence | beside it, baseline-aligned | **below it**, not beside |
+| Align | `align-items: baseline` | `align-items: start` |
+
+> **Why phrase mode is not simply the same type.** "Bilingual Urdu and English" is 26 characters.
+> At 150px Big Shoulders 900 in a 440px column that is four-plus lines and ~510px tall,
+> baseline-aligned against a one-line sentence — it reads as a bug, not a composition. The
+> prototype only ever demonstrated the easy case (`10%`). Never an invented figure (D9).
 
 ### 4.3 Architecture diagram
 Inline SVG. Stroke `--amber` at 1.1–1.2px on nodes and connectors; node fill `--lab`; labels
@@ -187,9 +198,20 @@ glow — the lab's power indicator. Links in `--bone` at 15px, underline on hove
 `text-underline-offset:4px`.
 
 ### 4.5 Motion pause control
-A persistent 34px circular button in the navigation, always present, never hidden behind a menu.
-`aria-pressed` reflects state; the label swaps between "Pause motion" and "Resume motion". Sets
-`gsap.globalTimeline.timeScale(0)` and freezes the scene clock. Focus ring `--amber`, 2px, 3px offset.
+A persistent 34px circular button, always present, never hidden behind a menu. It sits **outside**
+the `<nav>` landmark — a motion control is not navigation. `aria-pressed` reflects state; the label
+swaps between "Pause motion" and "Resume motion". Focus ring `--amber`, 2px, 3px offset.
+
+**Mechanism — and note what it must NOT do.** Pause freezes the **ambient clock only**:
+```js
+if (!paused) t += timer.getDelta();              // ambient motion stops
+if (paused && camST) cam.u = camST.progress * 0.92;  // camera stays under the reader's hand
+```
+> **Never `gsap.globalTimeline.timeScale(0)`.** The camera is driven by a scrubbed tween, which
+> lives on the global timeline — freezing it parks the camera in one bay while the copy scrolls on
+> past it, so the scene becomes a still photograph of the wrong room for the rest of the page. The
+> accessibility control would desynchronise the site for exactly the people who need it. **An
+> earlier version of this spec specified that defect**; it was caught by the Phase 2.6 critique.
 
 ### 4.6 Focus
 Every interactive element shows a visible `--amber` focus ring. The pause control and nav links
@@ -208,14 +230,31 @@ ScrollSmoother.create({ smooth: 1.3, effects: false, smoothTouch: 0.1 })
 Not created at all under reduced motion. `effects:false` because no element uses `data-speed`;
 all parallax is real camera movement in 3D, not layered 2D.
 
-### 5.2 The camera — one scrubbed timeline
-The camera rides a `CatmullRomCurve3` through the lab, driven by a single tween of a normalised
-`u`:
+### 5.2 The camera — per-section triggers writing a shared `u`
+
+The camera rides a `CatmullRomCurve3` through the lab. **It must NOT be driven by one linear tween
+across the whole page.** Each section owns a ScrollTrigger that writes into a shared `u`:
+
 ```js
-gsap.to(cam, { u: 0.92, ease: "none",
-  scrollTrigger: { trigger: "#smooth-content", start: "top top", end: "bottom bottom",
-                   scrub: reduce ? true : 1.2 } })
+SECTIONS.forEach(({ id, uFrom, uTo }) => {
+  ScrollTrigger.create({ trigger: `#${id}`, start: "top bottom", end: "bottom top",
+    scrub: reduce ? true : 1.2,
+    onUpdate: self => { cam.u = uFrom + (uTo - uFrom) * self.progress; } });
+});
 ```
+
+> **Why, and this is a correction.** An earlier version specified a single
+> `gsap.to(cam, { u: 0.92 })` across `#smooth-content` while §6 assigned sections *unequal* `u`
+> widths (12, 10, 14, 14, 14, 10, 10, 6, 4, 6) and §3 gave every section an *equal* `100vh`. A
+> single linear tween cannot produce unequal widths from equal heights — camera and copy would
+> drift apart by construction. Worse, §5.4 pins five case studies for `+=60%` each, adding three
+> viewports of scroll per case with no `u` budget allocated, and the tween ended at `u:0.92` while
+> §6 needs the camera to reach `1.00` for the alcove and the vault door. Per-section triggers make
+> §6's table a real contract: each section's scroll range — **including its pin spacer** — maps to
+> exactly its own `u` range, and the last section ends at `u = 1.00`.
+
+Pinned sections must use `pinSpacing: true` so the spacer is part of that section's own trigger
+range; otherwise the pin's extra scroll silently belongs to the next section.
 - `ease:"none"` — the scrollbar is the easing; anything else fights the user's hand.
 - `scrub: 1.2` — a 1.2s catch-up, which is what makes it feel filmed rather than dragged.
 - **`scrub: true` under reduced motion, never `false`.** `false` makes ScrollTrigger play the
@@ -303,7 +342,7 @@ same thing. `u` is the camera's normalised position along the curve.
 | # | Section | `u` | The bay | Leads with |
 |---|---|---|---|---|
 | 1 | Hero | 0.00–0.12 | Entrance deck, doorway behind, lab below | "Welcome to the lab." |
-| 2 | Proof | 0.12–0.22 | Descending into the hall | 20 hrs · 10% · 1.24s |
+| 2 | Proof | 0.12–0.22 | Descending into the hall | **20 hrs/week**, each figure named to its system |
 | 3 | Voice agent | 0.22–0.36 | The console | **10%** |
 | 4 | Call centre QA | 0.36–0.50 | Transcription bench | **Bilingual Urdu and English** |
 | 5 | AlphaLens | 0.50–0.64 | Archive racks | **22,000 chunks** |
@@ -311,7 +350,10 @@ same thing. `u` is the camera's normalised position along the curve.
 | 7 | Shoe-shop receipts | 0.74–0.84 | Scanner bench | **A shop with no database** |
 | 8 | Range | 0.84–0.90 | Capability wall | technical range |
 | 9 | Teaching | 0.90–0.94 | Alcove | **50+ per batch** |
-| 10 | Contact | 0.94–1.00 | Vault door | "Ask me something." |
+| 10 | Contact | 0.94–**1.00** | Vault door | "Ask me something." |
+
+**The camera reaches `u = 1.00`, not 0.92.** Each range above is realised by that section's own
+ScrollTrigger (§5.2), pin spacer included — not by a single tween across the page.
 
 ### 6.1 The four states, per section
 
@@ -427,3 +469,76 @@ Recorded so a later session does not add them back thinking they were forgotten:
 - No clickable element without a visible affordance.
 - No asymmetric grid presented as composition (§3).
 - No product screenshots — forbidden by D7 and replaced by original architecture diagrams (§4.3).
+
+---
+
+## 10. Phase 2.6 critique — every finding, and its disposition
+
+An independent sub-agent reviewed this spec, `CONTENT.md` and the prototype against the seven
+named failure modes and on its own terms. It returned **22 findings, 7 blocking**. Per
+`BUILD-INSTRUCTIONS.md` §2.6 every one is either fixed here or explicitly accepted with a reason.
+Nothing is quietly dropped.
+
+### Fixed in this revision
+
+| # | Finding | Disposition |
+|---|---|---|
+| 1 | Spec designs around content `CONTENT.md` said was permission-gated | **Not a violation — `CONTENT.md` §12 was stale.** D7 resolved permission at the Phase 1 gate (text, metrics, original diagrams; no screenshots; employer may be named) and that file was never updated. `CONTENT.md` §12 corrected to defer to `DECISIONS.md`. |
+| 2 | No call to action anywhere; the email was plain text; two of three nav links pointed at the same section | Contact now has one primary `mailto:` CTA in `--amber` plus secondary GitHub and LinkedIn links. Nav reduced to two honest destinations. **"Resume" removed until a real PDF exists** — see §10.1. |
+| 4 | The `u`-to-section map was arithmetically impossible | §5.2 rewritten: per-section ScrollTriggers writing a shared `u`, pin spacers inside their own section's range, camera reaches `1.00`. |
+| 5 | The lead slot breaks for 3 of 5 case studies | §4.2 rewritten with two modes — figure and phrase — sharing one position and one colour. |
+| 7 | The scrim protects the text column; nav, pause control and footer live past its 68% stop over the lit scene | Added top and bottom scrim **bands** sized to those elements at 100vw. Footer promoted to `--bone`. |
+| 8 | The two-colour rule violated in the architecture diagram — cyan connectors with a 4px glow | Diagram strokes and nodes now `--amber`; drop-shadow removed. |
+| 10 | In-page anchors broken under ScrollSmoother; mid-page landing replays the boot sequence | Anchor clicks intercepted through `smoother.scrollTo`; boot skipped when `scrollY > 0` and the lab set to powered directly. |
+| 11 | Reduced motion still ran bubbles and a drifting, rolling camera | `updateBubbles` gated; drift and roll gated. |
+| 12 | `composer.setSize` re-allocates the bloom mip chain at full resolution, so bloom silently cost 4x after any resize | `bloom.setSize()` called explicitly after `composer.setSize`. |
+| 13 | Metrics in a weak position; hero carried no claim; the spec broke its own middle-dot rule in §6's table | §6 table corrected. Hero and proof-strip copy — see §10.1. |
+| 15 | `aria-label` ignored on bare `span`/`div`; his name unannounced; pause button inside the nav list | Name is now a link with real visually-hidden text; `role="group"` on the metrics; pause moved outside `<nav>`. |
+| 16 | `nav a { outline: none }` deleted the focus ring §4.6 mandates; `opacity:.85` reintroduced dimmed text | Both removed. Hover underlines, focus shows an `--amber` ring, text is full `--bone`. |
+| 17 | The pause control desynchronised the page — the spec specified the defect | §4.5 rewritten with the correct mechanism and a warning about the wrong one. |
+
+### Accepted, with a reason
+
+| # | Finding | Why it stands |
+|---|---|---|
+| 6 | No doctype, `lang`, `charset` or **viewport** meta | **Correct for Phase 3 and recorded as a hard requirement in §10.2.** Not fixable in the prototype: it is published as an Artifact, which supplies its own doctype/head wrapper and rejects those tags. The consequence the finding names is real — without a viewport meta a phone renders at ~980px and **every mobile rule in §3 and §7.5 is dead code**. The mobile layout has therefore only ever been seen under emulation. |
+| 9 | Budget measured on four sections and three bays, presented as headroom for ten | **Accepted as a real limitation.** §7.1's figures are honest for what exists, but six more bays at one light each breaches the 16-light ceiling with nothing to retire. §7 gains a per-bay allowance in §10.2 rather than a whole-site ceiling. Transmission (five glass tubes, two meshes each) forces a scene re-render and is the single most expensive thing in the build on integrated and mobile GPUs — **added to the §7.5 mobile retirement list**. |
+| 14 | Diagram unreadable 760–1100px; its "13px" labels are viewBox units, not pixels | **Valid.** Breakpoint moves to **1080px** for the case grid, and diagram label sizing must be verified at the narrowest two-column width in Phase 3. Not fixed in the prototype, which has one case study. |
+| 18 | No wayfinding on a ten-section page | **Agreed, and it does not conflict with §8.** The rule forbids duplicating the native scrollbar, not navigation. §4.4 gains a section list with `aria-current`, driven by the ScrollTriggers that already exist. Deferred to Phase 3 because the prototype has four sections. |
+| 19 | The orchestrated moment is gated on a network font and can re-render mid-sequence | **Valid.** Phase 3: `Promise.race([document.fonts.ready, delay(800)])` before `boot`, and self-host and subset the faces. Luckiest Guy needs ~16 glyphs. Fonts also gain a line item in §7.1, which §7.2's "600 KB including fonts" currently lacks. |
+| 20 | A WebGL failure leaves the pause button inert | **Valid, deferred.** Phase 3 wraps renderer construction in try/catch and hides `#stage` and the pause control on failure. Copy already survives — it is DOM. |
+| 22 | Type-scale drift: `16px`/`14px` literals and an inline `style` standing in for `--t-h3` | **Valid.** Phase 3 implements §2.1 as real custom properties and adds a `.case-title` class. Prototype left as-is; it is a spike. |
+
+### Escalated to the user — not mine to decide
+
+| # | Finding | Why |
+|---|---|---|
+| 3 | The fan-service props (pink slippers, purple gloves, round glasses) read as recognisable trade dress, and the theme costs a hiring manager's scarce attention | The user asked for these props by name. The critique's argument is serious and is put to them in full; **the call is theirs.** See §10.1. |
+| 21 | AlphaLens's README says "Phase 1 setup in progress" while §6 gives it a case slot stating figures as present-tense fact | Unresolved since Phase 1. **Blocks building §6 section 5.** See §10.1. |
+
+### 10.1 Open questions that block Phase 3
+
+1. **The props.** Keep or cut the slippers, purple gloves and round glasses. The machine room —
+   racks that blink faster on the retrieval section, pipes that carry signal — is what earns the
+   theme; the cartoon references spend it. The critique's view is that they read as building a
+   professional identity out of someone else's IP. **User decides.**
+2. **Is AlphaLens actually running?** If yes, update its README badge and measure real latency. If
+   no, its case study must say so in its own copy. A reader who finds "Phase 1 setup in progress"
+   after reading "measured, not promised" has found the one thing that undoes the rest of the page.
+3. **Resume PDF.** "Resume" is removed from the nav until a real file exists.
+4. **Hero claim.** The hero currently carries no number, company or role in a heading. Proposal:
+   lead with **20 hrs/week**, naming the system. Needs the user's wording.
+
+### 10.2 Amendments carried into Phase 3
+
+- **Required in `index.html`:** doctype, `<html lang="en">`, `<meta charset>`, and
+  `<meta name="viewport" content="width=device-width,initial-scale=1">`. Without the last one the
+  entire mobile design is dead code.
+- **Per-bay budget**, replacing a whole-site ceiling: **1 light**, **20 draw calls**,
+  **5,000 triangles** per bay. Ten bays then fits inside §7.2 alongside the corridor's own cost.
+- **Add transmission to the §7.5 mobile retirement list** — opaque emissive glass at phone scale.
+- **Case grid breakpoint at 1080px**, not 760px.
+- **Re-baseline §7.1** after the two heaviest remaining bays (chart wall, capability wall) are
+  built, before the rest.
+- **Derive scene state from `cam.u` on `ScrollTrigger.refresh()`**, not only from enter/leave
+  callbacks, so a mid-page landing is consistent.

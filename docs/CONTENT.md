@@ -374,6 +374,10 @@ to support the result-first card inversion: **20 hrs/week**, **10% of calls**, *
 🟢 **Blocking gap #2 (missing repos) is RESOLVED** — employer-owned, so both become link-less case
 studies. That is a normal and respectable pattern for production work.
 
-🔴 **Blocking gap #3 (employer permission) is NOT resolved.** The user answered "NI", which is
-ambiguous. **Phase 2 must not design pages around internal Saylani systems until this is an
-explicit yes.**
+🟢 **Blocking gap #3 (employer permission) is RESOLVED — see `DECISIONS.md` D7.**
+The user answered at the Phase 1 gate: **text, metrics and original architecture diagrams are
+permitted; screenshots of internal UI and internal data are not; the employer may be named.**
+
+> *This paragraph previously said the gap was unresolved. It was written before the answer arrived
+> and was never updated — a stale line that a Phase 2.6 critique correctly flagged as a blocker.
+> `DECISIONS.md` is the authority on decisions; this file defers to it.*
