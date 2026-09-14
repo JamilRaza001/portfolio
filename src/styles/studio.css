@@ -20,7 +20,7 @@
 .role-card-top{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--muted);margin-bottom:26px}
 .role-card-top>span:last-child{font-size:22px;color:var(--ink);transition:transform .35s}
 .role-card:hover .role-card-top>span:last-child{transform:translate(3px,-3px)}
-.role-card h3{font-family:var(--body);font-size:26px;font-weight:700;letter-spacing:-.035em;line-height:1.2}
+.role-card h3{font-family:var(--display);font-size:26px;font-weight:400;letter-spacing:-.035em;line-height:1.2}
 .role-card-title{font-size:12px;color:var(--ink);margin-top:9px}
 .role-card-description{font-size:14px;line-height:1.7;color:var(--muted);margin-block:20px 26px;max-width:36ch}
 .role-card-bottom{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:auto;padding-top:18px;border-top:1px solid var(--border);font-size:11px}

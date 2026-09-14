@@ -4,8 +4,8 @@ import FeaturedWork from '../components/FeaturedWork.astro';
 import Expertise from '../components/Expertise.astro';
 import Experience from '../components/Experience.astro';
 import ProfessionalBackground from '../components/ProfessionalBackground.astro';
-import { getSettings, identity } from '../lib/config';
-const portrait = getSettings(import.meta.env).theme === 'black-studio' ? 'jamil-black-studio' : 'jamil-studio';
+import { identity } from '../lib/config';
+const portrait = 'jamil-studio-portrait-v2';
 
 ---
 <Base>
@@ -20,7 +20,7 @@ const portrait = getSettings(import.meta.env).theme === 'black-studio' ? 'jamil-
       <p class="hero-note">Open to remote opportunities and relocation.</p>
     </div>
     <figure class="hero-portrait">
-      <div class="portrait-frame"><img src={`/images/${portrait}-960.webp`} srcset={`/images/${portrait}-480.webp 480w, /images/${portrait}-960.webp 960w`} sizes="(max-width: 800px) 90vw, 42vw" width="960" height="1200" alt="Muhammad Jamil Raza in a charcoal blazer against a dark studio backdrop" fetchpriority="high" /></div>
+      <div class="portrait-frame"><img src={`/images/${portrait}-960.webp`} srcset={`/images/${portrait}-480.webp 480w, /images/${portrait}-960.webp 960w`} sizes="(max-width: 520px) 90vw, (max-width: 800px) 520px, (max-width: 1440px) 40vw, 520px" width="960" height="1200" alt="Muhammad Jamil Raza in a charcoal blazer and ivory shirt against a dark studio backdrop" fetchpriority="high" /></div>
       <figcaption><span>Muhammad Jamil Raza</span><span>Engineer. Builder. Educator.</span></figcaption>
     </figure>
     <div class="hero-foot"><span>Real work. Thoughtful engineering.</span><a href="#work">Discover the work <span aria-hidden="true">↓</span></a></div>
