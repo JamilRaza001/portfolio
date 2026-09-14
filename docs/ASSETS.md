@@ -23,3 +23,7 @@ in the repo for the Phase 3 build, which has a real static host.
 **2026-09-11 — all of the above removed** at the user's direction (D12). The direction no longer
 uses downloaded assets; the hero object is procedural. Files remain in git history
 (`f56ad68` and earlier) if Phase 3 wants them.
+
+## 2026-09-13 portrait and project-art refinement
+
+See ARTWORK.md for the provenance and context of the studio portrait and seven generated project covers. Finished optimized assets are in public/images and included in the repository. They do not depend on an external image service at runtime. Font license files are copied from the installed @fontsource packages to public/licenses.

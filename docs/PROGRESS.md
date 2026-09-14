@@ -294,3 +294,81 @@ nav until one exists); shoe-shop extraction stack and receipt volume for its cas
 `whatsapp-new` owning org.
 
 **Next action:** Phase 3 — Build. **Model switches to Sonnet** per CLAUDE.md §2.
+
+### 2026-09-13 — Portfolio identity, motion and artwork refinement
+
+Current application is the Astro portfolio under D23/D24, not the earlier Three.js prototype. User requested stronger personal branding, section separation, actual motion, project-specific generated images and use of supplied portraits.
+
+Implemented: name-led hero with AI Engineer role, Saylani/SMIT background, studio portrait; revised about, experience and contact; 80–144px section spacing and alternating surfaces; seven original concept covers in responsive local WebP; finite intro motion, viewport image/divider emphasis, project hover/focus, filter transitions, architecture reading state, reduced-motion and no-JS fallbacks. Full case studies remain on individual pages. All four themes retained and verified. No paid runtime APIs.
+
+Sources: live public README refresh for AlphaLens, Crypto Agent, Pizza chatbot; SecureVision README empty; private CB_voice-agent unavailable unauthenticated. Approved CONTENT.md supplied private-project context. Portrait uses both owner-provided photos as references; originals untouched.
+
+Evidence: 8 tests pass, Astro check 0 errors/warnings/hints, 10-page build and resource checks pass; all four theme builds pass; 20 Chromium layout checks pass; filters, keyboard demo controls, no-network examples and email copy checked. Full details in REFINEMENT-VERIFICATION.md. README includes run and theme-change instructions; ARTWORK.md records provenance. Fontconfig emits nonfatal cache messages during social PNG rendering in the restricted environment.
+
+Next: user visual/portrait review on http://127.0.0.1:4321. Existing environment theme is Aubergine–Silver. No publication or push; owner resume and domain remain optional unconfigured inputs. Changes are uncommitted in the existing redesign branch.
+
+### 2026-09-14 — D25 interaction correction implemented and verified
+
+Resumed the unfinished browser validation. Experience now uses four selectable career chapters with directional transitions, replacing the row/table composition. Expertise is a capability explorer with animated tool groups and linked project evidence. Featured work uses a sticky introduction and stacking cards on desktop, with normal vertical flow on mobile. Hero portrait responds to scroll; About uses a large statement with reading emphasis; Contact offers project, opportunity and greeting intents. Full case studies remain on individual pages.
+
+Final polish: skill tablist orientation follows responsive layout; case navigation clears the sticky header. New components and scripts are documented in README. All interactions are local browser code, with reduced-motion and no-JS fallbacks.
+
+Verification: 8 tests; 27-file Astro check with zero diagnostics; 10-page build; all four palette builds; 20 responsive route combinations; 35 panel selections. Browser observed actual 500ms panel animation and changing portrait transform. Zero requests from the career, skill and contact controls. Desktop showcase and mobile career panel visually inspected. Full results and limits: INTERACTION-VERIFICATION.md.
+
+Next: owner visual review at http://127.0.0.1:4321/#experience. Preview runs locally with the existing Aubergine–Silver selection. No publication, push or commit performed.
+
+### 2026-09-14 — D26 Black Studio and project viewport correction
+
+User screenshot showed the project's large cover consuming the visible screen. Featured cards now reserve measured text height before sizing images; short-screen introduction typography is more compact. When a screen cannot fit even the minimum image and full copy, cards unpin instead of clipping information. Black Studio is a fifth palette and the current config/environment selection; the four prior palettes remain available. Career and skill selection now have a sliding shared highlight, and the active project has a silver border emphasis. Reference rationale is appended to INTERACTION-PLAN.md.
+
+Verified 24 card/viewport combinations including 1280×585 and 900×500, with all desktop pinned titles, summaries and actions visible; no overflow or page errors. Foreground browser testing verified the 550ms moving indicator and final alignment. Reduced-motion and no-JS fallbacks pass. Build checks and all-five-palette contrast/config tests pass. Details in INTERACTION-VERIFICATION.md. No dependencies added, no paid runtime services, no publication or commit.
+
+Current review URL: http://127.0.0.1:4321/#work. Restarting the server retains Black Studio through PUBLIC_SITE_THEME. Owner review remains next.
+
+### 2026-09-14 — D27 portrait, restrained neon and text motion
+
+Edited the existing owner portrait using built-in imagegen: low-key black/graphite studio, natural skin lighting, faint mint rim on the shoulder. New 480px/960px WebPs are local and selected only for Black Studio; previous portrait assets remain. Source prompt and provenance are in ARTWORK.md.
+
+Added a centralized mint signal token, active-control/project lighting and pointer-led portrait edge light. Finite masked word reveals animate the name, introduction, section headings and employer names on entry. Text is present without JS; reduced-motion suppresses all reveals. No repeated typing or idle glow animation.
+
+Validation: 8 tests including signal contrast, 29-file Astro check with zero diagnostics, 10-page build/resource checks. Six responsive homepage/career widths from 320 to 1440 show no horizontal overflow or page errors. Browser observed running 850ms name animations with advancing time; portrait pointer light coordinates updated. Reduced-motion produced zero document animations; no-JS retained the name, new photo and all four career chapters. Desktop hero visually inspected. No publication or commit. Review at http://127.0.0.1:4321/.
+
+### 2026-09-14 — D28 neon correction
+
+Removed permanent mint control backgrounds, progress bars, active borders and underline treatments. Buttons and career selection are silver again. Neon mint/violet/rose is restricted to finite text highlights and interaction halos; portrait edge light is invisible at rest. No looping effects. The obsolete signal theme token was removed.
+
+Browser verified button and career selection backgrounds as neutral RGB(228,228,223). During interaction, animation keyframes include all three neon hues; after completion there are zero running animations and only the existing neutral hover shadow remains. Reduced motion yields zero animations. `npm run check` passes: 8 tests, zero diagnostics, 10-page build. README updated. No deployment or commit.
+
+### 2026-09-14 — D29 all seven software covers integrated
+
+Continued from seven generated vector compositions, reviewed each visual, and integrated all seven into the homepage, project listing and individual cases via ProjectArtwork.astro. Covers now explain project workflows rather than physical desk objects. Existing context/status/private-source restrictions remain. All images have descriptive alt text and an Interface concept label. Containment replaces image zoom/crop so software details stay inside the frame. Croplogic raster was refined from a checkerboard into spatially clustered vegetation colors; redundant internal-data disclaimers removed from image footers.
+
+References and generation-method boundary are recorded in ARTWORK.md. Built-in image generation had returned usage_limit_reached, so these are original scripted SVG/WebP illustrations, not newly model-generated screenshots. `scripts/create-software-covers.mjs` regenerates editable SVG sources plus both runtime sizes. The 960px assets are 15–20KB each. No paid service, customer data or copied brand graphics.
+
+Validation: each of seven images visually inspected; 18 browser route/width combinations across home, listing and seven cases at 390/1280px passed image-load, contain-fit and overflow checks, with no page errors. All three pinned cards fit the 1280×585 viewport (bottoms about 561px). The initial test waited indefinitely on offscreen lazy image decode; corrected the test to request eager loading with an 8-second bound, without changing runtime lazy loading. `npm run check`: 8 tests, 30 Astro files with zero diagnostics, 10-page build/resource checks; conservative homepage asset estimate 271,506 bytes. Nonfatal Fontconfig cache messages remain. Preview running at http://127.0.0.1:4321/projects/. No deployment, push or commit.
+
+### 2026-09-14 — D30 content aligned to supplied CV and LinkedIn export
+
+Read all three CV pages and all four Profile (1).pdf pages with pypdf, including embedded links. Updated expertise to AI, Software & ML Engineering; Multi-cloud Data Engineering (AWS/Azure explicitly confirmed by owner); Data Science & Analytics. Intro, About, contact, metadata/social copy and project categories now reflect that grouping. Employment titles/dates and project evidence remain source-based. Added ETL/SQL/API work to Saylani, data analysis/deployment mentoring to SMIT, query analytics to the internship, full surname in About and source-listed training/job-simulation credentials. Source files were not edited or published.
+
+CONTENT-ALIGNMENT-REVIEW.md contains the comparison, intentional differences and required source-document corrections: 30+/50+ teaching context, duplicate Omdena dates, unsupported internship evaluation statement, unqualified manual-review/FTE claims, incomplete education dates and new cloud positioning missing from PDFs. SecureVision remains outside the selected cases; no status or deployment was invented. Existing owner metric/privacy decisions preserved.
+
+Validation: eight tests and 30-file Astro diagnostics pass. A new raw ampersand in SVG social text initially failed image generation; XML escaping fixed it, and the rebuilt 10-page site plus all artifact/resource checks passed. Fifteen skill selections across widths 320, 390, 768, 1280 and 1440 show no overflow or JS errors; project filters return 7/5/2. Conservative homepage estimate 271,780 bytes. No source CV/LinkedIn edits, push or deployment. Preview: http://127.0.0.1:4321/#expertise.
+
+### 2026-09-14 — D31 background section and LinkedIn action
+
+Replaced the sparse organization strip with three responsive role cards: Build at Saylani Welfare, Teach at SMIT and Collaborate at Omdena. Each includes the role, a concise source-based contribution and date range. Native links select and scroll to the matching career chapter; direct fragment navigation and keyboard activation work. The hero Let's connect button opens the existing configured LinkedIn profile in a new tab with noopener/noreferrer. New heading reveals and card halos reuse the finite motion system; resting surfaces stay neutral.
+
+Validation: npm run check passes (8 tests, 31 Astro files with zero diagnostics, 10-page build and artifact checks). Five widths from 320 to 1440 pass overflow/card-fit checks; desktop and mobile layouts visually reviewed. All three card destinations select the correct visible panel, with desktop target positions clearing the header by 120–125px. Direct fragment navigation and Enter activation pass. Browser observed mint/violet/rose halo keyframes, neutral backgrounds and zero remaining animations after completion. Reduced-motion and no-JS fallbacks pass; no page errors. Existing nonfatal Fontconfig cache messages remain. Preview: http://127.0.0.1:4321/#background. No publication or commit.
+
+### 2026-09-14 — D32 mobile navigation toggle
+
+Added a shared compact Menu/Close disclosure at 800px and below. Navigation and résumé now open beneath the 72px sticky header; desktop retains inline links. Controls expose aria-expanded/aria-controls; collapsed links are hidden and inert. Escape restores toggle focus, outside click/focus and link activation close the menu, and crossing the desktop breakpoint resets the state. Finite panel/icon motion respects reduced-motion preferences. Short landscape viewports get a bounded, scrollable menu; no-JS navigation remains visible.
+
+Validation: npm run check passes (8 tests, 32 checked files with zero diagnostics, 10-page build and artifact checks). Twelve route/width combinations cover home, project listing and a case at 390, 800, 801 and 1440px with no overflow or browser errors. Keyboard entry/exit, Escape/focus restoration, anchor navigation (target clears header at 110px), outside dismissal, cross-page Work navigation/current-page state and responsive reset pass. An immediate resize snapshot preceded the media-query event; waiting for the event confirmed reset. Additional 320px portrait and 667×375 landscape checks pass, including access to the résumé link. Reduced motion yields zero header animations; no-JS retains all five links. Mobile closed/open screenshots reviewed. A cached dev import error was cleared by restarting the server; build had already passed. Existing nonfatal Fontconfig cache messages remain. Preview runs at http://127.0.0.1:4321/. No deployment or commit.
+
+### 2026-09-14 — D33 résumé and Vercel release preparation
+
+Copied the user-supplied June 2026 CV into the single public download path `public/resumes/muhammad-jamil-raza-resume.pdf`; byte-for-byte SHA-256 comparison with the supplied PDF matched. Header and footer now expose same-origin `Download résumé` controls using a stable download filename. Content was not rewritten; the alignment report now states that this public CV retains its documented discrepancies and needs owner approval before replacement.
+
+Added Vercel configuration (`npm ci`, `npm run check`, `dist`, Node 24.x, static cache/referrer/content-type headers and deploy-input exclusions) plus a Vercel deployment/rollback guide. Build-time metadata uses Vercel's stable production project domain or a production-only `PUBLIC_SITE_URL`; preview/static local builds are noindex, produce no sitemap URLs and disallow crawling. Initial production simulation exposed an Astro static-build boundary: unprefixed Vercel system variables were absent from `import.meta.env`, making output incorrectly noindex. A new red regression test against `getSettings` failed with an undefined origin; the minimal fix merges Node build environment values, then the test and full suite passed. Production build simulation with `VERCEL_ENV=production` and a stable project host now produced canonical URLs, Open Graph image URLs, robots sitemap and nine public sitemap routes. Preview simulation produced `noindex, nofollow`, `Disallow: /` and an empty sitemap. Twelve tests, 32 Astro diagnostics with zero issues, ten-page builds and artifact checks pass for local, simulated-production and simulated-preview environments. Browser checked both résumé controls, the actual PDF response/signature, desktop and mobile header layouts, no overflow and no page errors. Asset estimate is 273,394 bytes for homepage transfer plus images; the 130,892-byte CV is not fetched by the homepage. No Git remote, Vercel account action, deployment, commit or source CV rewrite occurred. Guide: VERCEL-DEPLOYMENT.md.

@@ -1,5 +1,7 @@
 # DECISIONS.md
 
+Current implementation authority: D23 below and `REDESIGN-PLAN.md` supersede historical laboratory-specific requirements for the new application. Earlier entries remain history.
+
 Append-only. A decision recorded here is **locked**. Never edit an entry — supersede it with a
 new one that references the old by number. Only the user unlocks a decision.
 
@@ -313,3 +315,61 @@ no company and no role on the one screen every visitor sees.
 **Rejected:** his LinkedIn tagline verbatim ("Building Production-Grade AI Systems That Drive Real
 Organizational Value") — accurate but corporate-register, and "drive real organisational value"
 says less than "replaces manual effort", which is concrete and measurable.
+
+## D23 — Approved configurable redesign and implementation
+
+**Date:** 2026-09-13
+**Decision:** User approved implementing the discussed AI Systems, Made Visible portfolio, with blue-amber, charcoal-copper, olive-champagne and aubergine-silver palettes selected through config/environment. Landing and project listings show summaries; full case studies live on separate project pages. Demonstrations are deterministic browser-only illustrative examples, with no paid APIs/services. Astro + TypeScript builds static routes with reusable components and semantic CSS tokens. Default charcoal-copper is a review starting point, not a final palette choice.
+**Authority:** User explicitly requested a detailed plan, required skills and implementation in the same instruction. No additional planning gate is needed for this authorized scope.
+**Supersedes:** D14-D16/D20 laboratory presentation, D17-D18 scene-dependent scrims, and the old continuous-3D build recommendation for the new app. Original prototype retained. D7/D9/D21 evidence/privacy constraints remain binding; D22 headline retained.
+**Limits:** No publication, remote push or private source exposure. Resume stays request-by-email until a configured public PDF exists; no raw CV is copied. Current Codex model is used because repository-specific Claude models are not available in this session.
+
+## D24 — Identity, imagery, spacing and motion refinement
+
+**Date:** 2026-09-13
+**Decision:** User explicitly requested a prominent personal introduction and professional background, improved about/experience/contact copy, stronger section separation, purposeful animations and README-informed project imagery, plus studio editing of two supplied photos. Name-led hero supersedes D22 headline placement. D23 themes, private-source boundaries and free browser-only demos remain. Generated artwork is conceptual; only publicly accessible READMEs and existing approved private-project notes inform it. User portraits may be edited and included in the local website. No publication authorized.
+
+## D25 — Layout and interaction correction
+
+**Date:** 2026-09-13
+**Decision:** User rejected the static section compositions and especially the table-like experience layout. Implement distinct section interactions: scroll-driven featured-work presentation, skill exploration, career chapter selection, statement-led About and intent-aware contact. Preserve D23/D24 identity, four themes, source/privacy rules and local-only scope. The new direction supersedes the row-based experience presentation and minimal-reveal-only motion pass.
+
+## D26 — Black Studio preview and viewport-aware project frames
+
+**Date:** 2026-09-14
+**Decision:** User supplied a screenshot where large project artwork pushed the title and information below the screen, requested further modern motion references and a dark black/grey studio combination. Add `black-studio` as a fifth palette and select it in config and the existing environment's theme field. Preserve all four previous options. Allocate artwork height only after reserving measured project-copy height and sticky-header clearance. Disable pinning when a viewport cannot accommodate the minimum image plus copy. Use a shared moving selection highlight and active-project border emphasis. No paid runtime libraries or services; no publication.
+
+## D27 — Matching portrait, neon accents and elegant text motion
+
+**Date:** 2026-09-14
+**Decision:** User approved matching the portrait to Black Studio and trying neon interaction lighting plus animated text, with elegance preserved. Use a low-key graphite portrait with natural face lighting and faint mint shoulder rim. Preserve the earlier image files; select the new portrait only for Black Studio. Mint `#8CF5C6` highlights interactive states and the portrait boundary, while reading text remains neutral. Main headings and introductory copy use finite masked word reveals; long-form copy remains still. No flashes, idle loops, fake typing or paid runtime services. Original personal content and case-study separation remain unchanged.
+
+## D28 — Neon is transient motion, never control fill
+
+**Date:** 2026-09-14
+**Decision:** User corrected D27: neon must appear only in animation highlights, not button fills, bars or persistent selected states; use multiple neon colors. Restored all UI surfaces and progress indicators to neutral palette tokens. Mint, violet and rose now appear in finite text-reveal light and 1.1-second interaction halos, including a temporary portrait boundary. Effects return to neutral even with the pointer held in place. Reduced motion disables the colored animation. This supersedes D27's permanent mint UI treatment.
+
+## D29 — Software-focused covers for every project
+
+**Date:** 2026-09-14
+**Decision:** User rejected the object-based covers and requested internet-informed images for all projects that clearly communicate AI/software. Replaced all seven live covers with original vector software-interface concepts: speech, call review, cited retrieval, seasonal reporting, receipt extraction, ordering and agricultural ML. The imagegen request was blocked by usage limit; user was informed and work continued using locally authored SVGs rendered to WebP, without paid API fallback. Images are labeled Interface concept, use illustrative data and preserve project status/privacy boundaries. Entire software frames remain visible through object-fit containment. Prior covers remain on disk but are no longer referenced.
+
+## D30 — Three expertise areas and CV/LinkedIn reconciliation
+
+**Date:** 2026-09-14
+**Decision:** User requested combining AI, software and ML engineering; replacing the standalone software capability with Multi-cloud Data Engineering; adding analytics alongside data science; and matching portfolio content to the two supplied PDFs. Owner explicitly confirmed AWS and Azure. These platforms may be listed as owner-confirmed skills, with no invented services, certifications or provider-specific deployment evidence. Employer job titles remain source-based. D9/D21 and prior metric corrections override conflicting older CV/LinkedIn wording. Full comparison and unresolved source mismatches are in CONTENT-ALIGNMENT-REVIEW.md. Source PDFs and live LinkedIn remain unchanged.
+
+## D31 — Professional background cards and LinkedIn connection
+
+**Date:** 2026-09-14
+**Decision:** User requested improving the sparse Saylani/SMIT/Omdena strip and connecting the hero connection button to LinkedIn. Replace the strip with three compact Build, Teach and Collaborate cards containing source-based roles, contributions and dates. Each card opens its matching career chapter through a native anchor and progressive tab selection. The hero Let's connect action opens the configured LinkedIn profile in a new tab. Preserve neutral surfaces and finite mint/violet/rose interaction highlights under D28. No external profile edits or connection requests.
+
+## D32 — Compact mobile navigation
+
+**Date:** 2026-09-14
+**Decision:** User requested a toggle instead of the two-row navigation on mobile and small screens. At widths up to 800px, use a 72px logo/Menu header with a non-modal dropdown containing the four links and résumé action. Desktop navigation stays inline. Use finite 240ms open/160ms close transitions and a neutral Menu/Close icon. Escape, outside interaction and link activation close it; reduced-motion and no-JS fallbacks remain. No new dependency or service.
+
+## D33 — Approved résumé download and Vercel deployment preparation
+
+**Date:** 2026-09-14
+**Decision:** User requested adding the supplied June 2026 CV and preparing the portfolio for Vercel. Publish the owner-provided PDF unchanged at a stable same-origin download path, with header and footer download controls. Add static Vercel configuration, Node 24.x pinning, safe cache/security headers, deployment-input exclusions and production/preview metadata policy. Production may derive its canonical HTTPS origin from Vercel's stable project domain or an explicit production-only custom origin. Vercel system metadata is read from the Node build environment because Astro's `import.meta.env` did not propagate those unprefixed system variables in a static build. Preview routes remain noindex and disallowed by robots. No deploy, Git remote, Vercel account change, live LinkedIn edit or CV content rewrite is authorized by this preparation.

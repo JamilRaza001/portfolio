@@ -1,0 +1,17 @@
+---
+interface Props { slug: string; title: string; eager?: boolean; }
+const { slug, title, eager = false } = Astro.props;
+const descriptions: Record<string,string> = {
+  'voice-agent': 'Caller and assistant waveforms, a sample conversation, and listen-reason-respond stages',
+  'call-quality': 'Bilingual transcript review with quality checks and a highlighted passage for manual review',
+  alphalens: 'Financial filing passages moving through retrieval and evaluation into a cited answer',
+  'qurbani-analytics': 'Hijri and Gregorian alignment with illustrative seasonal comparison charts',
+  'receipt-automation': 'A sample shoe receipt mapped into structured product, size and stock fields',
+  'voice-ordering': 'A sample spoken restaurant request beside its structured order draft',
+  croplogic: 'An illustrative vegetation map beside sensor history and agricultural model comparison',
+};
+---
+<figure class="project-artwork software-artwork">
+  <img src={`/images/projects/${slug}-software-960.webp`} srcset={`/images/projects/${slug}-software-480.webp 480w, /images/projects/${slug}-software-960.webp 960w`} sizes="(max-width: 520px) 90vw, (max-width: 800px) 80vw, 46vw" width="960" height="600" alt={`${title} interface concept: ${descriptions[slug] || title}. Illustrative data.`} loading={eager ? 'eager' : 'lazy'} decoding="async" />
+  <figcaption>Interface concept</figcaption>
+</figure>

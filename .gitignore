@@ -35,3 +35,5 @@ npm-debug.log*
 
 # local scratch
 scratch/
+.astro/
+.playwright-mcp/

@@ -1,5 +1,7 @@
 # PLAN.md
 
+**2026-09-13 update:** the user approved a revised design and implementation. Execute `REDESIGN-PLAN.md` for the current app (D23). The phase plan below is retained as historical context.
+
 The step-level plan for the whole build. `BUILD-INSTRUCTIONS.md` says *what* each phase must
 achieve; this file says *how*. Written in Phase 0, amended only through the unlock procedure in
 `CLAUDE.md` §5.

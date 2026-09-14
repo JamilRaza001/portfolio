@@ -1,0 +1,17 @@
+# Local tooling, credentials, review artifacts and source PDFs are not deployment inputs.
+.git/
+.env*
+.claude/
+.codex/
+.agents/
+.astro/
+.playwright-mcp/
+.cache/
+node_modules/
+dist/
+docs/
+scratch/
+tmp/
+output/
+*.log
+/*.pdf

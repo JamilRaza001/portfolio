@@ -1,0 +1,15 @@
+---
+const roles = [
+  {id:'saylani', mode:'Build', organization:'Saylani Welfare', role:'AI Engineer', description:'Voice systems, intelligent automation and data pipelines for everyday operations.', period:'Jan 2026 — Present'},
+  {id:'smit', mode:'Teach', organization:'SMIT', role:'Lead Trainer · AI & Data Science', description:'Helping aspiring engineers turn Python, data and AI concepts into working applications.', period:'Dec 2025 — Present'},
+  {id:'omdena', mode:'Collaborate', organization:'Omdena', role:'AI / ML Engineer · CropLogic', description:'Sensor and satellite data, preprocessing and model comparison with a global team.', period:'2025 — Present'},
+];
+---
+<section class="professional-background wrap" id="background" aria-labelledby="background-title">
+  <div class="background-heading"><h2 id="background-title">Building. Teaching.<br />Collaborating.</h2><p>Where I put my engineering into practice.</p></div>
+  <div class="background-roles">{roles.map(item=><a class="role-card" href={`#career-panel-${item.id}`} data-career-link={item.id}>
+    <div class="role-card-top"><span>{item.mode}</span><span aria-hidden="true">↗</span></div>
+    <h3>{item.organization}</h3><p class="role-card-title">{item.role}</p><p class="role-card-description">{item.description}</p>
+    <div class="role-card-bottom"><span>{item.period}</span><span>Explore role<span class="sr-only"> at {item.organization}</span></span></div>
+  </a>)}</div>
+</section>

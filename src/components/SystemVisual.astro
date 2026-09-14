@@ -1,0 +1,12 @@
+---
+interface Props { kind?: 'voice' | 'retrieval' | 'analytics' | 'automation'; hero?: boolean; }
+const { kind = 'voice', hero = false } = Astro.props;
+---
+<div class:list={['system-visual', `visual-${kind}`, { 'visual-hero': hero }]} aria-hidden={hero ? undefined : 'true'}>
+  <div class="visual-grid"></div>
+  {kind === 'voice' && <div class="voice-object"><div class="voice-orbit orbit-one"></div><div class="voice-orbit orbit-two"></div><div class="voice-core"><div class="wave-bars">{[16, 26, 40, 28, 56, 80, 48, 68, 100, 76, 50, 88, 62, 38, 58, 34, 22].map((height) => <i style={`--bar:${height}%`}></i>)}</div></div><div class="object-caption"><span>Human language</span><span class="caption-line"></span><span>Intelligent action</span></div></div>}
+  {kind === 'retrieval' && <div class="document-object"><div class="document-sheet sheet-back"><i></i><i></i><i></i><i></i></div><div class="document-sheet sheet-middle"><i></i><i></i><i></i><i></i></div><div class="document-sheet sheet-front"><span class="doc-mark">Aa</span><i></i><i class="chosen-line"></i><i></i><span class="source-tag">Source attached</span></div></div>}
+  {kind === 'analytics' && <div class="analytics-object"><div class="chart-caption">A clearer view.</div><svg viewBox="0 0 400 180"><path class="chart-grid" d="M0 30H400 M0 80H400 M0 130H400 M50 0V180 M150 0V180 M250 0V180 M350 0V180"/><path class="chart-secondary" d="M0 130C50 140 60 55 110 85S175 135 220 60S310 100 400 30"/><path class="chart-primary" d="M0 155C50 145 65 90 110 110S175 90 220 80S320 40 400 15"/></svg><span>Operational analytics / illustration</span></div>}
+  {kind === 'automation' && <div class="automation-object"><div class="receipt-paper"><strong>From paperwork.</strong><i></i><i></i><i></i><i></i><div class="receipt-code"></div></div><div class="structured-data"><span>To structured data.</span><div><i></i><i></i><i></i></div><div><i></i><i></i><i></i></div><div><i></i><i></i><i></i></div></div></div>}
+  {hero && <><div class="visual-topline"><span>Applied AI systems</span><span>Designed around people</span></div><div class="visual-bottomline"><span>Voice. Knowledge. Automation.</span><a href="/projects/voice-agent/">Explore the voice system <span aria-hidden="true">↗</span></a></div></>}
+</div>

@@ -1,5 +1,7 @@
 # CONTENT.md
 
+**Latest alignment supplement (2026-09-14):** See `CONTENT-ALIGNMENT-REVIEW.md` for a fresh page-by-page review of `MJR_CV_9 6 2026.pdf` and `Profile (1).pdf`. The user confirmed AWS and Azure and requested AI/Software/ML, Multi-cloud Data Engineering, and Data Science/Analytics positioning (D30). Named cloud-service deployments and certifications remain unasserted. Existing D9 metric/evaluation corrections still override contradictory PDF text; older audit questions below are historical when resolved by an addendum or decision.
+
 The content model for the portfolio. Built in Phase 1 from the CV (`MJR_CV_9 6 2026.pdf`),
 the LinkedIn export (`Profile.pdf`), and README-only reads across 12 candidate GitHub repos.
 

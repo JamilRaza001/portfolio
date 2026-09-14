@@ -1,0 +1,23 @@
+---
+import Base from '../../layouts/Base.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import { projects } from '../../data/projects';
+---
+<Base title="Selected projects — Muhammad Jamil Raza" description="Explore AI, software and ML engineering, data pipelines and analytics projects by Muhammad Jamil Raza. Read the engineering decisions in each case study.">
+  <section class="page-intro wrap"><a class="breadcrumb" href="/">Home</a><p class="section-label">The work</p><h1>Different problems.<br />One engineering mindset.</h1><p>Voice, knowledge, automation and data. Explore the projects, then get into the decisions behind them.</p></section>
+  <section class="project-collection wrap" aria-label="Project collection"><div class="collection-toolbar"><div class="filters" aria-label="Filter projects" hidden>{['All work', 'AI, Software & ML', 'Data Engineering & Analytics'].map((label, i) => <button type="button" data-filter={i === 0 ? 'all' : label} aria-pressed={i === 0 ? 'true' : 'false'}>{label}</button>)}</div><span class="result-count" role="status" aria-live="polite">{projects.length} projects</span></div><div class="all-projects">{projects.map(project => <ProjectCard project={project} />)}</div><p class="collection-note">Some repositories are private. Their case studies share the problem and engineering approach without exposing internal code or data.</p></section>
+  <script>
+    const filters = document.querySelector<HTMLElement>('.filters');
+    const cards = [...document.querySelectorAll<HTMLElement>('.project-card')];
+    const buttons = [...document.querySelectorAll<HTMLButtonElement>('[data-filter]')];
+    if (filters) filters.hidden = false;
+    buttons.forEach(button => button.addEventListener('click', () => {
+      const category = button.dataset.filter;
+      cards.forEach(card => { card.hidden = category !== 'all' && card.dataset.category !== category; });
+      buttons.forEach(item => item.setAttribute('aria-pressed', String(item === button)));
+      const count = cards.filter(card => !card.hidden).length;
+      const result = document.querySelector<HTMLElement>('.result-count');
+      if (result) result.textContent = `${count} ${count === 1 ? 'project' : 'projects'}`;
+    }));
+  </script>
+</Base>

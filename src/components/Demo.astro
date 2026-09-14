@@ -1,0 +1,48 @@
+---
+interface Props { type: 'voice' | 'retrieval'; }
+const { type } = Astro.props;
+const voice = [
+  { title: 'Listen', label: 'A person makes a request', input: '“Can I speak to someone about my donation?”', output: 'The conversation begins.', detail: 'This scripted example illustrates an inbound request. No microphone is used and no real caller data is included.' },
+  { title: 'Transcribe', label: 'Speech becomes usable text', input: 'Sample spoken request', output: 'Can I speak to someone about my donation?', detail: 'The system converts speech to text before deciding how to respond. Real recognition quality depends on language, noise and the speech model.' },
+  { title: 'Respond', label: 'Clarify the next step', input: 'A request to speak with a person', output: '“I can help connect you to the right team.”', detail: 'The agent provides a suitable response. The wording here is an authored illustration, not an actual production transcript or live model output.' },
+  { title: 'Hand off', label: 'Keep a person in the loop', input: 'The caller needs human assistance', output: 'Conversation moves to a human agent.', detail: 'Automation has a boundary. Escalation gives the caller a route to a person rather than forcing the agent to invent an answer.' },
+];
+const retrieval = [
+  { title: 'Question', label: 'Start with a specific question', input: '“What risks did this company discuss?”', output: 'A question to answer from documents.', detail: 'This fictional example explains the retrieval approach. It does not query AlphaLens or provide investment advice.' },
+  { title: 'Retrieve', label: 'Find candidate evidence', input: 'Question + document collection', output: 'Candidate passages from semantic and keyword search.', detail: 'Hybrid retrieval considers both meaning and exact terms. Combining candidates helps cover questions that one search method can miss.' },
+  { title: 'Rerank', label: 'Select more relevant passages', input: 'Candidate passages', output: 'The passages most relevant to the question.', detail: 'A reranker compares candidate passages with the question. This example displays no invented relevance scores or benchmark claims.' },
+  { title: 'Cite', label: 'Keep the answer tied to evidence', input: 'Selected source passages', output: 'An answer with references to its sources.', detail: 'Citations let a reader inspect the evidence. The project is in progress; this is a walkthrough of its intended interaction, not a running-system result.' },
+];
+const stages = type === 'voice' ? voice : retrieval;
+---
+<section class="demo" data-demo>
+  <div class="demo-header"><h2>{type === 'voice' ? 'Follow a conversation.' : 'Follow the evidence.'}</h2><span class="demo-label">Illustrative demo · No live AI</span></div>
+  <p class="demo-intro">Step through an authored example. Everything runs in your browser; no API, real customer data or live service is involved.</p>
+  <ol class="demo-steps">{stages.map((stage, index) => <li><button type="button" data-step={index} aria-controls={`demo-${type}-${index}`} aria-current={index === 0 ? 'step' : undefined}><span>{String(index + 1).padStart(2, '0')}</span>{stage.title}</button></li>)}</ol>
+  <div class="demo-panels">{stages.map((stage, index) => <div class="demo-panel" id={`demo-${type}-${index}`} data-panel={index}><div class="demo-stage-copy"><span class="section-label">Step {index + 1} / {stages.length}</span><h3>{stage.label}</h3><p>{stage.detail}</p></div><div class="demo-example"><div><span>Input</span><p>{stage.input}</p></div><div><span>Output</span><p>{stage.output}</p></div></div></div>)}</div>
+  <div class="demo-controls" hidden><button class="button button-quiet" type="button" data-previous>Previous</button><span role="status" aria-live="polite" data-step-status>Step 1 of {stages.length}: {stages[0].title}</span><button class="button" type="button" data-next>Next step</button></div>
+</section>
+<script>
+  document.querySelectorAll<HTMLElement>('[data-demo]').forEach(root => {
+    const tabs = [...root.querySelectorAll<HTMLButtonElement>('[data-step]')];
+    const panels = [...root.querySelectorAll<HTMLElement>('[data-panel]')];
+    const previous = root.querySelector<HTMLButtonElement>('[data-previous]')!;
+    const next = root.querySelector<HTMLButtonElement>('[data-next]')!;
+    const status = root.querySelector<HTMLElement>('[data-step-status]')!;
+    let current = 0;
+    function select(index: number) {
+      current = index;
+      panels.forEach((panel, i) => { panel.hidden = i !== index; });
+      tabs.forEach((tab, i) => { if (i === index) tab.setAttribute('aria-current', 'step'); else tab.removeAttribute('aria-current'); });
+      previous.disabled = index === 0;
+      next.textContent = index === panels.length - 1 ? 'Restart example' : 'Next step';
+      status.textContent = `Step ${index + 1} of ${panels.length}: ${tabs[index].textContent?.slice(2).trim()}`;
+    }
+    tabs.forEach((tab, i) => tab.addEventListener('click', () => select(i)));
+    previous.addEventListener('click', () => select(Math.max(0, current - 1)));
+    next.addEventListener('click', () => select((current + 1) % panels.length));
+    root.querySelector<HTMLElement>('.demo-controls')!.hidden = false;
+    root.dataset.enhanced = 'true';
+    select(0);
+  });
+</script>
