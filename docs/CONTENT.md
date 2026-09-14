@@ -231,7 +231,7 @@ no README) · `Data_Analysis_Streamlit` (unfinished template README, placeholder
 
 | Item | Institution | Date | Note |
 |---|---|---|---|
-| Bachelor of Technology | Virtual University | `Mar ?? – Present` | ⚠️ **No start year on CV.** |
+| Bachelor's in Software Engineering | Virtual University | `Mar ?? – Present` | Owner-corrected degree title; no start year or completion claim on the website. Earlier CV PDFs still say Bachelor of Technology. |
 | Intermediate | Government Superior College | Aug 2022 | ⚠️ Spelled "Intermaitade" in both documents. |
 | AI & Data Science | SMIT | Sep 2025 | |
 | Agentic AI | SMIT | May 2026 | |
