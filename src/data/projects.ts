@@ -43,8 +43,8 @@ export const projects: Project[] = [
     solution: 'Combined real-time speech recognition with LLM reasoning to handle inbound conversations autonomously. The system operates within Saylani’s call workflow.',
     architecture: ['Inbound call', 'Speech recognition', 'LLM reasoning', 'Voice interaction'],
     decisions: [
-      { title: 'Work with live speech', body: 'The system processes speech in real time so the model can participate in a call rather than analyze a recording afterward.' },
-      { title: 'Measure autonomous handling', body: 'The reported outcome is the share of inbound calls handled autonomously: a concrete measure of the workload the system takes on.' },
+      { title: 'Work With Live Speech', body: 'The system processes speech in real time so the model can participate in a call rather than analyze a recording afterward.' },
+      { title: 'Measure Autonomous Handling', body: 'The reported outcome is the share of inbound calls handled autonomously: a concrete measure of the workload the system takes on.' },
     ],
     outcomes: ['10% of inbound calls handled autonomously, as reported by the engineer.'],
     limitations: [
@@ -73,8 +73,8 @@ export const projects: Project[] = [
     solution: 'An asynchronous FastAPI pipeline transcribes recordings, evaluates compliance with OpenAI models and applies rule-based scores. A Streamlit dashboard brings results and a manual review queue together.',
     architecture: ['Call recordings', 'Bilingual transcription', 'Compliance + scoring', 'Audit records', 'Review dashboard'],
     decisions: [
-      { title: 'Separate evaluation and scoring', body: 'Model-based compliance evaluation sits alongside a rule-based scoring engine, making the scoring rules explicit.' },
-      { title: 'Keep a review trail', body: 'JSON audit records and a queryable SQLite index retain analysis outputs. Duplicate detection and a manual review queue support the review workflow.' },
+      { title: 'Separate Evaluation and Scoring', body: 'Model-based compliance evaluation sits alongside a rule-based scoring engine, making the scoring rules explicit.' },
+      { title: 'Keep a Review Trail', body: 'JSON audit records and a queryable SQLite index retain analysis outputs. Duplicate detection and a manual review queue support the review workflow.' },
     ],
     outcomes: [
       'A working pipeline analyzes real production call recordings in Urdu and English.',
@@ -105,9 +105,9 @@ export const projects: Project[] = [
     solution: 'The five-stage LangGraph architecture plans a query, retrieves passages with vector and lexical search, reranks candidates, evaluates the retrieved evidence and synthesizes a cited response. The system is still being built and is not presented as a running service.',
     architecture: ['Plan', 'Hybrid retrieve', 'Rerank', 'Evaluate', 'Synthesize + cite'],
     decisions: [
-      { title: 'Combine two retrieval signals', body: 'pgvector HNSW and PostgreSQL tsvector provide semantic and lexical candidates. Reciprocal Rank Fusion combines their rankings before cross-encoder reranking.' },
-      { title: 'Design for embedding quotas', body: 'The architecture includes Jina v3 and a local nomic embedding fallback. Both use 768 dimensions; retrieval behavior across backends still needs validation.' },
-      { title: 'Keep evidence visible', body: 'Multi-document synthesis is designed to cite the passages behind the response, with a dedicated evaluation stage before synthesis.' },
+      { title: 'Combine Two Retrieval Signals', body: 'pgvector HNSW and PostgreSQL tsvector provide semantic and lexical candidates. Reciprocal Rank Fusion combines their rankings before cross-encoder reranking.' },
+      { title: 'Design for Embedding Quotas', body: 'The architecture includes Jina v3 and a local nomic embedding fallback. Both use 768 dimensions; retrieval behavior across backends still needs validation.' },
+      { title: 'Keep Evidence Visible', body: 'Multi-document synthesis is designed to cite the passages behind the response, with a dedicated evaluation stage before synthesis.' },
     ],
     outcomes: [
       'The documented corpus contains approximately 22,000 chunks from 200 SEC 10-K and 10-Q filings.',
@@ -140,9 +140,9 @@ export const projects: Project[] = [
     solution: 'An ETL pipeline normalizes and deduplicates three years of source data. Hijri–Gregorian conversion supports seasonal comparisons, while five chart modules and KPI views expose the operational picture.',
     architecture: ['Source records', 'Normalize + deduplicate', 'Align calendars', 'Build reporting data', 'Operational views'],
     decisions: [
-      { title: 'Align seasonal comparisons', body: 'Hijri–Gregorian date conversion gives year-on-year analysis a calendar basis that reflects the timing of Qurbani operations.' },
-      { title: 'Make data rebuilding part of the tool', body: 'The application supports an in-app pipeline rebuild. Deduplicated merges use atomic file replacement, and Docker packages the dashboard environment.' },
-      { title: 'Normalize source conventions', body: 'Regex-based country inference and price-to-label mapping reconcile inconsistent source representations before reporting.' },
+      { title: 'Align Seasonal Comparisons', body: 'Hijri–Gregorian date conversion gives year-on-year analysis a calendar basis that reflects the timing of Qurbani operations.' },
+      { title: 'Make Data Rebuilding Part of the Tool', body: 'The application supports an in-app pipeline rebuild. Deduplicated merges use atomic file replacement, and Docker packages the dashboard environment.' },
+      { title: 'Normalize Source Conventions', body: 'Regex-based country inference and price-to-label mapping reconcile inconsistent source representations before reporting.' },
     ],
     outcomes: [
       'Three years of multi-source records are available through five chart modules and operational KPI views.',
@@ -173,8 +173,8 @@ export const projects: Project[] = [
     solution: 'Built a pipeline that reads physical receipts and bills, extracts their information and populates the website’s product and stock database.',
     architecture: ['Physical receipts + bills', 'Extract information', 'Product + stock records', 'Website database'],
     decisions: [
-      { title: 'Start with the records the shop has', body: 'Physical receipts and bills provide the input for building the digital catalogue and stock database.' },
-      { title: 'Connect extraction to an operational use', body: 'The output populates the website database, turning extracted information into product and stock records.' },
+      { title: 'Start With the Records the Shop Has', body: 'Physical receipts and bills provide the input for building the digital catalogue and stock database.' },
+      { title: 'Connect Extraction to an Operational Use', body: 'The output populates the website database, turning extracted information into product and stock records.' },
     ],
     outcomes: ['Established a receipt-to-database workflow for a shop that previously had no database.'],
     limitations: [
@@ -202,9 +202,9 @@ export const projects: Project[] = [
     solution: 'The project connects speech recognition, LLM reasoning and speech synthesis over WebSockets. It supports barge-in, isolates per-session state with Python ContextVars and persists conversation memory through async SQLite.',
     architecture: ['Customer speech', 'Speech recognition', 'Order conversation', 'Speech synthesis', 'Streamed response'],
     decisions: [
-      { title: 'Support interruption', body: 'Barge-in allows the customer to interrupt the voice response instead of waiting for playback to finish.' },
-      { title: 'Separate session state', body: 'ContextVars isolates per-session context, alongside SQLite-backed conversation memory using asynchronous database access.' },
-      { title: 'Track the first audible response', body: 'Time to first chunk captures an early part of the interaction delay. The reported English value is 1.24 seconds, while work continues on other languages.' },
+      { title: 'Support Interruption', body: 'Barge-in allows the customer to interrupt the voice response instead of waiting for playback to finish.' },
+      { title: 'Separate Session State', body: 'ContextVars isolates per-session context, alongside SQLite-backed conversation memory using asynchronous database access.' },
+      { title: 'Track the First Audible Response', body: 'Time to first chunk captures an early part of the interaction delay. The reported English value is 1.24 seconds, while work continues on other languages.' },
     ],
     outcomes: ['The engineer reports English time to first chunk of 1.24 seconds for this project.'],
     limitations: [
@@ -233,9 +233,9 @@ export const projects: Project[] = [
     solution: 'Contributed pipelines combining IoT sensor data with satellite multispectral imagery, including NDVI and EVI features. Work covered missing-data handling, structured preprocessing and comparisons between classical ML and vision baselines.',
     architecture: ['Sensors + satellite imagery', 'Impute missing observations', 'Preprocess features', 'Compare model baselines', 'Crop + irrigation prediction'],
     decisions: [
-      { title: 'Handle incomplete sensor histories', body: 'Interpolation and rolling-window imputation address missing readings within scikit-learn preprocessing workflows.' },
-      { title: 'Work with limited labels', body: 'Transfer learning, targeted augmentation and stratified sampling were used to address limited ground-truth data.' },
-      { title: 'Compare model families', body: 'XGBoost and scikit-learn approaches were benchmarked against PyTorch and Hugging Face vision baselines, with lightweight architectures considered for rural connectivity constraints.' },
+      { title: 'Handle Incomplete Sensor Histories', body: 'Interpolation and rolling-window imputation address missing readings within scikit-learn preprocessing workflows.' },
+      { title: 'Work With Limited Labels', body: 'Transfer learning, targeted augmentation and stratified sampling were used to address limited ground-truth data.' },
+      { title: 'Compare Model Families', body: 'XGBoost and scikit-learn approaches were benchmarked against PyTorch and Hugging Face vision baselines, with lightweight architectures considered for rural connectivity constraints.' },
     ],
     outcomes: [
       'Contributed preprocessing pipelines and model-comparison work to a global agricultural AI collaboration.',

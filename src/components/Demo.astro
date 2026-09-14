@@ -2,21 +2,21 @@
 interface Props { type: 'voice' | 'retrieval'; }
 const { type } = Astro.props;
 const voice = [
-  { title: 'Listen', label: 'A person makes a request', input: '“Can I speak to someone about my donation?”', output: 'The conversation begins.', detail: 'This scripted example illustrates an inbound request. No microphone is used and no real caller data is included.' },
-  { title: 'Transcribe', label: 'Speech becomes usable text', input: 'Sample spoken request', output: 'Can I speak to someone about my donation?', detail: 'The system converts speech to text before deciding how to respond. Real recognition quality depends on language, noise and the speech model.' },
-  { title: 'Respond', label: 'Clarify the next step', input: 'A request to speak with a person', output: '“I can help connect you to the right team.”', detail: 'The agent provides a suitable response. The wording here is an authored illustration, not an actual production transcript or live model output.' },
-  { title: 'Hand off', label: 'Keep a person in the loop', input: 'The caller needs human assistance', output: 'Conversation moves to a human agent.', detail: 'Automation has a boundary. Escalation gives the caller a route to a person rather than forcing the agent to invent an answer.' },
+  { title: 'Listen', label: 'A Person Makes a Request', input: '“Can I speak to someone about my donation?”', output: 'The conversation begins.', detail: 'This scripted example illustrates an inbound request. No microphone is used and no real caller data is included.' },
+  { title: 'Transcribe', label: 'Speech Becomes Usable Text', input: 'Sample spoken request', output: 'Can I speak to someone about my donation?', detail: 'The system converts speech to text before deciding how to respond. Real recognition quality depends on language, noise and the speech model.' },
+  { title: 'Respond', label: 'Clarify the Next Step', input: 'A request to speak with a person', output: '“I can help connect you to the right team.”', detail: 'The agent provides a suitable response. The wording here is an authored illustration, not an actual production transcript or live model output.' },
+  { title: 'Hand off', label: 'Keep a Person in the Loop', input: 'The caller needs human assistance', output: 'Conversation moves to a human agent.', detail: 'Automation has a boundary. Escalation gives the caller a route to a person rather than forcing the agent to invent an answer.' },
 ];
 const retrieval = [
-  { title: 'Question', label: 'Start with a specific question', input: '“What risks did this company discuss?”', output: 'A question to answer from documents.', detail: 'This fictional example explains the retrieval approach. It does not query AlphaLens or provide investment advice.' },
-  { title: 'Retrieve', label: 'Find candidate evidence', input: 'Question + document collection', output: 'Candidate passages from semantic and keyword search.', detail: 'Hybrid retrieval considers both meaning and exact terms. Combining candidates helps cover questions that one search method can miss.' },
-  { title: 'Rerank', label: 'Select more relevant passages', input: 'Candidate passages', output: 'The passages most relevant to the question.', detail: 'A reranker compares candidate passages with the question. This example displays no invented relevance scores or benchmark claims.' },
-  { title: 'Cite', label: 'Keep the answer tied to evidence', input: 'Selected source passages', output: 'An answer with references to its sources.', detail: 'Citations let a reader inspect the evidence. The project is in progress; this is a walkthrough of its intended interaction, not a running-system result.' },
+  { title: 'Question', label: 'Start With a Specific Question', input: '“What risks did this company discuss?”', output: 'A question to answer from documents.', detail: 'This fictional example explains the retrieval approach. It does not query AlphaLens or provide investment advice.' },
+  { title: 'Retrieve', label: 'Find Candidate Evidence', input: 'Question + document collection', output: 'Candidate passages from semantic and keyword search.', detail: 'Hybrid retrieval considers both meaning and exact terms. Combining candidates helps cover questions that one search method can miss.' },
+  { title: 'Rerank', label: 'Select More Relevant Passages', input: 'Candidate passages', output: 'The passages most relevant to the question.', detail: 'A reranker compares candidate passages with the question. This example displays no invented relevance scores or benchmark claims.' },
+  { title: 'Cite', label: 'Keep the Answer Tied to Evidence', input: 'Selected source passages', output: 'An answer with references to its sources.', detail: 'Citations let a reader inspect the evidence. The project is in progress; this is a walkthrough of its intended interaction, not a running-system result.' },
 ];
 const stages = type === 'voice' ? voice : retrieval;
 ---
 <section class="demo" data-demo>
-  <div class="demo-header"><h2>{type === 'voice' ? 'Follow a conversation.' : 'Follow the evidence.'}</h2><span class="demo-label">Illustrative demo · No live AI</span></div>
+  <div class="demo-header"><h2>{type === 'voice' ? 'Follow a Conversation.' : 'Follow the Evidence.'}</h2><span class="demo-label">Illustrative demo · No live AI</span></div>
   <p class="demo-intro">Step through an authored example. Everything runs in your browser; no API, real customer data or live service is involved.</p>
   <ol class="demo-steps">{stages.map((stage, index) => <li><button type="button" data-step={index} aria-controls={`demo-${type}-${index}`} aria-current={index === 0 ? 'step' : undefined}><span>{String(index + 1).padStart(2, '0')}</span>{stage.title}</button></li>)}</ol>
   <div class="demo-panels">{stages.map((stage, index) => <div class="demo-panel" id={`demo-${type}-${index}`} data-panel={index}><div class="demo-stage-copy"><span class="section-label">Step {index + 1} / {stages.length}</span><h3>{stage.label}</h3><p>{stage.detail}</p></div><div class="demo-example"><div><span>Input</span><p>{stage.input}</p></div><div><span>Output</span><p>{stage.output}</p></div></div></div>)}</div>

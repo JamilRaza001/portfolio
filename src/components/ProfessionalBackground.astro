@@ -6,7 +6,7 @@ const roles = [
 ];
 ---
 <section class="professional-background wrap" id="background" aria-labelledby="background-title">
-  <div class="background-heading"><h2 id="background-title">Building. Teaching.<br />Collaborating.</h2><p>Where I put my engineering into practice.</p></div>
+  <div class="background-heading"><h2 id="background-title">Building. Teaching. Collaborating.</h2><p>Where I put my engineering into practice.</p></div>
   <div class="background-roles">{roles.map(item=><a class="role-card" href={`#career-panel-${item.id}`} data-career-link={item.id}>
     <div class="role-card-top"><span>{item.mode}</span><span aria-hidden="true">↗</span></div>
     <h3>{item.organization}</h3><p class="role-card-title">{item.role}</p><p class="role-card-description">{item.description}</p>
